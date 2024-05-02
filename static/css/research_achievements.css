@@ -1,0 +1,95 @@
+/* research_achievements.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header, footer {
+    text-align: center;
+    background: #f4f4f4;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+main {
+    padding: 1em;
+}
+
+section {
+    margin-bottom: 1em;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+h1 {
+    margin: 0.5em 0;
+}
+
+h2 {
+    margin: 1em 0 0.5em;
+}
+
+h3 {
+    margin: 0.5em 0;
+}
+
+nav ul {
+    padding: 0;
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav a {
+    text-decoration: none;
+    padding: 5px 10px;
+    background: #e0e0e0;
+    color: #333;
+}
+
+nav a:hover, nav a.active {
+    background: #333;
+    color: #fff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #333;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+footer {
+    margin-top: 1em;
+}

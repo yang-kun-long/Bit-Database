@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>国际合作 - 网络攻防对抗技术研究所</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cooperation.css') }}">
+</head>
+<body>
+    <header>
+        <h1>网络攻防对抗技术研究所</h1>
+    </header>
+    <nav>
+        <!-- 导航链接 -->
+    </nav>
+    <main>
+        <section id="international-cooperation">
+            <h2>国际合作</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>大学/企业名称</th>
+                        <th>所属国家</th>
+                        <th>合作项目</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 使用Jinja2循环渲染国际合作信息 -->
+                    {% for cooperation in cooperation %}
+                    <tr>
+                        <td>{{ cooperation.university_name }}</td>
+                        <td>{{ cooperation.country }}</td>
+                        <td>{{ cooperation.project }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
+    </footer>
+</body>
+</html>

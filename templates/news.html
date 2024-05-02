@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态消息 - 网络攻防对抗技术研究所</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+</head>
+<body>
+    <header>
+        <h1>网络攻防对抗技术研究所</h1>
+    </header>
+    <nav>
+        <!-- 导航链接 -->
+    </nav>
+    <main>
+        <section id="news-dynamic">
+            <h2>新闻动态</h2>
+            {% for item in news_data %}
+                <article>
+                    <h3>{{ item.title }}</h3>
+                    <p>撰稿人：{{ item.author }} | 发稿时间：{{ item.date }}</p>
+                    <img src="{{ url_for('static', filename=item.image_path) }}" alt="News Image">
+                    <video src="{{ url_for('static', filename=item.video_path) }}" controls></video>
+                    <div>{{ item.content }}</div>
+                </article>
+            {% endfor %}
+        </section>
+        <!-- 通知通告和学术活动子栏目的类似循环 -->
+    </main>
+    <footer>
+        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>网络攻防对抗技术研究所</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- 引入CSS样式表 -->
+    <script src="scripts.js"></script> <!-- 引入JavaScript文件 -->
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <ul>
+            <li><a href="user_index">首页</a></li>
+            <li><a href="about">关于我们</a></li>
+            <li><a href="news">动态消息</a></li>
+            <li><a href="research">教学科研</a></li>
+            <li><a href="research_achievements">研究成果</a></li>
+            <li><a href="admissions">招生信息</a></li>
+            <li><a href="cooperation">国际合作</a></li>
+            <li><a href="internal_management">内部管理</a></li>
+            <li><a href="download_zone">下载专区</a></li>
+            <li><a href="user_help">用户帮助</a></li>
+
+        </ul>
+        <div id="user-avatar" class="user-avatar">
+            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像" onclick="toggleDropdown()">
+            <div id="dropdown" class="dropdown" style="display: none;">
+                <a href="{{ url_for('views.user_page') }}">个人主页</a>
+                <a href="{{ url_for('views.logout') }}">退出登录</a>
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- 首页内容 -->
+    <div id="home" class="content">
+        <h1>欢迎来到网络攻防对抗技术研究所</h1>
+        <p>这里是研究所的简介和最新动态...</p>
+        <!-- 动态消息 -->
+        <section>
+            <h2>最新动态</h2>
+            <ul>
+                <li><strong>通知：</strong> [通知内容]</li>
+                <li><strong>新闻：</strong> [新闻内容]</li>
+                <li><strong>活动：</strong> [活动内容]</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- 关于我们 -->
+    <div id="about" class="content">
+        <h2>关于我们</h2>
+        <p>研究所简介、师资队伍、学生信息、联系方式等...</p>
+    </div>
+
+    <!-- 动态消息 -->
+    <div id="news" class="content">
+        <h2>动态消息</h2>
+        <p>新闻动态、通知通告、学术活动等信息...</p>
+    </div>
+
+    <!-- 教学科研 -->
+    <div id="research" class="content">
+        <h2>教学科研</h2>
+        <p>展示研究所全职教师的教学及科研工作相关信息...</p>
+    </div>
+
+    <!-- 研究成果 -->
+    <div id="achievements" class="content">
+        <h2>研究成果</h2>
+        <p>展示教学成果、科研论文、专利、著作权等信息...</p>
+    </div>
+
+    <!-- 招生信息 -->
+    <div id="admissions" class="content">
+        <h2>招生信息</h2>
+        <p>提供本科生、硕士生、博士生、留学生的招生信息...</p>
+    </div>
+
+    <!-- 国际合作 -->
+    <div id="international" class="content">
+        <h2>国际合作</h2>
+        <p>展示研究所的国际合作项目和合作方信息...</p>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
+        <ul class="footer-links">
+            <li><a href="http://cs.bit.edu.cn" target="_blank">计算机学院</a></li>
+            <li><a href="http://grd.bit.edu.cn" target="_blank">研究生院</a></li>
+            <li><a href="http://grdms.bit.edu.cn" target="_blank">研究生管理系统</a></li>
+        </ul>
+    </footer>
+    <script>
+        function toggleDropdown() {
+            var dropdown = document.getElementById('dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+
+</body>
+</html>

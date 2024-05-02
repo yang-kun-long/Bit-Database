@@ -1,0 +1,114 @@
+/* internal_management.css */
+
+/* 重置浏览器默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面整体样式 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+/* 导航栏样式 */
+nav {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    background: #555;
+}
+
+/* 页面内容区域样式 */
+.content {
+    padding: 20px;
+    margin: 20px 0;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.content h2 {
+    color: #333;
+}
+
+/* 页脚样式 */
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* 动态消息列表样式 */
+.content ul {
+    list-style-type: none;
+}
+
+.content ul li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background: #eee;
+    border-radius: 3px;
+}
+
+.content ul li strong {
+    color: #d00;
+}
+
+/* 内部管理页面样式 */
+#sign_in_out {
+    /* 签到签出页面样式 */
+}
+
+#notice {
+    /* 通知通告页面样式 */
+}
+
+#book_borrowing {
+    /* 图书借阅页面样式 */
+}
+
+#statistics {
+    /* 统计分析页面样式 */
+}
+
+#user_management {
+    /* 用户管理页面样式 */
+}
+
+#system_settings {
+    /* 系统设置页面样式 */
+}
+
+#help {
+    /* 帮助文档页面样式 */
+}

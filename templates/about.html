@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于我们 - 网络攻防对抗技术研究所</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
+<body>
+    <header>
+        <h1>网络攻防对抗技术研究所</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#introduction">研究所简介</a></li>
+            <li><a href="#faculty">师资队伍</a></li>
+            <li><a href="#students">学生信息</a></li>
+            <li><a href="#contact">联系我们</a></li>
+        </ul>
+    </nav>
+    <section id="introduction">
+        <h2>研究所简介</h2>
+        <p>这里是研究所的介绍内容，可以及时更新。</p>
+    </section>
+    <section id="faculty">
+        <h2>师资队伍</h2>
+        <h3>全职教师</h3>
+        <ul>
+            {% for faculty in faculty %}
+                <li>
+                    姓名：{{ faculty.name }}, 职称：{{ faculty.title }}, 职位：{{ faculty.position }}
+                </li>
+            {% endfor %}
+        </ul>
+        <h3>兼职教师</h3>
+        <!-- 兼职教师列表 -->
+        <ul>
+            <!-- 这里添加兼职教师的循环显示逻辑 -->
+        </ul>
+    </section>
+    <section id="students">
+        <h2>学生信息</h2>
+        <h3>在读学生</h3>
+        <ul>
+            {% for student in students %}
+                <li>
+                    学号：{{ student.id }}, 姓名：{{ student.name }}, 性别：{{ student.gender }}
+                </li>
+            {% endfor %}
+        </ul>
+        <h3>毕业学生</h3>
+        <!-- 毕业学生信息列表 -->
+        <ul>
+            <!-- 这里添加毕业学生信息的循环显示逻辑 -->
+        </ul>
+    </section>
+    <section id="contact">
+        <h2>联系我们</h3>
+        <p>这里是联系信息的介绍内容。</p>
+    </section>
+    <footer>
+        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
+    </footer>
+</body>
+</html>

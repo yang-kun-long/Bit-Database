@@ -1,0 +1,165 @@
+/* 重置浏览器默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面整体样式 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+/* 导航栏样式 */
+nav {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    background: #555;
+}
+
+/* 页面内容区域样式 */
+.content {
+    padding: 20px;
+    margin: 20px 0;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.content h2 {
+    color: #333;
+}
+
+/* 页脚样式 */
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+
+    bottom: 0;
+    width: 100%;
+}
+
+/* 动态消息列表样式 */
+.content ul {
+    list-style-type: none;
+}
+
+.content ul li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background: #eee;
+    border-radius: 3px;
+}
+
+.content ul li strong {
+    color: #d00;
+}
+/* styles.css */
+/* styles.css */
+.user-avatar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px; /* 头像宽度 */
+    height: 50px; /* 头像高度 */
+    border-radius: 50%; /* 头像圆角 */
+    background-color: #f8f8f8; /* 背景颜色 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* 鼠标悬停时显示手指图标 */
+}
+
+.user-avatar img {
+    width: 100%; /* 确保图片在头像容器内完全显示 */
+    height: auto; /* 保持图片高度与宽度比例 */
+    border-radius: 50%; /* 确保图片是圆形的 */
+}
+
+/* styles.css */
+.footer-links {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around; /* 使列表项均匀分布 */
+}
+
+.footer-links li {
+    margin-bottom: 0; /* 防止列表项之间有额外的空隙 */
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #fff; /* 链接颜色 */
+}
+
+.footer-links a:hover {
+    text-decoration: underline; /* 鼠标悬停时的下划线效果 */
+}
+
+
+/* 响应式设计：当屏幕宽度小于600px时，导航栏水平排列变为垂直排列 */
+@media (max-width: 600px) {
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
+/* 下拉菜单样式 */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* 默认隐藏下拉菜单 */
+    width: 200px; /* 增加下拉菜单的宽度 */
+}
+
+/* 鼠标悬停时显示下拉菜单 */
+.user-avatar:hover .dropdown {
+    display: block;
+}
+
+/* 下拉菜单项样式 */
+.dropdown a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+/* 下拉菜单项悬停样式 */
+.dropdown a:hover {
+    background: #eee;
+}

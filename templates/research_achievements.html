@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>研究成果 - 网络攻防对抗技术研究所</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/research_achievements.css') }}">
+</head>
+<body>
+    <header>
+        <h1>网络攻防对抗技术研究所</h1>
+    </header>
+    <nav>
+        <!-- 导航链接 -->
+    </nav>
+    <main>
+        <!-- 教学栏目 -->
+        <section id="teaching">
+            <h2>教学</h2>
+
+            <!-- 教学成果 -->
+            <section id="teaching-achievements">
+                <h3>教学成果</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>获得年份</th>
+                            <th>成果名称</th>
+                            <th>层次</th>
+                        </tr>
+                    </thead>
+                    <!-- 表格内容 -->
+                    {% for achievement in achievements.teaching.achievements %}
+                    <tr>
+                        <td>{{ achievement.year }}</td>
+                        <td>{{ achievement.name }}</td>
+                        <td>{{ achievement.level }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+
+            <!-- 教学论文 -->
+            <section id="teaching-papers">
+                <h3>教学论文</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>发表年份</th>
+                            <th>论文题目</th>
+                            <th>期刊/会议名称</th>
+                            <th>刊号/会议时间</th>
+                        </tr>
+                    </thead>
+                    {% for paper in achievements.teaching.papers %}
+                    <tr>
+                        <td>{{ paper.year }}</td>
+                        <td>{{ paper.title }}</td>
+                        <td>{{ paper.publication }}</td>
+                        <td>{{ paper.number }} / {{ paper.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+
+            <!-- 教材 -->
+            <section id="textbooks">
+                <h3>教材</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>出版年份</th>
+                            <th>教材名称</th>
+                            <th>获奖信息</th>
+                        </tr>
+                    </thead>
+                    {% for book in achievements.teaching.textbooks %}
+                    <tr>
+                        <td>{{ book.year }}</td>
+                        <td>{{ book.name }}</td>
+                        <td>{{ book.award_info }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+
+            <!-- 教改 -->
+            <section id="teaching-reform">
+                <h3>教改</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>获批年份</th>
+                            <th>项目名称</th>
+                            <th>层次</th>
+                        </tr>
+                    </thead>
+                    {% for reform in achievements.teaching.reform %}
+                    <tr>
+                        <td>{{ reform.year }}</td>
+                        <td>{{ reform.name }}</td>
+                        <td>{{ reform.level }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+        </section>
+
+        <!-- 科研栏目 -->
+        <section id="research">
+            <h2>科研</h2>
+
+            <!-- 科研成果 -->
+            <section id="research-achievements">
+                <h3>科研成果</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>获得年份</th>
+                            <th>成果名称</th>
+                            <th>层次</th>
+                        </tr>
+                    </thead>
+                    {% for achievement in achievements.research.achievements %}
+                    <tr>
+                        <td>{{ achievement.year }}</td>
+                        <td>{{ achievement.name }}</td>
+                        <td>{{ achievement.level }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+
+            <!-- 科研论文 -->
+            <section id="research-papers">
+                <h3>科研论文</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>发表年份</th>
+                            <th>论文题目</th>
+                            <th>期刊/会议名称</th>
+                            <th>刊号/会议时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paper in achievements.research.papers %}
+                        <tr>
+                            <td>{{ paper.year }}</td>
+                            <td>{{ paper.title }}</td>
+                            <td>{{ paper.publication }}</td>
+                            <td>{{ paper.number }} / {{ paper.date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 专利 -->
+            <section id="patents">
+                <h3>专利</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>申请号</th>
+                            <th>申请人</th>
+                            <th>发明创造名称</th>
+                        </tr>
+                    </thead>
+                    {% for patent in achievements.research.patents %}
+                    <tr>
+                        <td>{{ patent.application_number }}</td>
+                        <td>{{ patent.applicant }}</td>
+                        <td>{{ patent.invention_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+
+            <!-- 著作权 -->
+            <section id="copyrights">
+                <h3>著作权</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>登记号</th>
+                            <th>著作权人</th>
+                            <th>软件名称</th>
+                        </tr>
+                    </thead>
+                    {% for copyright in achievements.research.copyrights %}
+                    <tr>
+                        <td>{{ copyright.id }}</td>
+                        <td>{{ copyright.registration_number }}</td>
+                        <td>{{ copyright.owner }}</td>
+                        <td>{{ copyright.software_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+        </section>
+    </main>
+    <footer>
+        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
+    </footer>
+</body>
+</html>

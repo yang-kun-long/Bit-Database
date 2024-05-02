@@ -1,0 +1,156 @@
+/* 重置浏览器默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面整体样式 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+/* 导航栏样式 */
+nav {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    background: #555;
+}
+
+/* 页面内容区域样式 */
+.container {
+    max-width: 600px;
+    margin: 80px auto; /* 从导航栏下方开始，水平居中 */
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    text-align: center; /* 将激活按钮等元素居中 */
+}
+
+.container h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 表单样式 */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background: #5cb85c;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+button:hover {
+    background: #4cae4c;
+}
+
+.login-button {
+    background: #f4f4f4;
+    color: #333;
+}
+
+.login-button:hover {
+    background: #e0e0e0;
+}
+
+/* 页脚样式 */
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* 响应式设计：当屏幕宽度小于600px时，导航栏水平排列变为垂直排列 */
+@media (max-width: 600px) {
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
+
+/* 下拉菜单样式 */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    width: 200px;
+}
+
+/* 鼠标悬停时显示下拉菜单 */
+.user-avatar:hover .dropdown {
+    display: block;
+}
+
+/* 下拉菜单项样式 */
+.dropdown a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+/* 下拉菜单项悬停样式 */
+.dropdown a:hover {
+    background: #eee;
+}

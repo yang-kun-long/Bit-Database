@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>招生信息 - 网络攻防对抗技术研究所</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admissions.css') }}">
+</head>
+<body>
+    <header>
+        <h1>网络攻防对抗技术研究所</h1>
+    </header>
+    <nav>
+        <!-- 导航链接 -->
+    </nav>
+    <main>
+        <!-- 招生信息栏目 -->
+        <section id="admissions">
+            <h2>招生信息</h2>
+
+            <!-- 本科生招生 -->
+            <section id="undergraduate">
+                <h3>本科生招生</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>技术要求</th>
+                            <th>工作时间</th>
+                            <th>其他要求</th>
+                            <th>联系人</th>
+                            <th>联系方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detail in admissions.undergraduate %}
+                        <tr>
+                            <td>{{ detail.requirements }}</td>
+                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.other_requirements }}</td>
+                            <td>{{ detail.contact_person }}</td>
+                            <td>{{ detail.contact_info }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 硕士生招生 -->
+            <section id="master">
+                <h3>硕士生招生</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>技术要求</th>
+                            <th>工作时间</th>
+                            <th>其他要求</th>
+                            <th>联系人</th>
+                            <th>联系方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 使用Jinja2循环渲染硕士生的招生信息 -->
+                        {% for detail in admissions.master %}
+                        <tr>
+                            <td>{{ detail.requirements }}</td>
+                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.other_requirements }}</td>
+                            <td>{{ detail.contact_person }}</td>
+                            <td>{{ detail.contact_info }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 留学生招生 -->
+            <section id="international">
+                <h3>留学生招生</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>技术要求</th>
+                            <th>工作时间</th>
+                            <th>其他要求</th>
+                            <th>联系人</th>
+                            <th>联系方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 使用Jinja2循环渲染留学生的招生信息 -->
+                        {% for detail in admissions.international %}
+                        <tr>
+                            <td>{{ detail.requirements }}</td>
+                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.other_requirements }}</td>
+                            <td>{{ detail.contact_person }}</td>
+                            <td>{{ detail.contact_info }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            <!-- 博士生招生 -->
+            <section id="phd">
+                <h3>博士生招生</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>技术要求</th>
+                            <th>工作时间</th>
+                            <th>其他要求</th>
+                            <th>联系人</th>
+                            <th>联系方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 使用Jinja2循环渲染博士生的招生信息 -->
+                        {% for detail in admissions.phd %}
+                        <tr>
+                            <td>{{ detail.requirements }}</td>
+                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.other_requirements }}</td>
+                            <td>{{ detail.contact_person }}</td>
+                            <td>{{ detail.contact_info }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+
+
+
+        </section>
+    </main>
+    <footer>
+        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
+    </footer>
+</body>
+</html>

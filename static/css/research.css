@@ -1,0 +1,41 @@
+/* 您可以根据需要添加或修改样式 */
+
+header, footer {
+    text-align: center;
+    padding: 1em;
+    background-color: #f8f8f8;
+}
+
+nav {
+    /* 导航栏样式 */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+main {
+    margin: 1em;
+}
+
+section {
+    margin-bottom: 2em;
+}
+
+.course-info, .project-info {
+    background-color: #eef;
+    border: 1px solid #ddd;
+    padding: 1em;
+    margin: 1em 0;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+}

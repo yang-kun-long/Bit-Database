@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理系统登录</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>管理系统登录</h1>
+        <div class="flash-message" style="display:none;">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <p>{{ messages[0] }}</p>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <form method="post" action="/login">
+            <label for="userid">学号或教职工号:</label>
+            <input type="text" id="userid" name="userid" required>
+
+            <label for="password">密码:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">登录</button>
+            <button type="button" class="register-button">注册</button>
+        </form>
+    </div>
+
+    <script>
+        // 检查是否需要显示flash消息
+        var flashMessage = document.querySelector('.flash-message');
+        if (flashMessage.textContent.trim() !== '') {
+            flashMessage.style.display = 'block';
+        }
+        // 注册按钮点击事件
+        document.querySelector('.register-button').addEventListener('click', function() {
+            window.location.href = '/register';
+        });
+    </script>
+</body>
+</html>

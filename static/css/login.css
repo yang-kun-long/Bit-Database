@@ -1,0 +1,89 @@
+/* login.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    max-width: 400px;
+    margin: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* 确保输入框宽度合适 */
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.register-button {
+    margin-top: 10px;
+    background-color: #6c757d;
+}
+
+.register-button:hover {
+    background-color: #545b62;
+}
+
+.flash-message {
+    background: #ffcccc;
+    color: #ff0000;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+    display: none; /* 默认不显示 */
+}
+
+/* 添加一些间距到flash消息和表单之间 */
+.container > .flash-message:first-child {
+    margin-bottom: 20px;
+}
+
+/* 响应式设计，当屏幕宽度小于600px时，按钮堆叠 */
+@media (max-width: 600px) {
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
