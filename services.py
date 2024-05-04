@@ -1,18 +1,123 @@
-def get_faculty_info():
-    # 这里应该是查询数据库获取师资队伍信息的逻辑
-    # 暂时用一个示例字典列表代替
-    return [
-        {'name': '张三', 'title': '教授', 'position': '网络空间安全研究院院长'},
-        # ... 其他教师信息 ...
-    ]
+import pandas as pd
+from flask import session
+from models import LoginEvent,Students,Teachers
+from config import db
+from sqlalchemy import func,Integer
 
-def get_students_info():
-    # 这里应该是查询数据库获取学生信息的逻辑
-    # 暂时用一个示例字典列表代替
-    return [
-        {'id': 'S001', 'name': '李四', 'gender': '男', 'category': '硕士', 'supervisor': '张三教授'},
-        # ... 其他学生信息 ...
-    ]
+def get_login_logs(user_type, current_user_id):
+    # 根据用户类型和当前用户ID获取登录日志数据
+    if user_type == 'admin':
+        # 院长获取所有人员的登录日志
+        logs = db.session.query(LoginEvent).all()
+    elif user_type == 'teacher':
+        # 教师获取导师ID是当前用户ID的所有学生的登录日志
+        logs1 = db.session.query(LoginEvent).filter(
+            LoginEvent.tutor_id == current_user_id
+        ).all()
+        logs2 = db.session.query(LoginEvent).filter(
+            LoginEvent.co_tutor_id == current_user_id
+        ).all()
+        logs=logs1+logs2
+    else:
+        # 默认情况下，返回当前用户的登录日志
+        logs = db.session.query(LoginEvent).filter_by(user_id=current_user_id).all()
+    return logs
+
+def longin_log(user,ip_address):
+    if user.user_type == 'student':
+        student = Students.query.filter_by(id=user.id).first()
+        tutor_id = student.tutor_id
+        co_tutor_id = student.co_tutor_id
+    else:
+        tutor_id = None
+        co_tutor_id = None
+    login_event = LoginEvent(
+        user_id=user.id,
+        ip_address=ip_address,
+        session_id=session.sid if 'sid' in session else None,
+        tutor_id=tutor_id,
+        co_tutor_id=co_tutor_id,
+        user_name=user.username
+    )
+    return login_event
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls'}
+    ALLOWED_TEACHER_NAMES = {'教师信息'}
+    ALLOWED_STUDENT_NAMES = {'学生信息'}
+
+    # 检查文件扩展名是否允许
+    if '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+        # 检查文件名是否包含允许的文本
+        if any(name in filename for name in ALLOWED_TEACHER_NAMES):
+            return 1  # 表示教师信息
+        elif any(name in filename for name in ALLOWED_STUDENT_NAMES):
+            return 2  # 表示学生信息
+
+    # 如果文件扩展名不允许或文件名不包含特定的文本，则返回 None 或其他标识符
+    return None
+
+def process_graduate_status(value):
+    """
+    处理毕业状态，将字符串转换为布尔值。
+
+    :param value: 要处理的字符串。
+    :return: 布尔值，如果字符串为'是'或'1'，则返回True；否则返回False。
+    """
+    if value == '是' or value == '1':
+        return True
+    return False
+def process_empty_values(value, default=None):
+    """
+    处理空值或NaN，将它们转换为默认值。
+
+    :param value: 要检查的值。
+    :param default: 如果值是空或NaN，则使用此默认值。
+    :return: 检查后的值，如果原值为空或NaN，则返回default。
+    """
+    # 检查值是否为NaN
+    if pd.isna(value):
+        return default
+
+    # 检查值是否为空字符串
+    if value == '' or value == '无':
+        return default
+
+    # 如果值不是空或NaN，直接返回
+    return value
+
+#获取全职教师信息的函数
+def get_faculty_info(category):
+    teachers = db.session.query(Teachers).filter(
+        Teachers.category == category
+    ).all()
+    return teachers
+
+def get_students_by_year():
+    students_by_year = {}
+    for year, in sorted(Students.query.with_entities(func.date_part('year', Students.admission_time).cast(Integer)).filter(Students.is_graduate == False).distinct().all()):
+        students = Students.query.filter(
+            Students.is_graduate == False,
+            func.date_part('year', Students.admission_time) == year
+        ).order_by(Students.admission_time.asc()).all()  # 按照入学时间升序排列
+        students_by_year[year] = students
+
+    return students_by_year
+
+def get_graduated_students_by_year():
+    graduated_students_by_year = {}
+    for year, in sorted(
+            Students.query.with_entities(func.date_part('year', Students.admission_time).cast(Integer)).filter(
+                    Students.is_graduate == True).distinct().all()):
+        students = Students.query.filter(
+            Students.is_graduate == True,
+            func.date_part('year', Students.admission_time) == year
+        ).order_by(Students.admission_time.asc()).all()  # 按照入学时间升序排列
+        graduated_students_by_year[year] = students
+
+    return graduated_students_by_year
+
 def research_teaching_info():
     # 获取科研教学信息
     research_teaching_info = {

@@ -51,7 +51,83 @@ footer {
     text-align: center;
     padding: 10px 0;
 }
+.student-photos {
+    list-style: none;
+    padding: 0;
+}
 
+.student-photos li {
+    display: inline-block; /* 或者使用 block */
+    margin: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.student-photos img {
+    max-width: 100px; /* 或者您希望的任何宽度 */
+    max-height: 100px; /* 或者您希望的任何高度 */
+    border-radius: 50%; /* 圆形照片 */
+}
+.faculty-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.faculty-table th,
+.faculty-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.faculty-table th {
+    background-color: #f2f2f2;
+}
+
+.faculty-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.parttime-faculty-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.parttime-faculty-table th,
+.parttime-faculty-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.parttime-faculty-table th {
+    background-color: #f2f2f2;
+}
+
+.parttime-faculty-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.graduate-students-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.graduate-students-table th,
+.graduate-students-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.graduate-students-table th {
+    background-color: #f2f2f2;
+}
+
+.graduate-students-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 /* 响应式设计 */
 @media (max-width: 600px) {
     nav ul li {

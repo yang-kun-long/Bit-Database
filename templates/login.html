@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>管理系统登录</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
 </head>
 <body>
     <div class="container">
@@ -23,7 +24,7 @@
             <input type="password" id="password" name="password" required>
 
             <button type="submit">登录</button>
-            <button type="button" class="register-button">注册</button>
+            <button type="button" class="register-button">激活账户</button>
         </form>
     </div>
 
@@ -35,7 +36,7 @@
         }
         // 注册按钮点击事件
         document.querySelector('.register-button').addEventListener('click', function() {
-            window.location.href = '/register';
+            window.location.href = '/activation';
         });
     </script>
 </body>

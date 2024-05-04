@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activation Failed</title>
+    <!-- 引入 CSS 样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ activation_failed.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>账户激活失败</h1>
+        <!-- 显示 flash 消息 -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <p class="lead">请检查激活码是否正确，或者请求重新发送激活邮件。</p>
+        <!-- 返回首页或登录页面的链接 -->
+        <a href="{{ url_for('views.index') }}" class="btn btn-primary">返回首页</a>
+        <a href="{{ url_for('views.login') }}" class="btn btn-secondary">返回登录</a>
+    </div>
+    <!-- 引入 JavaScript 文件 -->
+    <script src="{{ url_for('static', filename='js/activation_failed.js') }}"></script>
+</body>
+</html>

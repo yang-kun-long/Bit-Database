@@ -4,12 +4,27 @@
     <meta charset="UTF-8">
     <title>关于我们 - 网络攻防对抗技术研究所</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <!-- 引入本地的 Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
 <body>
-    <header>
-        <h1>网络攻防对抗技术研究所</h1>
-    </header>
-    <nav>
+<!--    <nav>-->
+<!--        <ul>-->
+<!--            <li><a href="">首页</a></li>-->
+<!--            <li><a href="about">关于我们</a></li>-->
+<!--            <li><a href="news">动态消息</a></li>-->
+<!--            <li><a href="research">教学科研</a></li>-->
+<!--            <li><a href="research_achievements">研究成果</a></li>-->
+<!--            <li><a href="admissions">招生信息</a></li>-->
+<!--            <li><a href="cooperation">国际合作</a></li>-->
+
+<!--        </ul>-->
+<!--        <div id="user-avatar" class="user-avatar">-->
+<!--            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像" onclick="window.location.href='{{ url_for('views.login') }}'">-->
+<!--        </div>-->
+
+<!--    </nav>-->
+    <nav >
         <ul>
             <li><a href="#introduction">研究所简介</a></li>
             <li><a href="#faculty">师资队伍</a></li>
@@ -24,41 +39,137 @@
     <section id="faculty">
         <h2>师资队伍</h2>
         <h3>全职教师</h3>
-        <ul>
-            {% for faculty in faculty %}
-                <li>
-                    姓名：{{ faculty.name }}, 职称：{{ faculty.title }}, 职位：{{ faculty.position }}
-                </li>
-            {% endfor %}
-        </ul>
+        <table class="faculty-table">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>职称</th>
+                    <th>导师资格</th>
+                    <th>研究所职务</th>
+                    <th>社会兼职</th>
+                    <th>学院行政职务</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for faculty in faculty %}
+                <tr>
+                    <td>{{ faculty.name }}</td>
+                    <td>{{ faculty.title }}</td>
+                    <td>{{ faculty.qualification }}</td>
+                    <td>{{ faculty.duty }}</td>
+                    <td>{{ faculty.social_part_time }}</td>
+                    <td>{{ faculty.administrative_duty }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <h3>兼职教师</h3>
-        <!-- 兼职教师列表 -->
-        <ul>
-            <!-- 这里添加兼职教师的循环显示逻辑 -->
-        </ul>
+        <table class="parttime-faculty-table">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>职称</th>
+                    <th>工作单位</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for faculty in faculty_part %}
+                <tr>
+                    <td>{{ faculty.name }}</td>
+                    <td>{{ faculty.title }}</td>
+                    <td>{{ faculty.unit }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </section>
     <section id="students">
         <h2>学生信息</h2>
         <h3>在读学生</h3>
-        <ul>
-            {% for student in students %}
-                <li>
-                    学号：{{ student.id }}, 姓名：{{ student.name }}, 性别：{{ student.gender }}
+        {% for year, students1 in students.items() %}
+            <h4>{{ year }}届在校生</h4>
+            <ul class="student-photos">
+                {% for student in students1 %}
+                <li class="student-photo">
+                    <!-- 触发模态框的链接 -->
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#studentModal{{ student.id }}">
+                        <img src="{{ url_for('static', filename=student.photo_path) }}" alt="学生照片" class="student-photo-img">
+                        <span class="student-name">{{ student.name }}</span>
+                    </button>
+
+                    <!-- 模态框的结构 -->
+                    <div class="modal fade" id="studentModal{{ student.id }}" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="studentModalLabel">{{ student.name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- 学生的详细信息 -->
+                                    <p>学号: {{ student.student_id }}</p>
+                                    <p>姓名: {{ student.name }}</p>
+                                    <p>性别: {{ student.gender }}</p>
+                                    <p>类别: {{ student.category }}</p>
+                                    <p>国籍: {{ student.nationality }}</p>
+                                    <p>导师: {{ student.tutor }}</p>
+                                    <!-- 其他信息 -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
-            {% endfor %}
-        </ul>
-        <h3>毕业学生</h3>
-        <!-- 毕业学生信息列表 -->
-        <ul>
-            <!-- 这里添加毕业学生信息的循环显示逻辑 -->
-        </ul>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+       <h3>毕业学生</h3>
+        {% for year, students in students_graduate.items() %}
+            <h4>{{ year }}届毕业生</h4>
+            <table class="graduate-students-table">
+                <thead>
+                    <tr>
+                        <th>学号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>类别</th>
+                        <th>入学时间</th>
+                        <th>毕业时间</th>
+                        <th>初次就业单位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.student_id }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.gender }}</td>
+                        <td>{{ student.category }}</td>
+                        <td>{{ student.admission_time.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ student.graduation_time.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ student.first_employment_unit }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
     </section>
     <section id="contact">
-        <h2>联系我们</h3>
+        <h2>联系我们</h2>
         <p>这里是联系信息的介绍内容。</p>
     </section>
     <footer>
         <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
     </footer>
+
+
+    <!-- 引入本地的 Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+<!--    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>-->
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>批量导入用户</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/import_users.css') }}">
+
+</head>
+<body>
+    <h1>批量导入用户</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="post" action="/import_users" enctype="multipart/form-data">
+        <label for="file">选择Excel文件：</label>
+        <input type="file" id="file" name="file">
+        <label for="type">选择类型：</label>
+        <select id="type" name="type">
+            <option value="student">学生信息</option>
+            <option value="teacher">老师信息</option>
+        </select>
+        <button type="submit">导入用户</button>
+    </form>
+    <script src="{{ url_for('static', filename='js/import_users.js') }}"></script>
+</body>
+</html>
