@@ -3,33 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>动态消息 - 网络攻防对抗技术研究所</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- 引入自定义样式 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
-
 </head>
 <body>
-    <header>
-        <h1>网络攻防对抗技术研究所</h1>
-    </header>
-    <nav>
-        <!-- 导航链接 -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- 导航栏内容，可以使用您已有的 HTML 结构 -->
     </nav>
-    <main>
-        <section id="news-dynamic">
+
+    <div class="container">
+        <h1>动态消息</h1>
+
+        <div class="row">
+            <!-- 新闻动态 -->
             <h2>新闻动态</h2>
-            {% for item in news_data %}
-                <article>
-                    <h3>{{ item.title }}</h3>
-                    <p>撰稿人：{{ item.author }} | 发稿时间：{{ item.date }}</p>
-                    <img src="{{ url_for('static', filename=item.image_path) }}" alt="News Image">
-                    <video src="{{ url_for('static', filename=item.video_path) }}" controls></video>
-                    <div>{{ item.content }}</div>
-                </article>
+            {% for news_item in news_items %}
+            <div class="col-md-4">
+                <div class="news-item">
+                    <h3>{{ news_item.title }}</h3>
+                    <p>撰稿人：{{ news_item.author }}</p>
+                    <p>发稿时间：{{ news_item.publish_date }}</p>
+                    <!-- 显示新闻图片 -->
+                    <img src="{{ url_for('static', filename='images/' ~ news_item.image_path) }}" alt="新闻图片">
+                    <p>{{ news_item.summary }}</p>
+                    <!-- 提供文件下载链接 -->
+                    <a href="{{ url_for('download_news_file', filename=news_item.file_path) }}" class="btn btn-primary">下载文件</a>
+                </div>
+            </div>
             {% endfor %}
-        </section>
-        <!-- 通知通告和学术活动子栏目的类似循环 -->
-    </main>
-    <footer>
-        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
-    </footer>
+
+            <!-- 通知通告 -->
+            <div class="col-md-4">
+                <h2>通知通告</h2>
+                <!-- 通知内容 -->
+            </div>
+
+            <!-- 学术活动 -->
+            <div class="col-md-4">
+                <h2>学术活动</h2>
+                <!-- 学术活动内容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入 jQuery 和 Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.slim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

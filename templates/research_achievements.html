@@ -32,7 +32,7 @@
                     <!-- 表格内容 -->
                     {% for achievement in achievements.teaching.achievements %}
                     <tr>
-                        <td>{{ achievement.year }}</td>
+                        <td>{{ achievement.achievement_year }}</td>
                         <td>{{ achievement.name }}</td>
                         <td>{{ achievement.level }}</td>
                     </tr>
@@ -54,10 +54,10 @@
                     </thead>
                     {% for paper in achievements.teaching.papers %}
                     <tr>
-                        <td>{{ paper.year }}</td>
+                        <td>{{ paper.publication_year }}</td>
                         <td>{{ paper.title }}</td>
                         <td>{{ paper.publication }}</td>
-                        <td>{{ paper.number }} / {{ paper.date }}</td>
+                        <td>{{ paper.publication_number }} </td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -76,7 +76,7 @@
                     </thead>
                     {% for book in achievements.teaching.textbooks %}
                     <tr>
-                        <td>{{ book.year }}</td>
+                        <td>{{ book.publication_year }}</td>
                         <td>{{ book.name }}</td>
                         <td>{{ book.award_info }}</td>
                     </tr>
@@ -93,13 +93,15 @@
                             <th>获批年份</th>
                             <th>项目名称</th>
                             <th>层次</th>
+                            <th>描述</th>
                         </tr>
                     </thead>
                     {% for reform in achievements.teaching.reform %}
                     <tr>
-                        <td>{{ reform.year }}</td>
+                        <td>{{ reform.approval_year }}</td>
                         <td>{{ reform.name }}</td>
                         <td>{{ reform.level }}</td>
+                        <td>{{ reform.description }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -119,13 +121,15 @@
                             <th>获得年份</th>
                             <th>成果名称</th>
                             <th>层次</th>
+                            <th>描述</th>
                         </tr>
                     </thead>
                     {% for achievement in achievements.research.achievements %}
                     <tr>
-                        <td>{{ achievement.year }}</td>
+                        <td>{{ achievement.achievement_year }}</td>
                         <td>{{ achievement.name }}</td>
                         <td>{{ achievement.level }}</td>
+                        <td>{{ achievement.description }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -146,10 +150,10 @@
                     <tbody>
                         {% for paper in achievements.research.papers %}
                         <tr>
-                            <td>{{ paper.year }}</td>
+                            <td>{{ paper.publication_year }}</td>
                             <td>{{ paper.title }}</td>
                             <td>{{ paper.publication }}</td>
-                            <td>{{ paper.number }} / {{ paper.date }}</td>
+                            <td>{{ paper.publication_number }} </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -170,8 +174,8 @@
                     {% for patent in achievements.research.patents %}
                     <tr>
                         <td>{{ patent.application_number }}</td>
-                        <td>{{ patent.applicant }}</td>
-                        <td>{{ patent.invention_name }}</td>
+                        <td>{{ patent.inventors }}</td>
+                        <td>{{ patent.title }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -191,9 +195,9 @@
                     </thead>
                     {% for copyright in achievements.research.copyrights %}
                     <tr>
-                        <td>{{ copyright.id }}</td>
+                        <td>{{ copyright.registration_id }}</td>
                         <td>{{ copyright.registration_number }}</td>
-                        <td>{{ copyright.owner }}</td>
+                        <td>{{ copyright.holder }}</td>
                         <td>{{ copyright.software_name }}</td>
                     </tr>
                     {% endfor %}

@@ -17,27 +17,31 @@
         <!-- 教学工作 -->
         <section id="teaching">
             <h2>教学工作</h2>
-            <div class="course-info">
-                <h3>课程编号：CS101</h3>
-                <p>课程名称：计算机科学导论</p>
-                <p>课程性质：必修</p>
-                <p>学生层次：本科</p>
-                <p>授课时间：周一至周五 10:00-12:00</p>
-                <p>主讲教师：张教授</p>
-            </div>
-            <!-- 可以添加更多课程信息 -->
+            {% for work in teaching_works %}
+                <div class="course-info">
+                    <h3>课程编号：{{ work.course_id }}</h3>
+                    <p>课程名称：{{ work.course_name }}</p>
+                    <p>课程性质：{{ work.course_nature }}</p>
+                    <p>学生层次：{{ work.student_level }}</p>
+                    <p>授课时间：{{ work.teaching_time }}</p>
+                    <p>主讲教师：{{ work.teacher.name }}</p>
+                </div>
+            {% endfor %}
         </section>
 
         <!-- 科研工作 -->
         <section id="research_work">
             <h2>科研工作</h2>
-            <div class="project-info">
-                <h3>项目名称：网络安全防护系统</h3>
-                <p>项目性质：国家级重点项目</p>
-                <p>负责人：李教授</p>
-                <!-- 可以添加项目开始时间、结束时间、项目成果等信息 -->
-            </div>
-            <!-- 可以添加更多科研项目信息 -->
+            {% for project in research_works %}
+                <div class="project-info">
+                    <h3>项目名称：{{ project.project_name }}</h3>
+                    <p>项目性质：{{ project.project_nature }}</p>
+                    <p>负责人：{{ project.teacher.name }}</p>
+                    <p>开始时间：{{ project.start_date }}</p>
+                    <p>结束时间：{{ project.end_date }}</p>
+                    <!-- 可以添加项目开始时间、结束时间、项目成果等信息 -->
+                </div>
+            {% endfor %}
         </section>
     </main>
     <footer>

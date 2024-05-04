@@ -3,6 +3,30 @@ from datetime import datetime
 from config import db,student_categorys
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# 教学成果与教师关联表
+# teaching_achievements_teachers_association = db.Table('teaching_achievements_teachers_association',
+#     db.Column('teaching_achievement_id', db.Integer, db.ForeignKey('teaching_achievements.id'), primary_key=True),
+#     db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id'), primary_key=True)
+# )
+#
+# # 论文与教师关联表
+# papers_teachers_association = db.Table('papers_teachers_association',
+#     db.Column('paper_id', db.Integer, db.ForeignKey('papers.id'), primary_key=True),
+#     db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id'), primary_key=True)
+# )
+#
+# # 教改项目与教师关联表
+# teaching_reform_projects_teachers_association = db.Table('teaching_reform_projects_teachers_association',
+#     db.Column('teaching_reform_project_id', db.Integer, db.ForeignKey('teaching_reform_projects.id'), primary_key=True),
+#     db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id'), primary_key=True)
+# )
+#
+# # 科研成果与教师关联表
+# research_achievements_teachers_association = db.Table('research_achievements_teachers_association',
+#     db.Column('research_achievement_id', db.Integer, db.ForeignKey('research_achievements.id'), primary_key=True),
+#     db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id'), primary_key=True)
+# )
+
 class Users(UserMixin, db.Model):
     __tablename__ = 'users'
 
@@ -143,6 +167,32 @@ class Teachers(db.Model):
     office_phone = db.Column(db.String(20),nullable=True)  # 办公电话
     photo_path = db.Column(db.String(255),nullable=True)  # 照片路径
     remarks = db.Column(db.Text,nullable=True)  # 备注信息
+    # teaching_achievements = db.relationship(
+    #     'TeachingAchievements',
+    #     secondary=teaching_achievements_teachers_association,
+    #     backref=db.backref('teachers', lazy='dynamic')
+    # )
+    #
+    # # 教学论文
+    # teaching_papers = db.relationship(
+    #     'TeachingPapers',
+    #     secondary=papers_teachers_association,
+    #     backref=db.backref('teachers', lazy='dynamic')
+    # )
+    #
+    # # 教改项目
+    # teaching_reform_projects = db.relationship(
+    #     'TeachingReformProjects',
+    #     secondary=teaching_reform_projects_teachers_association,
+    #     backref=db.backref('teachers', lazy='dynamic')
+    # )
+    #
+    # # 科研成果
+    # research_achievements = db.relationship(
+    #     'ResearchAchievements',
+    #     secondary=research_achievements_teachers_association,
+    #     backref=db.backref('teachers', lazy='dynamic')
+    # )
 
     # 定义与用户表的关联
     user = db.relationship('Users', backref=db.backref('teachers', lazy='dynamic'), foreign_keys=[teacher_id])
@@ -180,3 +230,104 @@ class Teachers(db.Model):
         user = Users(id=self.teacher_id, username=self.name, password_hash=password_hash, email=self.email, phone=self.mobile, user_type='teacher')
         db.session.add(user)
         db.session.commit()
+class TeachingWork(db.Model):
+    __tablename__ = 'teaching_work'
+
+    id = db.Column(db.BIGINT, primary_key=True)  # 教学工作ID，主键
+    course_id = db.Column(db.BIGINT, nullable=False)  # 课程编号
+    course_name = db.Column(db.String(100), nullable=False)  # 课程名称
+    course_nature = db.Column(db.String(50), nullable=False)  # 课程性质
+    student_level = db.Column(db.String(50), nullable=False)  # 学生层次
+    teaching_time = db.Column(db.DateTime, nullable=False)  # 授课时间
+    teacher_id = db.Column(db.BIGINT, db.ForeignKey('teachers.id'), nullable=False)  # 主讲教师ID
+    teacher_name = db.Column(db.String(50), nullable=False)
+
+    # 定义与教师表的关联
+    teacher = db.relationship('Teachers', backref=db.backref('teaching_works', lazy='dynamic'), foreign_keys=[teacher_id])
+class ResearchWork(db.Model):
+    __tablename__ = 'research_work'
+
+    id = db.Column(db.BIGINT, primary_key=True)  # 科研工作ID，主键
+    project_name = db.Column(db.String(100), nullable=False)  # 项目名称
+    project_nature = db.Column(db.String(50), nullable=False)  # 项目性质
+    start_date = db.Column(db.Date, nullable=True)  # 项目开始日期
+    end_date = db.Column(db.Date, nullable=True)  # 项目结束日期
+    teacher_id = db.Column(db.BIGINT, db.ForeignKey('teachers.id'), nullable=False)  # 承担项目的教师ID
+    teacher_name = db.Column(db.String(50), nullable=False)
+
+    # 定义与教师表的关联
+    # teacher = db.relationship('Teachers', backref=db.backref('research_works', lazy='dynamic'), foreign_keys=[teacher_id])
+
+
+class TeachingAchievements(db.Model):
+    __tablename__ = 'teaching_achievements'
+
+    id = db.Column(db.Integer, primary_key=True)
+    achievement_year = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    level = db.Column(db.String(100), nullable=False)  # 层次：国家、省部、校级
+    description = db.Column(db.Text, nullable=True)
+
+    # 定义与教师表的关联
+    # teachers = db.relationship('Teachers', secondary=teaching_achievements_teachers_association)
+class Papers(db.Model):
+    __tablename__ = 'papers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    publication_year = db.Column(db.Integer, nullable=False)
+    tupe=db.Column(db.String(255), nullable=False) # 类型：教学，科研
+    title = db.Column(db.String(255), nullable=False)
+    publication = db.Column(db.String(255), nullable=False)  # 期刊/会议名称
+    publication_number = db.Column(db.String(100), nullable=True)  # 刊号/会议时间
+
+    # teachers = db.relationship('Teachers', secondary=papers_teachers_association)
+class Textbooks(db.Model):
+    __tablename__ = 'textbooks'
+
+    id = db.Column(db.Integer, primary_key=True)
+    publication_year = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    award_info = db.Column(db.String(255), nullable=True)  # 获奖信息
+
+
+class TeachingReformProjects(db.Model):
+    __tablename__ = 'teaching_reform_projects'
+
+    id = db.Column(db.Integer, primary_key=True)
+    approval_year = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    level = db.Column(db.String(100), nullable=False)  # 层次：国家、省部、校级
+    description = db.Column(db.Text, nullable=True)
+
+    # 定义与教师表的关联
+    # teachers = db.relationship('Teachers', secondary=teaching_reform_projects_teachers_association)
+
+
+class ResearchAchievements(db.Model):
+    __tablename__ = 'research_achievements'
+
+    id = db.Column(db.Integer, primary_key=True)
+    achievement_year = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    level = db.Column(db.String(100), nullable=False)  # 层次：国家、省部、校级
+    description = db.Column(db.Text, nullable=True)
+
+    # # 定义与教师表的关联
+    # teachers = db.relationship('Teachers', secondary=research_achievements_teachers_association)
+class Patents(db.Model):
+    __tablename__ = 'patents'
+
+    id = db.Column(db.Integer, primary_key=True)
+    application_year = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    application_number = db.Column(db.String(100), nullable=False)  # 专利申请号
+    inventors = db.Column(db.String(255), nullable=False)  # 专利申请人（可以是多个，以某种方式分隔）
+class Copyrights(db.Model):
+    __tablename__ = 'copyrights'
+
+    id = db.Column(db.Integer, primary_key=True)
+    registration_id = db.Column(db.String(100), nullable=False)
+    registration_number = db.Column(db.String(100), nullable=False)  # 登记号
+    holder = db.Column(db.String(255), nullable=False)  # 著作权人
+    software_name = db.Column(db.String(255), nullable=False)  # 软件名称
+

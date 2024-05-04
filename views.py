@@ -1,11 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash,session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from config import db,app  # 确保从包根目录导入 app 和 db
+from config import app  # 确保从包根目录导入 app 和 db
 from models import Users, Students,Teachers,LoginEvent
-from services import (get_faculty_info, get_students_by_year, research_teaching_info,
-                     get_achievements_info, get_admissions_info, get_cooperation_info,
-                      get_news_info,process_empty_values,allowed_file,longin_log,get_login_logs,
-                      process_graduate_status,get_graduated_students_by_year)
+from services import *
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 import jwt
 from emails import generate_activation_code,send_verification_code
@@ -41,15 +38,18 @@ def load_user(userid):
 def index():
     return render_template('index.html')
 
-@views_blueprint.route('/')
-def research_achievements_page():
+@views_blueprint.route('/research_achievements')
+def research_achievements():
     research_achievements = get_achievements_info()
     # 将研究成果数据传递给模板
     return render_template('research_achievements.html', achievements=research_achievements)
 @views_blueprint.route('/research')
 def research_teaching():
     # 将教学和科研信息传递给模板
-    return render_template('research.html', info=research_teaching_info)
+    teachers = Teachers.query.all()
+    teaching_works = TeachingWork.query.all()
+    research_works = ResearchWork.query.all()
+    return render_template('research.html', teachers=teachers, teaching_works=teaching_works, research_works=research_works)
 @views_blueprint.route('/news')
 def news():
     # 渲染新闻动态页面并传递新闻数据
@@ -225,95 +225,53 @@ def update_user_info():
     # 返回用户主页
     return redirect(url_for('views.user_page'))
 # 导入用户的路由
-@views_blueprint.route('/import_users', methods=['GET', 'POST'])
-def import_users():
+@views_blueprint.route('/import_data', methods=['GET', 'POST'])
+def import_data():
     if request.method == 'POST':
         # 获取上传的文件
         file = request.files['file']
-        if file.filename == '':
-            flash('请选择一个文件')
-            return redirect(url_for('import_users'))
-        if file and allowed_file(file.filename):
-            # 获取用户选择的导入类型
-            type_selection = request.form.get('type')
-            if type_selection == 'student' and allowed_file(file.filename)==2:
-                # 导入学生信息
-                df = pd.read_excel(file)
-                for index, row in df.iterrows():
-                    student_id = row['学生ID']
-                    name = row['姓名']
-                    english_name = process_empty_values(row['英语姓名'])
-                    gender = row['性别']
-                    category = row['类别']
-                    nationality = process_empty_values(row['国籍'])
-                    admission_time = process_empty_values(row['入学时间'])
-                    tutor_id = process_empty_values(row['导师工号'])
-                    co_tutor_id = process_empty_values(row['副导师工号'])
-                    tutor_name = process_empty_values(row['导师姓名'])
-                    co_tutor_name = process_empty_values(process_empty_values(row['副导师姓名']))
-                    birth_date = process_empty_values(row['出生日期'])
-                    email = row['邮箱']
-                    mobile = process_empty_values(row['手机'])
-                    remarks = process_empty_values(row['备注'])
-                    is_graduate = process_graduate_status(row['是否毕业'])
-                    graduate_time = process_empty_values(row['毕业时间'])
-                    first_employment_unit = process_empty_values(row['首次就业单位'])
-                    # 创建学生对象
-                    existing_student = Students.query.filter_by(id=student_id).first()
-                    if existing_student:
-                        continue  # 如果已存在，跳过
-                    student = Students(student_id=student_id, name=name, english_name=english_name,
-                                       gender=gender, category=category, nationality=nationality,
-                                       admission_time=admission_time, tutor_id=tutor_id,
-                                       co_tutor_id=co_tutor_id, birth_date=birth_date,
-                                       email=email, mobile=mobile, remarks=remarks,
-                                       is_graduate=is_graduate, graduation_time=graduate_time,
-                                       first_employment_unit=first_employment_unit,
-                                       tutor=tutor_name, co_tutor=co_tutor_name)
-                    # 添加到数据库
-                    db.session.add(student)
-                    db.session.commit()
-            elif type_selection == 'teacher' and allowed_file(file.filename)==1:
-                # 导入教师信息
-                df = pd.read_excel(file)
-                for index, row in df.iterrows():
-                    teacher_id = row['工号']
-                    name = row['姓名']
-                    english_name = process_empty_values(row['英文名'])
-                    gender = row['性别']
-                    category = row['类别']
-                    nationality = process_empty_values(row['国籍'])
-                    unit = process_empty_values(row['单位'])
-                    title = process_empty_values(row['职称'])
-                    qualification = process_empty_values(row['导师资格'])
-                    duty = process_empty_values(row['研究所职务'])
-                    birth_date = process_empty_values(row['出生日期'])
-                    email = row['电子邮件地址']
-                    mobile = process_empty_values(row['手机'])
-                    office_phone = process_empty_values(row['办公电话'])
-                    remarks = process_empty_values(row['备注信息'])
-                    social_part_time = process_empty_values(row['社会兼职'])
-                    administrative_duty= process_empty_values(row['学院行政职务'])
-                    existing_student = Teachers.query.filter_by(id=teacher_id).first()
-                    if existing_student:
-                        continue  # 如果已存在，跳过
-                    # 创建教师对象
-                    teacher = Teachers(teacher_id=teacher_id, name=name, english_name=english_name,
-                                       gender=gender, category=category, nationality=nationality,
-                                       unit=unit, title=title, qualification=qualification, duty=duty,
-                                       birth_date=birth_date, email=email, mobile=mobile,
-                                       office_phone=office_phone, remarks=remarks,
-                                       social_part_time=social_part_time,
-                                       administrative_duty=administrative_duty)
-                    # 添加到数据库
-                    db.session.add(teacher)
-                    db.session.commit()
-            else:
-                flash('无效的导入类型')
-                return redirect(url_for('views.import_users'))
-            flash('用户已成功导入！')
-            return redirect(url_for('views.import_users'))
-    return render_template('import_users.html')
+        data_type = request.form['data_type']
+        if not file:
+            flash('请选择要上传的文件。')
+            return redirect(url_for('import_data_view'))
+        file_type = get_file_type(file)
+        if (file_type =='csv'):
+            df= pd.read_csv(file)
+
+        elif(file_type in [ 'xlsx', 'xls']):
+            df= pd.read_excel(file,engine='openpyxl')
+        else:
+            flash('不支持的文件类型。')
+            return redirect(url_for('views.import_data'))
+        if data_type == 'student':
+            import_student_info(df)
+        elif data_type == 'teacher':
+            import_teacher_info(df)
+        elif data_type == 'research_work':
+            import_research_work_info(df)
+        elif data_type == 'teaching_work':
+            import_teaching_work_info(df)
+        elif data_type == 'teaching_achievements':
+            import_teaching_achievements_info(df)
+        elif data_type == 'teaching_papers':
+            import_papers_info(df)
+        elif data_type == 'textbooks':
+            import_textbooks_info(df)
+        elif data_type == 'teaching_reform':
+            import_teaching_reform_info(df)
+        elif data_type == 'research_achievements':
+            import_research_achievements_info(df)
+        elif data_type == 'research_papers':
+            import_papers_info(df)
+        elif data_type == 'patents':
+            import_patents_info(df)
+        elif data_type == 'copyrights':
+            import_copyrights_info(df)
+        elif data_type == 'admissions':
+            import_admissions_info(df)
+        elif data_type == 'international_cooperation':
+            import_international_cooperation_info(df)
+    return render_template('import_data.html')
 
 # 检查文件是否允许上传
 

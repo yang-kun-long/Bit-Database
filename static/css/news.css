@@ -1,79 +1,63 @@
 /* news.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #fff;
-    color: #333;
-}
-
-header {
-    background: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    background: #444;
-    text-align: center;
-    margin: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 10px;
-}
-
-nav a {
-    text-decoration: none;
-    color: white;
-    background: #444;
-    padding: 10px 15px;
-}
-
-nav a:hover, nav a.active {
-    background: #555;
-}
-
-main {
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
 }
 
-article {
-    margin-bottom: 20px;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+h1, h2, h3, p {
+    margin: 0 0 1rem 0;
 }
 
-article h3 {
-    margin: 0 0 10px 0;
-}
-
-article p {
-    font-size: 0.9em;
-    color: #666;
-    margin: 0;
-}
-
-footer {
-    background: #333;
-    color: #fff;
+h1 {
     text-align: center;
-    padding: 10px 0;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-md-4 {
     position: relative;
-    bottom: 0;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+}
+
+.news-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.news-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+.news-item .btn-primary {
+    margin-top: 10px;
+}
+
+.img-fluid {
     width: 100%;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-video {
-    max-width: 100%;
-    height: auto;
+/* 响应式设计 */
+@media (max-width: 767px) {
+    .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
