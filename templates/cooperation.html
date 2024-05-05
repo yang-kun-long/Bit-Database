@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>国际合作 - 网络攻防对抗技术研究所</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cooperation.css') }}">
-
 </head>
 <body>
     <header>
@@ -14,23 +13,30 @@
         <!-- 导航链接 -->
     </nav>
     <main>
-        <section id="international-cooperation">
-            <h2>国际合作</h2>
+        <section id="cooperation">
+            <h2>国际合作信息</h2>
             <table>
                 <thead>
                     <tr>
                         <th>大学/企业名称</th>
                         <th>所属国家</th>
                         <th>合作项目</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>状态</th>
+                        <th>描述</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- 使用Jinja2循环渲染国际合作信息 -->
-                    {% for cooperation in cooperation %}
+                    {% for item in cooperation %}
                     <tr>
-                        <td>{{ cooperation.university_name }}</td>
-                        <td>{{ cooperation.country }}</td>
-                        <td>{{ cooperation.project }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.country }}</td>
+                        <td>{{ item.project }}</td>
+                        <td>{{ item.start_date.strftime('%Y-%m-%d') if item.start_date }}</td>
+                        <td>{{ item.end_date.strftime('%Y-%m-%d') if item.end_date }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.description }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

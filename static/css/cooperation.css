@@ -1,23 +1,53 @@
-/* cooperation.css */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
 }
 
 header, footer {
     text-align: center;
     padding: 1em;
-    background-color: #f8f8f8;
+    background-color: #333;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
 }
 
 nav {
-    /* 导航栏样式 */
+    /* 导航栏样式，根据需要添加 */
+    background: #444;
+    padding: 0.5em;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    display: inline-block;
+}
+
+nav a:hover {
+    background-color: #555;
+}
+
+main {
+    padding: 1em;
+    background: white;
+    margin: 1em;
+}
+
+section {
+    margin-bottom: 1em;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 table, th, td {
@@ -30,22 +60,65 @@ th, td {
 }
 
 th {
-    background-color: #333;
+    background-color: #4CAF50;
     color: white;
 }
 
-tr:nth-child(even) {
+th:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+th:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-tr:hover {
+tbody tr:hover {
     background-color: #eaeaea;
 }
 
 footer {
     background-color: #333;
     color: white;
-    position: fixed;
+    text-align: center;
+    padding: 1em;
+    position: relative;
     bottom: 0;
     width: 100%;
+}
+
+/* 响应式设计：当屏幕宽度小于600px时，表格在每行只显示一个表头 */
+@media screen and (max-width: 600px) {
+    table thead {
+        display: none;
+    }
+
+    table, table tbody, table tr, table td {
+        display: block;
+        width: 100%;
+    }
+
+    table tr {
+        margin-bottom: 1em;
+    }
+
+    table td {
+        text-align: right;
+        padding-left: 50%;
+        text-align: right;
+        position: relative;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
 }

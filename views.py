@@ -74,9 +74,9 @@ def download_zone():
     return render_template('download_zone.html')
 @views_blueprint.route('/cooperation')
 def cooperation_page():
-    cooperation =get_cooperation_info()
+    cooperation_info = InternationalPartnership.query.all()
     # 将招生信息数据传递给模板
-    return render_template('cooperation.html', cooperation=cooperation)
+    return render_template('cooperation.html', cooperation=cooperation_info)
 
 
 @views_blueprint.route('/about')

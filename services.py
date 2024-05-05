@@ -445,17 +445,30 @@ def import_admissions_info(df):
     try:
         for index, row in df.iterrows():
             # 假设df已经包含所有需要的列
-            admission = AdmissionInfo(
+            # 检查数据库中是否已经存在相同的记录
+            existing_admission = AdmissionInfo.query.filter_by(
                 category=row['招生类别'],
-                technical_requirements=row['技术要求'],
                 study_mode=row['学习形式'],
+                technical_requirements=row['技术要求'],
                 work_schedule=row['工作时间'],
                 other_requirements=row['其他要求'],
                 contact_person=row['联系人'],
                 contact_information=row['联系方式']
-            )
-            # 添加到数据库
-            db.session.add(admission)
+            ).first()
+
+            if not existing_admission:
+                # 如果记录不存在，创建新的招生信息记录
+                admission = AdmissionInfo(
+                    category=row['招生类别'],
+                    technical_requirements=row['技术要求'],
+                    study_mode=row['学习形式'],
+                    work_schedule=row['工作时间'],
+                    other_requirements=row['其他要求'],
+                    contact_person=row['联系人'],
+                    contact_information=row['联系方式']
+                )
+                # 添加到数据库
+                db.session.add(admission)
 
             if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
                 db.session.commit()
@@ -472,7 +485,43 @@ def import_admissions_info(df):
     finally:
         db.session.remove()  # 关闭会话
 def import_international_cooperation_info(df):
-    pass
+    try:
+        for index, row in df.iterrows():
+            # 检查数据库中是否已经存在相同的记录
+            existing_record = InternationalPartnership.query.filter_by(
+                name=row['大学/企业名称'],
+                country=row['所属国家'],
+                project=row['合作项目']
+            ).first()
+
+            if not existing_record:
+                # 如果记录不存在，创建新的国际合作记录
+                new_partnership = InternationalPartnership(
+                    name=row['大学/企业名称'],
+                    country=row['所属国家'],
+                    project=row['合作项目'],
+                    start_date=row['开始时间'],
+                    end_date=row['结束时间'],
+                    status=row['状态'],
+                    description=row['描述']
+                )
+                db.session.add(new_partnership)
+
+            if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
+                db.session.commit()
+
+        db.session.commit()  # 提交所有剩余的记录
+        flash('国际合作信息导入成功。')
+
+    except SQLAlchemyError as e:
+        db.session.rollback()  # 出错时回滚事务
+        flash('导入失败：' + str(e))
+    except Exception as e:
+        db.session.rollback()
+        flash('导入过程中发生错误：' + str(e))
+    finally:
+        db.session.remove()  # 关闭会话
+
 def import_student_info(df):
     try:
         for index, row in df.iterrows():

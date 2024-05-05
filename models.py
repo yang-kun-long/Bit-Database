@@ -343,3 +343,14 @@ class AdmissionInfo(db.Model):
     contact_person = db.Column(db.String(50), nullable=True)  # 联系人
     contact_information = db.Column(db.String(100), nullable=True)  # 联系
 
+class InternationalPartnership(db.Model):
+    __tablename__ = 'international_partnerships'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)  # 大学/企业名称
+    country = db.Column(db.String(100), nullable=False)  # 所属国家
+    project = db.Column(db.String(255), nullable=False)  # 合作项目
+    start_date = db.Column(db.Date, nullable=True)  # 合作开始时间
+    end_date = db.Column(db.Date, nullable=True)  # 合作结束时间
+    status = db.Column(db.String(50), nullable=True)  # 合作状态（如：进行中、已完成、暂停等）
+    description = db.Column(db.Text, nullable=True)  # 合作项目描述或详情
