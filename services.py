@@ -442,7 +442,35 @@ def get_achievements_info():
     }
     return achievements
 def import_admissions_info(df):
-    pass
+    try:
+        for index, row in df.iterrows():
+            # 假设df已经包含所有需要的列
+            admission = AdmissionInfo(
+                category=row['招生类别'],
+                technical_requirements=row['技术要求'],
+                study_mode=row['学习形式'],
+                work_schedule=row['工作时间'],
+                other_requirements=row['其他要求'],
+                contact_person=row['联系人'],
+                contact_information=row['联系方式']
+            )
+            # 添加到数据库
+            db.session.add(admission)
+
+            if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
+                db.session.commit()
+
+        db.session.commit()  # 提交所有剩余的记录
+        flash('招生信息导入成功。')
+
+    except SQLAlchemyError as e:
+        db.session.rollback()  # 出错时回滚事务
+        flash('导入失败：' + str(e))
+    except Exception as e:
+        db.session.rollback()
+        flash('导入过程中发生错误：' + str(e))
+    finally:
+        db.session.remove()  # 关闭会话
 def import_international_cooperation_info(df):
     pass
 def import_student_info(df):
@@ -565,49 +593,28 @@ def get_graduated_students_by_year():
     return graduated_students_by_year
 
 def get_admissions_info():
-    admissions_info = {
-        'undergraduate': [
-            {
-                'requirements': '计算机科学基础',
-                'work_hours': '全日制',
-                'other_requirements': '良好的逻辑思维能力',
-                'contact_person': '张老师',
-                'contact_info': 'zhang@example.com'
-            },
-            # 可以添加更多的招生信息条目
-        ],
-        'master': [
-            {
-                'requirements': '相关领域硕士学位',
-                'work_hours': '周一至周五',
-                'other_requirements': '研究背景或经验',
-                'contact_person': '李老师',
-                'contact_info': 'li@example.com'
-            },
-            # 可以添加更多的招生信息条目
-        ],
-        'phd': [
-            {
-                'requirements': '相关领域博士学位',
-                'work_hours': '弹性工作制',
-                'other_requirements': '高质量的研究成果',
-                'contact_person': '王老师',
-                'contact_info': 'wang@example.com'
-            },
-            # 可以添加更多的招生信息条目
-        ],
-        'international': [
-            {
-                'requirements': '良好的英语能力',
-                'work_hours': '周一至周五',
-                'other_requirements': '适应不同文化的能力',
-                'contact_person': '赵老师',
-                'contact_info': 'zhao@example.com'
-            },
-            # 可以添加更多的招生信息条目
-        ]
+    all_admissions = AdmissionInfo.query.all()
+
+    # 根据类别组织招生信息
+    admissions = {
+        'undergraduate': [],
+        'master': [],
+        'phd': [],
+        'international': []
     }
-    return admissions_info
+
+    for admission in all_admissions:
+        # 假设 category 字段存储了招生类别信息，如 "本科生", "硕士生", "博士生", "留学生"
+        # 根据实际情况，您可能需要调整这里的逻辑来匹配您的数据
+        if admission.category == "本科生":
+            admissions['undergraduate'].append(admission)
+        elif admission.category == "硕士生":
+            admissions['master'].append(admission)
+        elif admission.category == "博士生":
+            admissions['phd'].append(admission)
+        elif admission.category == "留学生":
+            admissions['international'].append(admission)
+    return admissions
 def get_cooperation_info():
     cooperation_info = [
         {

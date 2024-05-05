@@ -1,31 +1,42 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
 }
 
 header, footer {
     text-align: center;
     padding: 1em;
     background-color: #f8f8f8;
+    color: #333;
+}
+
+header h1 {
+    margin: 0;
 }
 
 nav {
     /* 导航栏样式 */
 }
 
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
     text-align: left;
     padding: 8px;
+    border: 1px solid #ddd;
 }
 
 th {
@@ -33,18 +44,39 @@ th {
     color: white;
 }
 
-tr:nth-child(even) {
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #333;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-tr:hover {
+tbody tr:hover {
     background-color: #eaeaea;
 }
 
 footer {
     background-color: #333;
     color: white;
+    text-align: center;
+    padding: 1em;
     position: relative;
     bottom: 0;
     width: 100%;
+}
+
+/* 为每个招生信息表格添加间距，使其整齐排列 */
+#admissions section {
+    margin-bottom: 20px;
+}
+
+/* 为每个招生信息表格的标题添加样式 */
+#admissions h3 {
+    background-color: #eee;
+    padding: 8px;
+    margin: 0;
 }

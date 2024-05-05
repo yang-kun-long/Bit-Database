@@ -24,6 +24,7 @@
                 <table>
                     <thead>
                         <tr>
+                           <th>学习形式</th>
                             <th>技术要求</th>
                             <th>工作时间</th>
                             <th>其他要求</th>
@@ -34,11 +35,12 @@
                     <tbody>
                         {% for detail in admissions.undergraduate %}
                         <tr>
-                            <td>{{ detail.requirements }}</td>
-                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.study_mode }}</td>
+                            <td>{{ detail.technical_requirements }}</td>
+                            <td>{{ detail.work_schedule }}</td>
                             <td>{{ detail.other_requirements }}</td>
                             <td>{{ detail.contact_person }}</td>
-                            <td>{{ detail.contact_info }}</td>
+                            <td>{{ detail.contact_information }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -51,6 +53,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>学习形式</th>
                             <th>技术要求</th>
                             <th>工作时间</th>
                             <th>其他要求</th>
@@ -62,11 +65,12 @@
                         <!-- 使用Jinja2循环渲染硕士生的招生信息 -->
                         {% for detail in admissions.master %}
                         <tr>
-                            <td>{{ detail.requirements }}</td>
-                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.study_mode }}</td>
+                            <td>{{ detail.technical_requirements }}</td>
+                            <td>{{ detail.work_schedule }}</td>
                             <td>{{ detail.other_requirements }}</td>
                             <td>{{ detail.contact_person }}</td>
-                            <td>{{ detail.contact_info }}</td>
+                            <td>{{ detail.contact_information }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -79,6 +83,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>学习形式</th>
                             <th>技术要求</th>
                             <th>工作时间</th>
                             <th>其他要求</th>
@@ -90,11 +95,12 @@
                         <!-- 使用Jinja2循环渲染留学生的招生信息 -->
                         {% for detail in admissions.international %}
                         <tr>
-                            <td>{{ detail.requirements }}</td>
-                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.study_mode }}</td>
+                            <td>{{ detail.technical_requirements }}</td>
+                            <td>{{ detail.work_schedule }}</td>
                             <td>{{ detail.other_requirements }}</td>
                             <td>{{ detail.contact_person }}</td>
-                            <td>{{ detail.contact_info }}</td>
+                            <td>{{ detail.contact_information }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -106,6 +112,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>学习形式</th>
                             <th>技术要求</th>
                             <th>工作时间</th>
                             <th>其他要求</th>
@@ -117,11 +124,12 @@
                         <!-- 使用Jinja2循环渲染博士生的招生信息 -->
                         {% for detail in admissions.phd %}
                         <tr>
-                            <td>{{ detail.requirements }}</td>
-                            <td>{{ detail.work_hours }}</td>
+                            <td>{{ detail.study_mode }}</td>
+                            <td>{{ detail.technical_requirements }}</td>
+                            <td>{{ detail.work_schedule }}</td>
                             <td>{{ detail.other_requirements }}</td>
                             <td>{{ detail.contact_person }}</td>
-                            <td>{{ detail.contact_info }}</td>
+                            <td>{{ detail.contact_information }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

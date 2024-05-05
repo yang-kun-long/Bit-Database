@@ -331,3 +331,15 @@ class Copyrights(db.Model):
     holder = db.Column(db.String(255), nullable=False)  # 著作权人
     software_name = db.Column(db.String(255), nullable=False)  # 软件名称
 
+class AdmissionInfo(db.Model):
+    __tablename__ = 'admission_info'
+
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String(50), nullable=False)  # 招生类别
+    technical_requirements = db.Column(db.Text, nullable=True)  # 技术要求
+    study_mode = db.Column(db.String(50), nullable=True)  # 学习形式（全日制、在职、远程教育等）
+    work_schedule = db.Column(db.String(100), nullable=True)  # 工作时间
+    other_requirements = db.Column(db.Text, nullable=True)  # 其他要求
+    contact_person = db.Column(db.String(50), nullable=True)  # 联系人
+    contact_information = db.Column(db.String(100), nullable=True)  # 联系
+
