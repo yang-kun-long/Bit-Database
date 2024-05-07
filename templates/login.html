@@ -3,41 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>管理系统登录</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 
+    <!-- 引入Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
 </head>
 <body>
+    {% include 'base/navbar.html' %}
     <div class="container">
-        <h1>管理系统登录</h1>
-        <div class="flash-message" style="display:none;">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <p>{{ messages[0] }}</p>
-                {% endif %}
-            {% endwith %}
+        <h1 class="text-center mt-5">管理系统登录</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="post" action="/login">
+                    <div class="form-group">
+                        <label for="userid">学号或教职工号:</label>
+                        <input type="text" id="userid" name="userid" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码:</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </form>
+            </div>
         </div>
-        <form method="post" action="/login">
-            <label for="userid">学号或教职工号:</label>
-            <input type="text" id="userid" name="userid" required>
-
-            <label for="password">密码:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">登录</button>
-            <button type="button" class="register-button">激活账户</button>
-        </form>
     </div>
 
+    <!-- 引入Bootstrap JS -->
+    <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
+
     <script>
-        // 检查是否需要显示flash消息
-        var flashMessage = document.querySelector('.flash-message');
-        if (flashMessage.textContent.trim() !== '') {
-            flashMessage.style.display = 'block';
-        }
-        // 注册按钮点击事件
-        document.querySelector('.register-button').addEventListener('click', function() {
-            window.location.href = '/activation';
-        });
+            $(function () {
+                //禁用“确认重新提交表单”
+                window.history.replaceState(null, null, window.location.href);
+            })
     </script>
 </body>
 </html>

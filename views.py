@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash,session
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from config import app  # 确保从包根目录导入 app 和 db
-from models import Users, Students,Teachers,LoginEvent
 from services import *
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 import jwt
@@ -42,14 +41,16 @@ def index():
 def research_achievements():
     research_achievements = get_achievements_info()
     # 将研究成果数据传递给模板
-    return render_template('research_achievements.html', achievements=research_achievements)
+    return render_template('research_achievements.html',
+                           achievements=research_achievements)
 @views_blueprint.route('/research')
-def research_teaching():
+def research():
     # 将教学和科研信息传递给模板
     teachers = Teachers.query.all()
     teaching_works = TeachingWork.query.all()
     research_works = ResearchWork.query.all()
-    return render_template('research.html', teachers=teachers, teaching_works=teaching_works, research_works=research_works)
+    return render_template('research.html', teachers=teachers,
+                           teaching_works=teaching_works, research_works=research_works)
 @views_blueprint.route('/news')
 def news():
     # 渲染新闻动态页面并传递新闻数据
@@ -57,13 +58,15 @@ def news():
     return render_template('news.html', news_data=news_data)
 
 @views_blueprint.route('/admissions')
-def admissions_page():
+def admissions():
     admissions_info =get_admissions_info()
     # 将招生信息数据传递给模板
     return render_template('admissions.html', admissions=admissions_info)
 @views_blueprint.route('/internal_management')
-def internal_management_page():
+@login_required
+def internal_management():
     return render_template('internal_management.html')
+
 
 @views_blueprint.route('/user_help')
 def user_help():
@@ -73,7 +76,7 @@ def user_help():
 def download_zone():
     return render_template('download_zone.html')
 @views_blueprint.route('/cooperation')
-def cooperation_page():
+def cooperation():
     cooperation_info = InternationalPartnership.query.all()
     # 将招生信息数据传递给模板
     return render_template('cooperation.html', cooperation=cooperation_info)
@@ -87,7 +90,26 @@ def about():
     students_info = get_students_by_year()
     students_info_graduate=get_graduated_students_by_year()
     # 渲染模板并传递数据
-    return render_template('about.html', faculty=faculty_info,faculty_part=faculty_info_part, students=students_info,students_graduate=students_info_graduate)
+    return render_template('about.html',
+                           faculty=faculty_info,faculty_part=faculty_info_part,
+                           students=students_info,students_graduate=students_info_graduate)
+
+@views_blueprint.route('/book_borrowing_page', methods=['GET', 'POST'])
+@login_required
+def book_borrowing_page():
+
+    return render_template('borrow_book_page.html')
+@views_blueprint.route('/book_management', methods=['GET', 'POST'])
+@login_required
+def book_management():
+    # 获取当前用户的ID
+    current_user_id = current_user.id
+    # 只有所长和全职教师可以访问此路由
+    if current_user.user_type == 'admin' or current_user.user_type == 'teacher':
+        return render_template('book_management.html')
+    else:
+
+        return '您没有权限访问此页面', 403
 
 
 @views_blueprint.route('/user_stats', methods=['GET', 'POST'])
@@ -113,12 +135,13 @@ def login():
         # 如果用户存在且密码匹配，登录用户
         if user and user.check_password(password):
             if user.is_active:
+                session['user_id'] = user.id
                 ip_address = request.remote_addr
                 login_event = longin_log(user,ip_address)
                 db.session.add(login_event)
                 db.session.commit()
                 login_user(user)  # 确保用户登录后设置登录状态
-                return redirect(url_for('views.user_index'))  # 确保用户登录后重定向到 'user_index' 页面
+                return redirect(url_for('views.index'))  # 确保用户登录后重定向到 'user_index' 页面
             else:
                 flash('您的账户未激活，请先激活。')
                 activation_code = generate_activation_code(userid)
@@ -143,6 +166,7 @@ def activate():
             if user and not user.is_active:
                 # 激活用户账户
                 user.is_active = True
+                session['user_id'] = user.id
                 ip_address = request.remote_addr
                 login_event = longin_log(user, ip_address)
                 db.session.add(login_event)
@@ -180,7 +204,8 @@ def user_page():
 @login_required
 def logout():
     # 获取当前登录用户的最后一条登录记录
-    last_login = db.session.query(LoginEvent).filter_by(user_id=current_user.id).order_by(LoginEvent.id.desc()).first()
+    last_login = db.session.query(LoginEvent).filter_by(user_id=current_user.id
+                                ).order_by(LoginEvent.id.desc()).first()
     if last_login:
         # 设置登出时间
         last_login.logout_time = datetime.utcnow()
@@ -271,6 +296,8 @@ def import_data():
             import_admissions_info(df)
         elif data_type == 'international_cooperation':
             import_international_cooperation_info(df)
+        elif data_type == 'books':
+            import_books_info(df)
     return render_template('import_data.html')
 
 # 检查文件是否允许上传

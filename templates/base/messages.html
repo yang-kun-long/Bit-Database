@@ -1,0 +1,26 @@
+ <div class="flash-message">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% if category == 'error' %}
+                        <script>
+                            setTimeout(function() {
+                                window.location.href = '/login';
+                            }, 3000);
+                        </script>
+                    {% elif category =='success' %}
+                        <script>
+                          setTimeout(function () {
+                            window.location.href = '/';
+                          }, 3000);
+                        </script>
+                    {% elif category == 'warning' %}
+                       <script>
+                         setTimeout(function () {
+                           window.location.href = '/';
+                         }, 3000);
+                       </script>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+ </div>

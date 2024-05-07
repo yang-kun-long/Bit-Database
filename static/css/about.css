@@ -12,29 +12,26 @@ header {
     text-align: center;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    background: #444;
-    text-align: center;
-    margin: 0;
+/* static/css/navbar.css */
+.nav-pills .nav-link {
+    border-radius: 0; /* 移除导航链接的圆角 */
+    margin-right: 5px; /* 导航链接之间的间距 */
+    padding: 10px 15px; /* 导航链接的内边距 */
+    background-color: #eee; /* 导航链接的背景颜色 */
+    border: 1px solid #ddd; /* 导航链接的边框 */
 }
 
-nav ul li {
-    display: inline;
-}
-
-nav a {
-    text-decoration: none;
+.nav-pills .nav-link.active,
+.nav-pills .nav-link:hover {
+    background-color: #007bff; /* 激活状态或鼠标悬停时的背景颜色 */
     color: white;
-    background: #444;
-    padding: 10px 15px;
-    display: inline-block;
+    border-color: #007bff;
 }
 
-nav a:hover, nav a.active {
-    background: #555;
+.nav-pills .nav-link.active {
+    font-weight: bold; /* 激活状态时的字体加粗 */
 }
+
 
 section {
     padding: 15px;
@@ -45,12 +42,6 @@ h1, h2, h3 {
     color: #333;
 }
 
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-}
 .student-photos {
     list-style: none;
     padding: 0;

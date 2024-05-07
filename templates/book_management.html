@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理 - 图书列表</title>
+    <!-- 引入Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/book_management.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>图书管理</h1>
+        <div id="bookList">
+            <!-- 图书列表将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <!-- 引入jQuery -->
+    <script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.min.js') }}"></script>
+    <!-- 引入Bootstrap JS -->
+    <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
+    <!-- 引入自定义JavaScript -->
+    <script src="{{ url_for('static', filename='js/book_management.js') }}"></script>
+</body>
+</html>

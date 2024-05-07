@@ -1,0 +1,18 @@
+.book-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.book-item h4 {
+    margin-top: 0;
+}
+
+.book-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.book-actions button {
+    margin-right: 5px;
+}

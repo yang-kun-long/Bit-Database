@@ -8,24 +8,8 @@
     <script src="scripts.js"></script> <!-- 引入JavaScript文件 -->
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav>
-        <ul>
-            <li><a href="">首页</a></li>
-            <li><a href="about">关于我们</a></li>
-            <li><a href="news">动态消息</a></li>
-            <li><a href="research">教学科研</a></li>
-            <li><a href="research_achievements">研究成果</a></li>
-            <li><a href="admissions">招生信息</a></li>
-            <li><a href="cooperation">国际合作</a></li>
-
-        </ul>
-        <div id="user-avatar" class="user-avatar">
-            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像" onclick="window.location.href='{{ url_for('views.login') }}'">
-        </div>
-
-    </nav>
-
+    <!-- 导入base.html模板的导航栏  -->
+    {% include 'base/navbar.html' %}
     <!-- 首页内容 -->
     <div id="home" class="content">
         <h1>欢迎来到网络攻防对抗技术研究所</h1>
@@ -77,15 +61,8 @@
         <p>展示研究所的国际合作项目和合作方信息...</p>
     </div>
 
-    <!-- 页脚 -->
-    <footer>
-        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
-        <ul class="footer-links">
-            <li><a href="http://cs.bit.edu.cn" target="_blank">计算机学院</a></li>
-            <li><a href="http://grd.bit.edu.cn" target="_blank">研究生院</a></li>
-            <li><a href="http://grdms.bit.edu.cn" target="_blank">研究生管理系统</a></li>
-        </ul>
-    </footer>
+<!-- 导入base.html模板的页脚  -->
+{% include 'base/footer.html' %}
 
 </body>
 </html>

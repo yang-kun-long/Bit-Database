@@ -1,0 +1,38 @@
+/* footer.css */
+
+footer {
+    background-color: #db2929; /* 设置页脚背景颜色为黑色 */
+    color: #ffffff; /* 设置页脚文本颜色为白色，以便在黑色背景上可见 */
+    padding: 20px 0; /* 上下内边距 */
+    border-top: 1px solid #333333; /* 上边框线，颜色为深灰色，以提供一些对比 */
+    font-size: 0.9rem; /* 字体大小 */
+    margin-top: 50px; /* 与页面内容的距离 */
+}
+
+footer a {
+    color: #ffffff; /* 设置链接颜色为白色 */
+    text-decoration: none; /* 移除下划线 */
+    transition: color 0.3s; /* 颜色变化的过渡效果 */
+}
+
+footer a:hover {
+    color: #cccccc; /* 鼠标悬停时链接颜色为浅灰色 */
+}
+
+footer ul {
+    padding: 0; /* 移除列表默认内边距 */
+    list-style: none; /* 移除列表标记 */
+}
+
+footer li {
+    display: inline; /* 将列表项设置为行内元素 */
+    margin-right: 10px; /* 列表项之间的间距 */
+}
+
+/* 响应式设计：在小屏幕上，使链接块级显示 */
+@media (max-width: 768px) {
+    footer li {
+        display: block;
+        margin-bottom: 5px;
+    }
+}

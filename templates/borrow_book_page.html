@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>借阅图书</title>
+    <!-- 引入Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
+    <style>
+        #booksList {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .book-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .book-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    {% include 'base/navbar.html' %}
+    <div class="container mt-5">
+        <h1>借阅图书</h1>
+        <div class="search-container mb-3">
+            <input type="text" id="searchBox" class="form-control" placeholder="搜索图书（书名、作者或ID）">
+        </div>
+        <ul id="booksList" class="list-group">
+            <!-- 书籍列表将通过JavaScript动态生成 -->
+        </ul>
+    </div>
+    {% include 'base/footer.html' %}
+    <!-- 引入jQuery -->
+    <script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.min.js') }}"></script>
+    <!-- 引入Bootstrap JS -->
+    <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
+    <!-- 引入自定义JavaScript -->
+    <script src="{{ url_for('static', filename='js/borrow_book.js') }}"></script>
+</body>
+</html>

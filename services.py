@@ -5,6 +5,7 @@ from config import db
 from sqlalchemy import func,Integer
 from sqlalchemy.exc import SQLAlchemyError
 import os
+from datetime import datetime, timedelta
 
 def get_login_logs(user_type, current_user_id):
     # 根据用户类型和当前用户ID获取登录日志数据
@@ -614,6 +615,38 @@ def import_teacher_info(df):
         flash('导入过程中发生错误：' + str(e))
     finally:
         db.session.close()
+def import_books_info(df):
+    try:
+        db_session = get_db_session()
+        for index, row in df.iterrows():
+            # 检查数据库中是否已经存在相同的图书编号
+            existing_book = db_session.query(Books).filter_by(
+                id=process_empty_values(row['图书编号'])
+            ).first()
+
+            if not existing_book:
+                # 如果图书不存在，创建新的图书记录
+                new_book = Books(
+                    id=process_empty_values(row['图书编号']),
+                    name=process_empty_values(str(row['图书名字'])),
+                    authors=process_empty_values(str(row['作者'])),
+                    publish_year=process_empty_values(str(row['出版年份'])),
+                    location=process_empty_values(str(row['图书当前位置'])),
+                    available=True  # 默认图书为可借状态
+                )
+                db_session.add(new_book)
+
+            if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
+                db_session.commit()
+
+        db_session.commit()  # 提交所有剩余的记录
+        flash('图书信息导入成功。')
+
+    except Exception as e:
+        db_session.rollback()  # 出错时回滚事务
+        flash('导入失败：' + str(e))
+    finally:
+        db_session.remove()  # 关闭会话
 
 def get_file_type(file_obj):
     """
@@ -641,43 +674,59 @@ def get_graduated_students_by_year():
 
     return graduated_students_by_year
 
-def get_admissions_info():
-    all_admissions = AdmissionInfo.query.all()
 
-    # 根据类别组织招生信息
-    admissions = {
+def get_admissions_info():
+    # 查询所有招生信息
+    admission_info_all = AdmissionInfo.query.all()
+
+    # 将查询结果按类别组织成字典
+    admissions_info = {
         'undergraduate': [],
         'master': [],
-        'phd': [],
-        'international': []
+        'international': [],
+        'phd': []
     }
 
-    for admission in all_admissions:
-        # 假设 category 字段存储了招生类别信息，如 "本科生", "硕士生", "博士生", "留学生"
-        # 根据实际情况，您可能需要调整这里的逻辑来匹配您的数据
-        if admission.category == "本科生":
-            admissions['undergraduate'].append(admission)
-        elif admission.category == "硕士生":
-            admissions['master'].append(admission)
-        elif admission.category == "博士生":
-            admissions['phd'].append(admission)
-        elif admission.category == "留学生":
-            admissions['international'].append(admission)
-    return admissions
-def get_cooperation_info():
-    cooperation_info = [
-        {
-            'university_name': '麻省理工学院',
-            'country': '美国',
-            'project': '网络安全技术研究'
-        },
-        {
-            'university_name': '东京大学',
-            'country': '日本',
-            'project': '人工智能在网络安全中的应用'
-        }
-    ]
-    return cooperation_info
+    for info in admission_info_all:
+        # 假设category字段用于区分不同的招生类别
+        if info.category == '本科生':
+            admissions_info['undergraduate'].append({
+                'study_mode': info.study_mode,
+                'technical_requirements': info.technical_requirements,
+                'work_schedule': info.work_schedule,
+                'other_requirements': info.other_requirements,
+                'contact_person': info.contact_person,
+                'contact_information': info.contact_information,
+            })
+        elif info.category == '硕士生':
+            admissions_info['master'].append({
+                'study_mode': info.study_mode,
+                'technical_requirements': info.technical_requirements,
+                'work_schedule': info.work_schedule,
+                'other_requirements': info.other_requirements,
+                'contact_person': info.contact_person,
+                'contact_information': info.contact_information,
+            })
+        elif info.category=='博士生':
+            admissions_info['phd'].append({
+                'study_mode': info.study_mode,
+                'technical_requirements': info.technical_requirements,
+                'work_schedule': info.work_schedule,
+                'other_requirements': info.other_requirements,
+                'contact_person': info.contact_person,
+                'contact_information': info.contact_information,
+            })
+        else:
+            admissions_info['international'].append({
+                'study_mode': info.study_mode,
+                'technical_requirements': info.technical_requirements,
+                'work_schedule': info.work_schedule,
+                'other_requirements': info.other_requirements,
+                'contact_person': info.contact_person,
+                'contact_information': info.contact_information,
+            })
+    return admissions_info
+
 def get_news_info():
     news_data = [
         {
@@ -691,3 +740,111 @@ def get_news_info():
         # ... 其他新闻动态 ...
     ]
     return news_data
+
+
+def get_db_session():
+    return db.session
+
+#获取当前用户ID
+def get_current_user_id():
+    return session.get('user_id')
+
+# 请求借阅图书
+def request_book(user_id, book_id):
+    db_session = get_db_session()
+    user = db_session.query(Users).filter_by(id=user_id).first()
+    book = db_session.query(Books).filter_by(id=book_id, available=True).first()
+
+    if not book:
+        raise Exception("图书不存在或不可借")
+
+    if BookLoans.query.filter_by(user_id=user_id, status='approved').count() >= user.max_loans:
+        raise Exception("用户已达到最大借阅数量")
+
+    loan = BookLoans(
+        book_id=book_id,
+        user_id=user_id,
+        loan_date=datetime.utcnow(),
+        status='pending'
+    )
+    db_session.add(loan)
+    db_session.commit()
+
+# 审核借阅请求
+def approve_loan(loan_id):
+    db_session = get_db_session()
+    loan = db_session.query(BookLoans).filter_by(id=loan_id, status='pending').first()
+
+    if not loan:
+        raise Exception("借阅请求不存在或已处理")
+
+    book = db_session.query(Books).filter_by(id=loan.book_id).first()
+    if not book.available:
+        raise Exception("图书不可借")
+
+    book.available = False
+    loan.status = 'approved'
+    db_session.commit()
+
+# 归还图书
+def return_book(loan_id):
+    db_session = get_db_session()
+    loan = db_session.query(BookLoans).filter_by(id=loan_id, status='approved').first()
+
+    if not loan:
+        raise Exception("无效的借阅记录")
+
+    book = db_session.query(Books).filter_by(id=loan.book_id).first()
+    book.available = True
+    loan.status = 'returned'
+    loan.return_date = datetime.utcnow()
+
+    if loan.is_overdue():
+        record_violation(loan.user_id)
+
+    db_session.commit()
+
+# 记录违规
+def record_violation(user_id):
+    db_session = get_db_session()
+    user = db_session.query(Users).filter_by(id=user_id).first()
+
+    if user.violation_count >= 3:
+        user.is_active = False
+
+    violation = ViolationRecords(
+        user_id=user_id,
+        violation_date=datetime.utcnow(),
+        description="逾期归还图书"
+    )
+    db_session.add(violation)
+    user.violation_count += 1
+    db_session.commit()
+
+# 检查逾期图书并提醒
+def check_overdue_books(user_id):
+    db_session = get_db_session()
+    # 设置提醒日期为当前时间之前的三天
+    due_date = datetime.utcnow() - timedelta(days=3)
+    # 查询指定用户所有已批准但未归还且即将到期的借阅记录
+    overdue_loans = db_session.query(BookLoans).filter(
+        BookLoans.status == 'approved',
+        BookLoans.loan_date < due_date,
+        BookLoans.user_id == user_id
+    ).all()
+
+    # 如果存在逾期图书，准备提醒信息
+    if overdue_loans:
+        flash("您有以下图书逾期，请及时归还：")
+        for loan in overdue_loans:
+            book = db_session.query(Books).filter_by(id=loan.book_id).first()
+            flash(f"书名：{book.name}, 编号：{book.barcode}")
+    else:
+        flash("您没有逾期的图书。")
+
+# 设置借阅上限和借阅期限
+def set_loan_settings(max_loans, loan_period):
+    db_session = get_db_session()
+    Users.max_loans = max_loans
+    Users.loan_period = loan_period
+    db_session.commit()

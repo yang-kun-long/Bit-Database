@@ -1,0 +1,116 @@
+/* navbar.css */
+.user-avatar {
+    /*位置在浏览器右上角*/
+    right: 10px;
+    top: 10px;
+
+
+    position: absolute;
+    display: inline-block; /* 使头像作为一个inline-block元素，以正确应用宽度和高度 */
+    cursor: pointer;
+}
+
+.user-avatar img {
+    width: 60px; /* 头像图片的宽度 */
+    height: 60px; /* 头像图片的高度 */
+    border-radius: 50%; /* 头像图片的圆角 */
+    border: 2px solid #fff; /* 头像图片的边框 */
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); /* 头像图片的阴影 */
+}
+
+.user-avatar .dropdown-menu {
+    position: absolute; /* 绝对定位到.user-avatar */
+    top: 100%; /* 将菜单放置在头像下方 */
+    /* 菜单的中间与头像的中间对齐 */
+
+    transform: translateX(-60%);
+    min-width: 120px; /* 根据您的设计调整下拉菜单的最小宽度 */
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* 默认不显示下拉菜单 */
+    /* 如果下拉菜单太宽，可以设置最大宽度 */
+    max-width: 100%;
+}
+
+.user-avatar:hover .dropdown-menu,
+.user-avatar:focus-within .dropdown-menu {
+    display: block; /* 鼠标悬停或点击头像时显示下拉菜单 */
+}
+
+/* 下拉菜单项 */
+.user-avatar .dropdown-menu a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.user-avatar .dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+/*导航栏样式设置，<nav class="navbar navbar-expand-lg navbar-light bg-light">*/
+.navbar {
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-brand {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 1rem;
+}
+
+.navbar-nav .nav-item a {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.navbar-nav .nav-item a:hover,
+.navbar-nav .nav-item a:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+
+.navbar-toggler {
+    padding: 0.25rem 0.75rem;
+    font-size: 1.2rem;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.navbar-toggler:hover,
+.navbar-toggler:focus {
+    text-decoration: none;
+}
+
+.navbar-toggler-icon {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
+    content: "";
+    background: no-repeat center center;
+    background-size: 100% 100%;
+}

@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from datetime import datetime
-from config import db,student_categorys
+from config import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # 教学成果与教师关联表
@@ -41,9 +41,12 @@ class Users(UserMixin, db.Model):
     login_fail_count = db.Column(db.BIGINT, default=0)  # 登录失败次数
     last_fail_login = db.Column(db.DateTime)  # 上次登录失败时间
     is_active = db.Column(db.Boolean, default=False)  # 是否激活
-
-
-        # 密码应在用户设置时生成，此处不设置默认值
+    is_book_admin = db.Column(db.Boolean, default=False, nullable=False)  # 是否为图书管理员
+    violation_count = db.Column(db.Integer, default=0, nullable=False)  # 违规次数
+    # 添加借阅上限字段，表示用户最多可以借阅的图书数量
+    max_loans = db.Column(db.Integer, default=2, nullable=False)
+    # 添加借阅期限字段，表示用户借阅图书的最长期限（以天为单位）
+    loan_period = db.Column(db.Integer, default=30, nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -256,7 +259,7 @@ class ResearchWork(db.Model):
     teacher_name = db.Column(db.String(50), nullable=False)
 
     # 定义与教师表的关联
-    # teacher = db.relationship('Teachers', backref=db.backref('research_works', lazy='dynamic'), foreign_keys=[teacher_id])
+    teacher = db.relationship('Teachers', backref=db.backref('research_works', lazy='dynamic'), foreign_keys=[teacher_id])
 
 
 class TeachingAchievements(db.Model):
@@ -354,3 +357,56 @@ class InternationalPartnership(db.Model):
     end_date = db.Column(db.Date, nullable=True)  # 合作结束时间
     status = db.Column(db.String(50), nullable=True)  # 合作状态（如：进行中、已完成、暂停等）
     description = db.Column(db.Text, nullable=True)  # 合作项目描述或详情
+
+
+class Books(db.Model):
+    __tablename__ = 'books'
+    id = db.Column(db.BIGINT, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    authors = db.Column(db.String(100), nullable=False)
+    publish_year = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String(50))  # 图书当前位置
+    available = db.Column(db.Boolean, default=True)  # 图书是否可借
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'authors': self.authors,
+            'publish_year': self.publish_year,
+            'location': self.location,
+            'available': self.available
+        }
+
+
+class BookLoans(db.Model):
+    __tablename__ = 'book_loans'
+    id = db.Column(db.BIGINT, primary_key=True)
+    book_id = db.Column(db.BIGINT, db.ForeignKey('books.id'), nullable=False)
+    user_id = db.Column(db.BIGINT,db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
+    loan_date = db.Column(db.DateTime, nullable=False)
+    return_date = db.Column(db.DateTime)
+    status = db.Column(db.String(20), nullable=False)  # 借阅状态
+
+    def to_json(self):
+        return{
+            'id': self.id,
+            'book_id': self.book_id,
+            'user_id': self.user_id,
+            'loan_date': self.loan_date,
+           'return_date': self.return_date,
+           'status': self.status
+        }
+
+class BookAdmins(db.Model):
+    __tablename__ = 'book_admins'
+    id = db.Column(db.BIGINT, primary_key=True)
+    teacher_id = db.Column(db.BIGINT, db.ForeignKey('teachers.id'), nullable=False)
+    # 可以添加其他与图书管理相关的字段
+
+class ViolationRecords(db.Model):
+    __tablename__ = 'violation_records'
+    id = db.Column(db.BIGINT, primary_key=True)
+    user_id = db.Column(db.BIGINT, db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
+    violation_date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.Text, nullable=False)

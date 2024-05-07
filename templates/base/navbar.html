@@ -1,0 +1,66 @@
+<!-- templates/navbar.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导航栏示例</title>
+    <!-- 引入本地的 Bootstrap CSS -->
+<!--    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">-->
+    <!-- 引入自定义CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('views.index') }}">研究所首页</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% if request.endpoint == 'index' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.index') }}">首页</a></li>
+                <li class="nav-item {% if request.endpoint == 'about' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.about') }}">关于我们</a></li>
+                <li class="nav-item {% if request.endpoint == 'news' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.news') }}">动态消息</a></li>
+                <li class="nav-item {% if request.endpoint == 'research' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.research') }}">教学科研</a></li>
+                <li class="nav-item {% if request.endpoint == 'research_achievements' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.research_achievements') }}">研究成果</a></li>
+                <li class="nav-item {% if request.endpoint == 'admissions' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.admissions') }}">招生信息</a></li>
+                <li class="nav-item {% if request.endpoint == 'cooperation' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.cooperation') }}">国际合作</a></li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-item {% if request.endpoint == 'internal_management' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.internal_management') }}">内部管理</a></li>
+                <li class="nav-item {% if request.endpoint == 'download_zone' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.download_zone') }}">下载专区</a></li>
+                <li class="nav-item {% if request.endpoint == 'user_help' %}active{% endif %}"><a class="nav-link" href="{{ url_for('views.user_help') }}">用户帮助</a></li>
+                <div class="navbar-nav">
+                    <div class="nav-item">
+                        <div class="user-avatar" onclick="toggleDropdown()">
+                            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像">
+                            <div id="dropdown" class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ url_for('views.user_page') }}">个人主页</a>
+                            <a class="dropdown-item" href="{{ url_for('views.logout') }}">退出登录</a>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% else %}
+                <!-- 用户未登录时显示的内容 -->
+                <div class="navbar-nav">
+                    <div class="nav-item">
+                        <div class="user-avatar" onclick="location.href='{{ url_for('views.login') }}'">
+                            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像">
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 引入Bootstrap JS -->
+<script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
+<!-- 引入自定义JS -->
+<script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+</body>
+</html>

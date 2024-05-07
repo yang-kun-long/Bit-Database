@@ -2,6 +2,7 @@ import yaml
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
+from flask_migrate import Migrate
 
 with open('database.yaml', 'r') as file:
     config = yaml.safe_load(file)
@@ -13,9 +14,9 @@ class Config:
                                f"@{config['database']['host']}:{config['database']['port']}/{config['database']['dbname']}")
 app = Flask(__name__)
 app.config.from_object(Config)
-sess = Session()
-sess.init_app(app)
+Session(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 student_categorys={
     11:'本科生',
