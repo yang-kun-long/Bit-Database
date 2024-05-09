@@ -4,3 +4,10 @@ database:
   password: 123456
   host: localhost
   port: 5432
+books:
+  interval_date: 5
+  borrow_period: 30
+  overdue_reminder_days: 3
+  borrow_limit: 2
+  violation_limit: 3
+

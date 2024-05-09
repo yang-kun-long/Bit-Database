@@ -131,6 +131,7 @@ def login():
         userid = request.form['userid']
         password = request.form['password']
         user = db.session.get(Users, userid)
+        print(user)
 
         # 如果用户存在且密码匹配，登录用户
         if user and user.check_password(password):
@@ -152,7 +153,11 @@ def login():
             flash('用户名或密码错误，请检查输入信息。')
     return render_template('login.html')
 
-
+#处理借阅请求页面
+@views_blueprint.route('/request_process', methods=['GET', 'POST'])
+@login_required
+def request_process():
+    return render_template('request_process.html')
 # 注册处理
 @views_blueprint.route('/activate', methods=['GET', 'POST'])
 def activate():
@@ -195,9 +200,13 @@ def activate():
 @views_blueprint.route('/user_page')
 @login_required
 def user_page():
-    user = current_user
-    student = Students.query.filter_by(id=user.id).first()
-    return render_template('user_page.html',student=student)
+    user_id = get_current_user_id()  # 假设这是从会话或令牌中获取当前用户ID的函数
+    user = Users.query.get(user_id)
+    user_loans = BookLoans.query.filter_by(user_id=user_id, return_date=None).all()
+
+
+    # 渲染模板并将用户信息、借阅列表和request_ids传递给模板
+    return render_template('user_page.html', user=user, user_loans=user_loans)
 
 
 @views_blueprint.route('/logout')

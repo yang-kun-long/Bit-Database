@@ -1,144 +1,72 @@
 /* user_page.css */
 
-/* 重置浏览器默认样式 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* 页面整体样式 */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+    background: #f7f7f7;
+    padding: 20px;
 }
 
-/* 用户信息容器样式 */
+/*.container {*/
+/*    background: #fff;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+h1, h2 {
+    color: #333;
+}
+
 .user-info {
-    background: #fff;
-    padding: 20px;
-    margin: 60px 0; /* 增加上边距以适应固定导航栏 */
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eaeaea;
+    padding: 15px;
+    margin-bottom: 20px;
 }
 
 .user-info h2 {
-    color: #333;
-    margin-bottom: 15px;
+    margin-top: 0;
 }
 
-.user-info p {
+.info-item {
+    padding: 10px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.info-item button.edit-btn {
+    float: right;
+    margin-top: 5px;
+}
+
+.loan-item {
+    padding: 10px;
     margin-bottom: 10px;
-    color: #666;
-}
-
-/* 修改个人信息表单样式 */
-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-form h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-form label {
-    display: block;
-    margin-bottom: 5px;
-    color: #666;
-}
-
-form input[type="text"],
-form select,
-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
+    background: #f5f5f5;
     border-radius: 4px;
 }
 
-form input[type="text"]:focus,
-form select:focus,
-form textarea:focus {
-    border-color: #007bff;
-    outline: none;
+.loan-item h4 {
+    margin-top: 0;
+    color: #017bff;
 }
 
-form button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background: #007bff;
-    color: #fff;
-    cursor: pointer;
+.loan-item p {
+    margin: 5px 0;
 }
 
-form button:hover {
-    background: #0056b3;
-}
-
-/* 响应式设计：当屏幕宽度小于600px时，调整表单元素的布局 */
-@media (max-width: 600px) {
-    form input[type="text"],
-    form select,
-    form textarea {
-        width: 100%;
+/* 响应式设计：在小屏幕上堆叠布局 */
+@media (max-width: 768px) {
+    .info-item button.edit-btn {
+        float: none;
+        display: block;
+        margin-top: 10px;
     }
-}
-/* 导航栏样式 */
-nav {
-    background: #333;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
-
-
-nav ul {
-    list-style: none;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-nav ul li a:hover, nav ul li a.active {
-    background: #555;
-}
-.user-avatar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px; /* 头像宽度 */
-    height: 50px; /* 头像高度 */
-    border-radius: 50%; /* 头像圆角 */
-    background-color: #f8f8f8; /* 背景颜色 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer; /* 鼠标悬停时显示手指图标 */
-}
-
-.user-avatar img {
-    width: 100%; /* 确保图片在头像容器内完全显示 */
-    height: auto; /* 保持图片高度与宽度比例 */
-    border-radius: 50%; /* 确保图片是圆形的 */
 }

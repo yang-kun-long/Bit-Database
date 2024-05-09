@@ -41,13 +41,15 @@ class Users(UserMixin, db.Model):
     login_fail_count = db.Column(db.BIGINT, default=0)  # 登录失败次数
     last_fail_login = db.Column(db.DateTime)  # 上次登录失败时间
     is_active = db.Column(db.Boolean, default=False)  # 是否激活
-    is_book_admin = db.Column(db.Boolean, default=False, nullable=False)  # 是否为图书管理员
-    violation_count = db.Column(db.Integer, default=0, nullable=False)  # 违规次数
-    # 添加借阅上限字段，表示用户最多可以借阅的图书数量
-    max_loans = db.Column(db.Integer, default=2, nullable=False)
-    # 添加借阅期限字段，表示用户借阅图书的最长期限（以天为单位）
-    loan_period = db.Column(db.Integer, default=30, nullable=False)
+    library_status_id = db.Column(db.BIGINT, db.ForeignKey('library_status.id'))  # 图书馆状态ID
+    library_status = db.relationship('LibraryStatus', backref=db.backref('users', lazy=True))  # 图书馆状态
 
+    # is_book_admin = db.Column(db.Boolean, default=False, nullable=False)  # 是否为图书管理员
+    # violation_count = db.Column(db.Integer, default=0, nullable=False)  # 违规次数
+    # # 添加借阅上限字段，表示用户最多可以借阅的图书数量
+    # max_loans = db.Column(db.Integer, default=2, nullable=False)
+    # # 添加借阅期限字段，表示用户借阅图书的最长期限（以天为单位）
+    # loan_period = db.Column(db.Integer, default=30, nullable=False)
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -67,6 +69,23 @@ class Users(UserMixin, db.Model):
         for attr, value in kwargs.items():
             if hasattr(self, attr):
                 setattr(self, attr, value)
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    def __init__(self, id, username, password_hash
+                         , email, phone,user_type):
+        self.id = id
+        self.username = username
+        self.password_hash = password_hash
+        self.email = email
+        self.phone = phone
+        self.user_type = user_type
+        self.created_at = datetime.utcnow()
+        self.last_login = None
+        self.login_fail_count = 0
+        self.last_fail_login = None
+        self.is_active = False
+        self.library_status = LibraryStatus()
+        self.library_status_id = self.library_status.id
 
     def __repr__(self):
         return '<Users {}>'.format(self.username)
@@ -127,7 +146,8 @@ class Students(db.Model):
         if not self.is_graduate:
             # 假设所有学生默认密码为 '123456'，实际应用中应允许学生设置自己的密码
             password_hash = generate_password_hash('123456')
-            user = Users(id=self.student_id, username=self.name, password_hash=password_hash, email=self.email, phone=self.mobile,user_type='student')
+            user = Users(id=self.student_id, username=self.name, password_hash=password_hash
+                         , email=self.email, phone=self.mobile,user_type='student')
             db.session.add(user)
             db.session.commit()
 
@@ -359,7 +379,7 @@ class InternationalPartnership(db.Model):
     description = db.Column(db.Text, nullable=True)  # 合作项目描述或详情
 
 
-class Books(db.Model):
+class Books(db.Model):#图书信息
     __tablename__ = 'books'
     id = db.Column(db.BIGINT, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -379,14 +399,21 @@ class Books(db.Model):
         }
 
 
-class BookLoans(db.Model):
+class BookLoans(db.Model):#图书借阅记录
     __tablename__ = 'book_loans'
     id = db.Column(db.BIGINT, primary_key=True)
     book_id = db.Column(db.BIGINT, db.ForeignKey('books.id'), nullable=False)
     user_id = db.Column(db.BIGINT,db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
+    brows_request_id = db.Column(db.Integer, db.ForeignKey('book_loan_requests.id'), nullable=True)  # 外键关联BookLoanRequest表
+    return_request_id = db.Column(db.Integer, db.ForeignKey('book_loan_requests.id'), nullable=True)  # 外键关联BookLoanRequest表
     loan_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime)
     status = db.Column(db.String(20), nullable=False)  # 借阅状态
+    book = db.relationship('Books', backref=db.backref('loans', lazy='dynamic'))
+    requester = db.relationship('Users', foreign_keys=[user_id])
+    browser_request = db.relationship('BookLoanRequest', foreign_keys=[brows_request_id])
+    return_request = db.relationship('BookLoanRequest', foreign_keys=[return_request_id])
+
 
     def to_json(self):
         return{
@@ -398,15 +425,79 @@ class BookLoans(db.Model):
            'status': self.status
         }
 
-class BookAdmins(db.Model):
+class BookAdmins(db.Model):#图书管理员
     __tablename__ = 'book_admins'
     id = db.Column(db.BIGINT, primary_key=True)
     teacher_id = db.Column(db.BIGINT, db.ForeignKey('teachers.id'), nullable=False)
     # 可以添加其他与图书管理相关的字段
 
-class ViolationRecords(db.Model):
+class ViolationRecords(db.Model):#违规记录
     __tablename__ = 'violation_records'
     id = db.Column(db.BIGINT, primary_key=True)
     user_id = db.Column(db.BIGINT, db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
+    loan_id = db.Column(db.BIGINT, db.ForeignKey('book_loans.id'), nullable=False)  # 外键关联BookLoans表
     violation_date = db.Column(db.DateTime, nullable=False)
+    loans = db.relationship('BookLoans', backref=db.backref('violation_records', lazy='dynamic'))
     description = db.Column(db.Text, nullable=False)
+    user = db.relationship('Users', backref=db.backref('violation_records', lazy='dynamic'))
+
+
+class BookLoanRequest(db.Model):
+    __tablename__ = 'book_loan_requests'
+
+    id = db.Column(db.Integer, primary_key=True)
+    requester_id = db.Column(db.BIGINT, db.ForeignKey('users.id'), nullable=False)
+    processor_id = db.Column(db.BIGINT, db.ForeignKey('users.id'), nullable=True)  # 处理人ID，可以为空
+    book_id = db.Column(db.BIGINT, db.ForeignKey('books.id'), nullable=False)
+    request_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    process_date = db.Column(db.DateTime)
+    status = db.Column(db.String(50), nullable=False)  # 例如：'待处理', 'Approved', 'Rejected'
+    request_reason = db.Column(db.Text)  # 申请理由
+    processing_note = db.Column(db.Text)  # 处理备注
+    request_type = db.Column(db.String(10), nullable=False)  # 申请类型，如 借阅, 还书
+    requester=db.relationship('Users', foreign_keys=[requester_id])
+    processor=db.relationship('Users', foreign_keys=[processor_id])
+    book=db.relationship('Books', foreign_keys=[book_id])
+
+    def __init__(self, requester_id, book_id, request_type,request_reason,
+                 request_date,status='待处理',processing_note=None,
+                 processor_id=None,process_date=None,):
+        self.requester_id = requester_id
+        self.book_id = book_id
+        self.request_date = request_date
+        self.request_type = request_type
+        self.status = status
+        self.request_reason = request_reason
+        self.processing_note = processing_note
+        self.processor_id = processor_id
+        self.process_date = process_date
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'requester_id': self.requester_id,
+            'processor_id': self.processor_id,
+            'book_id': self.book_id,
+            'request_date': self. request_date.strftime('%Y-%m-%d') if self.request_date else None,
+            'process_date': self.process_date.isoformat() if self.process_date else None,
+            'status': self.status,
+            'request_reason': self.request_reason,
+            'processing_note': self.processing_note,
+            'request_type': self.request_type,
+            'requester': self.requester.to_dict(),
+            'book': self.book.to_json()
+        }
+
+    def __repr__(self):
+        return f'<BookLoanRequest user_id={self.user_id} book_id={self.book_id} request_type={self.request_type} status={self.status}>'
+
+class LibraryStatus(db.Model):#图书馆管理常量设置
+
+    __tablename__ = 'library_status'
+    id = db.Column(db.BIGINT, primary_key=True)
+    interval_date=db.Column(db.Integer,default=5, nullable=False)  # 间隔日期 天数   #5  # 间隔日期 天数
+    borrow_period=db.Column(db.Integer,default=30, nullable=False)  #30  # 借阅期限 天数
+    overdue_reminder_days=db.Column(db.Integer,default=3, nullable=False)  # 3  # 超出期限提醒天数
+    borrow_limit=db.Column(db.Integer,default=2, nullable=False) #2  # 单个用户借阅数量限制
+    violation_limit=db.Column(db.Integer,default=3, nullable=False)  # 3  # 单个用户违规记录数量限制
+    is_book_admin=db.Column(db.Boolean,default=False, nullable=False)  # 是否图书管理员

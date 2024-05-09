@@ -44,6 +44,11 @@ def longin_log(user,ip_address):
     )
     return login_event
 
+def calculate_days_left(loan_date, loan_period):# 计算书籍借阅剩余天数
+    today = datetime.utcnow()
+    due_date = loan_date + timedelta(days=loan_period)
+    days_left = (due_date - today).days
+    return max(days_left, 0)
 
 def process_graduate_status(value):
     """
@@ -749,77 +754,7 @@ def get_db_session():
 def get_current_user_id():
     return session.get('user_id')
 
-# 请求借阅图书
-def request_book(user_id, book_id):
-    db_session = get_db_session()
-    user = db_session.query(Users).filter_by(id=user_id).first()
-    book = db_session.query(Books).filter_by(id=book_id, available=True).first()
 
-    if not book:
-        raise Exception("图书不存在或不可借")
-
-    if BookLoans.query.filter_by(user_id=user_id, status='approved').count() >= user.max_loans:
-        raise Exception("用户已达到最大借阅数量")
-
-    loan = BookLoans(
-        book_id=book_id,
-        user_id=user_id,
-        loan_date=datetime.utcnow(),
-        status='pending'
-    )
-    db_session.add(loan)
-    db_session.commit()
-
-# 审核借阅请求
-def approve_loan(loan_id):
-    db_session = get_db_session()
-    loan = db_session.query(BookLoans).filter_by(id=loan_id, status='pending').first()
-
-    if not loan:
-        raise Exception("借阅请求不存在或已处理")
-
-    book = db_session.query(Books).filter_by(id=loan.book_id).first()
-    if not book.available:
-        raise Exception("图书不可借")
-
-    book.available = False
-    loan.status = 'approved'
-    db_session.commit()
-
-# 归还图书
-def return_book(loan_id):
-    db_session = get_db_session()
-    loan = db_session.query(BookLoans).filter_by(id=loan_id, status='approved').first()
-
-    if not loan:
-        raise Exception("无效的借阅记录")
-
-    book = db_session.query(Books).filter_by(id=loan.book_id).first()
-    book.available = True
-    loan.status = 'returned'
-    loan.return_date = datetime.utcnow()
-
-    if loan.is_overdue():
-        record_violation(loan.user_id)
-
-    db_session.commit()
-
-# 记录违规
-def record_violation(user_id):
-    db_session = get_db_session()
-    user = db_session.query(Users).filter_by(id=user_id).first()
-
-    if user.violation_count >= 3:
-        user.is_active = False
-
-    violation = ViolationRecords(
-        user_id=user_id,
-        violation_date=datetime.utcnow(),
-        description="逾期归还图书"
-    )
-    db_session.add(violation)
-    user.violation_count += 1
-    db_session.commit()
 
 # 检查逾期图书并提醒
 def check_overdue_books(user_id):
@@ -848,3 +783,14 @@ def set_loan_settings(max_loans, loan_period):
     Users.max_loans = max_loans
     Users.loan_period = loan_period
     db_session.commit()
+def book_admin_judge(user):
+    if user.library_status.is_book_admin:
+        return True
+    else:
+        return False
+def get_max_loan_count(user):
+    return user.library_status.borrow_limit
+def get_borrow_period(user):
+    return user.library_status.borrow_period
+def get_interval_date(user):
+    return user.library_status.interval_date
