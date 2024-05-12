@@ -1,5 +1,5 @@
 from config import app,db
-from views import views_blueprint  # 从 views 导入蓝图
+from html_view import views_blueprint  # 从 html 导入蓝图
 from api.books import books_bp  # 从 books 导入蓝图
 from api.books_loans import loans_bp  # 从 books_loans 导入蓝图
 from api.users import users_bp  # 从 users 导入蓝图

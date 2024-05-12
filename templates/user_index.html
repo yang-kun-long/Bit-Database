@@ -26,8 +26,8 @@
         <div id="user-avatar" class="user-avatar">
             <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像" onclick="toggleDropdown()">
             <div id="dropdown" class="dropdown" style="display: none;">
-                <a href="{{ url_for('views.user_page') }}">个人主页</a>
-                <a href="{{ url_for('views.logout') }}">退出登录</a>
+                <a href="{{ url_for('html_view.user_page') }}">个人主页</a>
+                <a href="{{ url_for('html_view.logout') }}">退出登录</a>
             </div>
         </div>
 

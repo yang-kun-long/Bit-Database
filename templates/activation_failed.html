@@ -21,8 +21,8 @@
         {% endwith %}
         <p class="lead">请检查激活码是否正确，或者请求重新发送激活邮件。</p>
         <!-- 返回首页或登录页面的链接 -->
-        <a href="{{ url_for('views.index') }}" class="btn btn-primary">返回首页</a>
-        <a href="{{ url_for('views.login') }}" class="btn btn-secondary">返回登录</a>
+        <a href="{{ url_for('html_view.index') }}" class="btn btn-primary">返回首页</a>
+        <a href="{{ url_for('html_view.login') }}" class="btn btn-secondary">返回登录</a>
     </div>
     <!-- 引入 JavaScript 文件 -->
     <script src="{{ url_for('static', filename='js/activation_failed.js') }}"></script>

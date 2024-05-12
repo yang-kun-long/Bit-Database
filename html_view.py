@@ -7,9 +7,10 @@ import jwt
 from emails import generate_activation_code,send_verification_code
 import pandas as pd
 from datetime import datetime
+from import_data import *
 
 # 创建蓝图对象
-views_blueprint = Blueprint('views', __name__, url_prefix='/')
+views_blueprint = Blueprint('html_view', __name__, url_prefix='/')
 
 # 初始化 Flask-Login
 login_manager = LoginManager()
@@ -142,12 +143,12 @@ def login():
                 db.session.add(login_event)
                 db.session.commit()
                 login_user(user)  # 确保用户登录后设置登录状态
-                return redirect(url_for('views.index'))  # 确保用户登录后重定向到 'user_index' 页面
+                return redirect(url_for('html_view.index'))  # 确保用户登录后重定向到 'user_index' 页面
             else:
                 flash('您的账户未激活，请先激活。')
                 activation_code = generate_activation_code(userid)
                 send_verification_code(user.email, activation_code, userid)
-                return redirect(url_for('views.activate'))  # 重定向到激活页面
+                return redirect(url_for('html_view.activate'))  # 重定向到激活页面
         # 否则，提示用户名或密码错误
         else:
             flash('用户名或密码错误，请检查输入信息。')
@@ -179,7 +180,7 @@ def activate():
                 # 登录用户并重定向到首页或某个特定页面
                 login_user(user)
                 flash('账户已成功激活。')
-                return redirect(url_for('views.user_index'))  # 重定向到首页
+                return redirect(url_for('html_view.user_index'))  # 重定向到首页
             else:
                 flash('账户已激活或激活码无效。')
                 return render_template('activation_failed.html')
@@ -224,7 +225,7 @@ def logout():
     logout_user()
     flash('您已成功退出登录。')  # 显示退出登录消息
     # 重定向到首页或登录页面
-    return redirect(url_for('views.index'))
+    return redirect(url_for('html_view.index'))
 
 @views_blueprint.route('/user_index', methods=['GET', 'POST'])
 @login_required
@@ -257,7 +258,7 @@ def update_user_info():
     db.session.commit()
 
     # 返回用户主页
-    return redirect(url_for('views.user_page'))
+    return redirect(url_for('html_view.user_page'))
 # 导入用户的路由
 @views_blueprint.route('/import_data', methods=['GET', 'POST'])
 def import_data():
@@ -276,9 +277,11 @@ def import_data():
             df= pd.read_excel(file,engine='openpyxl')
         else:
             flash('不支持的文件类型。')
-            return redirect(url_for('views.import_data'))
-        if data_type == 'student':
-            import_student_info(df)
+            return redirect(url_for('html_view.import_data'))
+        if data_type == 'on_campus_students':
+            import_on_campus_students_info(df)
+        elif data_type == 'graduated_students':
+            import_graduated_students_info(df)
         elif data_type == 'teacher':
             import_teacher_info(df)
         elif data_type == 'research_work':

@@ -3,7 +3,7 @@ from flask import session,flash
 from models import *
 from config import db
 from sqlalchemy import func,Integer
-from sqlalchemy.exc import SQLAlchemyError
+
 import os
 from datetime import datetime, timedelta
 
@@ -60,6 +60,37 @@ def process_graduate_status(value):
     if value == '是' or value == '1':
         return True
     return False
+
+def split_ids(ids):
+    """
+    将以分号分隔的字符串转换为列表。
+    如果有中文分号。则自动替换为英文分号。
+
+    :param ids: 以分号分隔的字符串。
+    :return: 列表。
+    """
+    # 先替换中文分号为英文分号
+    ids = ids.replace('；', ';')
+    # 再按分号分割
+    ids_list = ids.split(';')
+    # 去除空字符串
+    ids_list = list(filter(lambda x: x!= '', ids_list))
+    ids_list = [str(id) for id in ids_list]
+    return ids_list
+
+def process_number(value):
+    """
+    处理数字,如果是整数或者浮点数，则返回字符串
+    浮点数转换为整数
+    如果是字符串，则返回本身
+    """
+    if isinstance(value, int) or isinstance(value, float):
+        return str(int(value))
+    elif isinstance(value, str):
+        return value
+    else:
+        return None
+
 def process_empty_values(value, default=None):
     """
     处理空值或NaN，将它们转换为默认值。
@@ -73,7 +104,7 @@ def process_empty_values(value, default=None):
         return default
 
     # 检查值是否为空字符串
-    if value == '' or value == '无':
+    if value == '':
         return default
 
     # 如果值不是空或NaN，直接返回
@@ -96,562 +127,7 @@ def get_students_by_year():
         students_by_year[year] = students
 
     return students_by_year
-def import_research_work_info(df):
-    try:
-        for index, row in df.iterrows():
-            id = row['项目编号']
-            project_name = row['项目名称']
-            project_nature=row['项目性质']
-            start_date=row['开始日期']
-            end_date=row['结束日期']
-            teacher_id=row['教师工号']
-            teacher_name=row['教师姓名']
-            existing_researchwork = ResearchWork.query.filter_by(id=id).first()
-            if existing_researchwork:
-                continue  # 如果已存在，跳过
-            researchwork = ResearchWork(id=id, project_name=project_name, project_nature=project_nature,
-                                        start_date=start_date,end_date=end_date, teacher_id=teacher_id,
-                                        teacher_name=teacher_name)
-            # 添加到数据库
-            db.session.add(researchwork)
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('科研工作信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.close()
-def import_teaching_work_info(df):
-    try:
-        for index, row in df.iterrows():
-            id = row['课程编号']
-            course_id=row['课程编号']
-            course_name=row['课程名称']
-            course_nature=row['课程性质']
-            student_level=row['学生层次']
-            teaching_time=row['授课时间']
-            teacher_id = row['教师工号']
-            teacher_name = row['教师姓名']
-            # 创建学生对象
-            existing_teachingwork = TeachingWork.query.filter_by(id=id).first()
-            if existing_teachingwork:
-                continue  # 如果已存在，跳过
-            teachingwork = TeachingWork(id=id, course_id=course_id, course_name=course_name,
-                                        course_nature=course_nature, student_level=student_level,
-                                        teacher_id=teacher_id, teacher_name=teacher_name, teaching_time=teaching_time)
-            # 添加到数据库
-            db.session.add(teachingwork)
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('教学工作信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.close()
-def import_teaching_achievements_info(df):
-    try:
-        for index, row in df.iterrows():
-            achievement_year = row['成果获得年份']
-            name = row['名称']
-            level = row['层次']
-            description = row['描述']
 
-            # 检查数据库中是否已经存在相同的记录
-            if not TeachingAchievements.query.filter_by(
-                    achievement_year=achievement_year,
-                    name=name,
-                    level=level,
-                    description=description
-            ).first():
-                teachingachievement = TeachingAchievements(
-                    achievement_year=achievement_year,
-                    name=name,
-                    level=level,
-                    description=description
-                )
-                # 添加到数据库
-                db.session.add(teachingachievement)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('教学成果信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def import_papers_info(df):
-    try:
-        for index, row in df.iterrows():
-            publication_year = row['发表年份']
-            tupe = row['类型']
-            title = row['论文题目']
-            publication = row['期刊/会议名称']
-            publication_number=row['刊号/会议时间']
-
-            # 检查数据库中是否已经存在相同的记录
-            if not Papers.query.filter_by(
-                    publication_year=publication_year,
-                    tupe=tupe,
-                    title=title,
-                    publication=publication,
-                    publication_number=publication_number
-            ).first():
-                paper = Papers(
-                    publication_year=publication_year,
-                    tupe=tupe,
-                    title=title,
-                    publication=publication,
-                    publication_number=publication_number
-                )
-                # 添加到数据库
-                db.session.add(paper)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('论文信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def import_textbooks_info(df):
-    try:
-        for index, row in df.iterrows():
-            publication_year = row['出版年份']
-            name = row['教材名称']
-            award_info = row['获奖信息']
-
-            # 检查数据库中是否已经存在相同的记录
-            if not Textbooks.query.filter_by(
-                    publication_year=publication_year,name=name,award_info=award_info
-            ).first():
-                textbook = Textbooks(
-                    publication_year=publication_year, name=name, award_info=award_info
-                )
-                # 添加到数据库
-                db.session.add(textbook)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('教材信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def import_teaching_reform_info(df):
-    try:
-        for index, row in df.iterrows():
-            approval_year = row['获批年份']
-            name = row['名称']
-            level = row['层次']
-            description = row['描述']
-
-            # 检查数据库中是否已经存在相同的记录
-            if not TeachingReformProjects.query.filter_by(
-                    approval_year=approval_year,
-                    name=name,
-                    level=level,
-                    description=description
-            ).first():
-                project = TeachingReformProjects(
-                    approval_year=approval_year,
-                    name=name,
-                    level=level,
-                    description=description
-                )
-                # 添加到数据库
-                db.session.add(project)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('教改项目信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def import_research_achievements_info(df):
-    try:
-        for index, row in df.iterrows():
-            achievement_year = row['成果获得年份']
-            name = row['名称']
-            level = row['层次']
-            description = row['描述']
-
-            # 检查数据库中是否已经存在相同的记录
-            if not ResearchAchievements.query.filter_by(
-                    achievement_year=achievement_year,
-                    name=name,
-                    level=level,
-                    description=description
-            ).first():
-                achievement = ResearchAchievements(
-                    achievement_year=achievement_year,
-                    name=name,
-                    level=level,
-                    description=description
-                )
-                # 添加到数据库
-                db.session.add(achievement)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('科研成果信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def import_patents_info(df):
-    try:
-        for index, row in df.iterrows():
-            application_year = row['申请年份']
-            title = row['发明创造名称']
-            application_number = str(row['专利申请号'])
-            inventors = row['申请人']
-
-            # 检查数据库中是否已经存在相同的记录
-            if not Patents.query.filter_by(
-                    application_year=application_year,
-                    title=title,
-                    application_number=application_number,
-                    inventors=inventors
-            ).first():
-                patent = Patents(
-                    application_year=application_year,
-                    title=title,
-                    application_number=application_number,
-                    inventors=inventors
-                )
-                # 添加到数据库
-                db.session.add(patent)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('专利信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def import_copyrights_info(df):
-    try:
-        for index, row in df.iterrows():
-            registration_id = str(row['编号'])
-            registration_number = str(row['登记号'])
-            holder = row['著作权人']
-            software_name = row['软件名称']
-
-            # 检查数据库中是否已经存在相同的记录
-            if not Copyrights.query.filter_by(
-                    registration_id=registration_id,
-                    registration_number=registration_number,
-                    holder=holder,
-                    software_name=software_name
-            ).first():
-                copyright = Copyrights(
-                    registration_id=registration_id,
-                    registration_number=registration_number,
-                    holder=holder,
-                    software_name=software_name
-                )
-                # 添加到数据库
-                db.session.add(copyright)
-
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('著作权信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()
-def get_achievements_info():
-    # 查询教学成果
-    teaching_achievements = TeachingAchievements.query.all()
-
-    # 查询教学论文，注意关联模型的查询可能需要使用适当的joins或subqueries,tupe=='教学'
-    teaching_papers = Papers.query.filter_by(tupe='教学').all()
-
-    # 查询教材信息
-    textbooks = Textbooks.query.all()
-
-    # 查询教改项目信息
-    teaching_reform = TeachingReformProjects.query.all()
-
-    # 查询科研成果
-    research_achievements = ResearchAchievements.query.all()
-
-    # 查询科研论文，同样注意关联模型的查询
-    research_papers = Papers.query.filter_by(tupe='科研').all()
-
-    # 查询专利信息
-    patents = Patents.query.all()
-
-    # 查询著作权信息
-    copyrights = Copyrights.query.all()
-
-    # 准备传递给模板的数据结构
-    achievements = {
-        'teaching': {
-            'achievements': teaching_achievements,
-            'papers': teaching_papers,
-            'textbooks': textbooks,
-            'reform': teaching_reform,
-        },
-        'research': {
-            'achievements': research_achievements,
-            'papers': research_papers,
-            'patents': patents,
-            'copyrights': copyrights,
-        }
-    }
-    return achievements
-def import_admissions_info(df):
-    try:
-        for index, row in df.iterrows():
-            # 假设df已经包含所有需要的列
-            # 检查数据库中是否已经存在相同的记录
-            existing_admission = AdmissionInfo.query.filter_by(
-                category=row['招生类别'],
-                study_mode=row['学习形式'],
-                technical_requirements=row['技术要求'],
-                work_schedule=row['工作时间'],
-                other_requirements=row['其他要求'],
-                contact_person=row['联系人'],
-                contact_information=row['联系方式']
-            ).first()
-
-            if not existing_admission:
-                # 如果记录不存在，创建新的招生信息记录
-                admission = AdmissionInfo(
-                    category=row['招生类别'],
-                    technical_requirements=row['技术要求'],
-                    study_mode=row['学习形式'],
-                    work_schedule=row['工作时间'],
-                    other_requirements=row['其他要求'],
-                    contact_person=row['联系人'],
-                    contact_information=row['联系方式']
-                )
-                # 添加到数据库
-                db.session.add(admission)
-
-            if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
-                db.session.commit()
-
-        db.session.commit()  # 提交所有剩余的记录
-        flash('招生信息导入成功。')
-
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()  # 关闭会话
-def import_international_cooperation_info(df):
-    try:
-        for index, row in df.iterrows():
-            # 检查数据库中是否已经存在相同的记录
-            existing_record = InternationalPartnership.query.filter_by(
-                name=row['大学/企业名称'],
-                country=row['所属国家'],
-                project=row['合作项目']
-            ).first()
-
-            if not existing_record:
-                # 如果记录不存在，创建新的国际合作记录
-                new_partnership = InternationalPartnership(
-                    name=row['大学/企业名称'],
-                    country=row['所属国家'],
-                    project=row['合作项目'],
-                    start_date=row['开始时间'],
-                    end_date=row['结束时间'],
-                    status=row['状态'],
-                    description=row['描述']
-                )
-                db.session.add(new_partnership)
-
-            if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
-                db.session.commit()
-
-        db.session.commit()  # 提交所有剩余的记录
-        flash('国际合作信息导入成功。')
-
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.remove()  # 关闭会话
-
-def import_student_info(df):
-    try:
-        for index, row in df.iterrows():
-            student_id = row['学生ID']
-            name = row['姓名']
-            english_name = process_empty_values(row['英语姓名'])
-            gender = row['性别']
-            category = row['类别']
-            nationality = process_empty_values(row['国籍'])
-            admission_time = process_empty_values(row['入学时间'])
-            tutor_id = process_empty_values(row['导师工号'])
-            co_tutor_id = process_empty_values(row['副导师工号'])
-            tutor_name = process_empty_values(row['导师姓名'])
-            co_tutor_name = process_empty_values(process_empty_values(row['副导师姓名']))
-            birth_date = process_empty_values(row['出生日期'])
-            email = row['邮箱']
-            mobile = process_empty_values(row['手机'])
-            remarks = process_empty_values(row['备注'])
-            is_graduate = process_graduate_status(row['是否毕业'])
-            graduate_time = process_empty_values(row['毕业时间'])
-            first_employment_unit = process_empty_values(row['首次就业单位'])
-            # 创建学生对象
-            existing_student = Students.query.filter_by(id=student_id).first()
-            if existing_student:
-                continue  # 如果已存在，跳过
-            student = Students(student_id=student_id, name=name, english_name=english_name,
-                               gender=gender, category=category, nationality=nationality,
-                               admission_time=admission_time, tutor_id=tutor_id,
-                               co_tutor_id=co_tutor_id, birth_date=birth_date,
-                               email=email, mobile=mobile, remarks=remarks,
-                               is_graduate=is_graduate, graduation_time=graduate_time,
-                               first_employment_unit=first_employment_unit,
-                               tutor=tutor_name, co_tutor=co_tutor_name)
-            # 添加到数据库
-            db.session.add(student)
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('学生信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.close()
-def import_teacher_info(df):
-    try:
-        for index, row in df.iterrows():
-            teacher_id = row['工号']
-            name = row['姓名']
-            english_name = process_empty_values(row['英文名'])
-            gender = row['性别']
-            category = row['类别']
-            nationality = process_empty_values(row['国籍'])
-            unit = process_empty_values(row['单位'])
-            title = process_empty_values(row['职称'])
-            qualification = process_empty_values(row['导师资格'])
-            duty = process_empty_values(row['研究所职务'])
-            birth_date = process_empty_values(row['出生日期'])
-            email = row['电子邮件地址']
-            mobile = process_empty_values(row['手机'])
-            office_phone = process_empty_values(row['办公电话'])
-            remarks = process_empty_values(row['备注信息'])
-            social_part_time = process_empty_values(row['社会兼职'])
-            administrative_duty = process_empty_values(row['学院行政职务'])
-            existing_teachers = Teachers.query.filter_by(id=teacher_id).first()
-            if existing_teachers:
-                continue  # 如果已存在，跳过
-            # 创建教师对象
-            teacher = Teachers(teacher_id=teacher_id, name=name, english_name=english_name,
-                               gender=gender, category=category, nationality=nationality,
-                               unit=unit, title=title, qualification=qualification, duty=duty,
-                               birth_date=birth_date, email=email, mobile=mobile,
-                               office_phone=office_phone, remarks=remarks,
-                               social_part_time=social_part_time,
-                               administrative_duty=administrative_duty)
-            # 添加到数据库
-            db.session.add(teacher)
-            if index % 100 == 0:  # 每100条记录提交一次
-                db.session.commit()
-        db.session.commit()
-        flash('教师信息导入成功。')
-    except SQLAlchemyError as e:
-        db.session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    except Exception as e:
-        db.session.rollback()
-        flash('导入过程中发生错误：' + str(e))
-    finally:
-        db.session.close()
-def import_books_info(df):
-    try:
-        db_session = get_db_session()
-        for index, row in df.iterrows():
-            # 检查数据库中是否已经存在相同的图书编号
-            existing_book = db_session.query(Books).filter_by(
-                id=process_empty_values(row['图书编号'])
-            ).first()
-
-            if not existing_book:
-                # 如果图书不存在，创建新的图书记录
-                new_book = Books(
-                    id=process_empty_values(row['图书编号']),
-                    name=process_empty_values(str(row['图书名字'])),
-                    authors=process_empty_values(str(row['作者'])),
-                    publish_year=process_empty_values(str(row['出版年份'])),
-                    location=process_empty_values(str(row['图书当前位置'])),
-                    available=True  # 默认图书为可借状态
-                )
-                db_session.add(new_book)
-
-            if index % 100 == 0:  # 每处理100条记录，提交一次以减少内存使用
-                db_session.commit()
-
-        db_session.commit()  # 提交所有剩余的记录
-        flash('图书信息导入成功。')
-
-    except Exception as e:
-        db_session.rollback()  # 出错时回滚事务
-        flash('导入失败：' + str(e))
-    finally:
-        db_session.remove()  # 关闭会话
 
 def get_file_type(file_obj):
     """
@@ -731,6 +207,48 @@ def get_admissions_info():
                 'contact_information': info.contact_information,
             })
     return admissions_info
+
+def get_achievements_info():
+    # 查询教学成果
+    teaching_achievements = TeachingAchievements.query.all()
+
+    # 查询教学论文，注意关联模型的查询可能需要使用适当的joins或subqueries,tupe=='教学'
+    teaching_papers = Papers.query.filter_by(tupe='教学').all()
+
+    # 查询教材信息
+    textbooks = TextBooks.query.all()
+
+    # 查询教改项目信息
+    teaching_reform = TeachingReformProjects.query.all()
+
+    # 查询科研成果
+    research_achievements = ResearchAchievements.query.all()
+
+    # 查询科研论文，同样注意关联模型的查询
+    research_papers = Papers.query.filter_by(tupe='科研').all()
+
+    # 查询专利信息
+    patents = Patents.query.all()
+
+    # 查询著作权信息
+    copyrights = Copyrights.query.all()
+
+    # 准备传递给模板的数据结构
+    achievements = {
+        'teaching': {
+            'achievements': teaching_achievements,
+            'papers': teaching_papers,
+            'textbooks': textbooks,
+            'reform': teaching_reform,
+        },
+        'research': {
+            'achievements': research_achievements,
+            'papers': research_papers,
+            'patents': patents,
+            'copyrights': copyrights,
+        }
+    }
+    return achievements
 
 def get_news_info():
     news_data = [
