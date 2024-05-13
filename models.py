@@ -48,6 +48,24 @@ class Users(UserMixin, db.Model):
     library_status_id = db.Column(db.Integer, db.ForeignKey('library_status.id'), nullable=False)  # 图书馆常量设置ID，外键关联LibraryStatus表
     library_status = db.relationship('LibraryStatus', backref=db.backref('users', lazy=True))  # 图书馆常量设置对象，反向引用
 
+    def get_english_name(self):
+        return self.user_info.english_name
+    def get_teacher(self,zheng,type):
+        if self.students:
+            if self.students[0].on_campus_students:
+                if zheng == "正":
+                    if type == "name":
+                        return self.students[0].on_campus_students[0].tutor_name
+                    elif type == "id":
+                        return self.students[0].on_campus_students[0].tutor_id
+                elif zheng == "副":
+                    if type == "name":
+                        return self.students[0].on_campus_students[0].co_tutor_name
+                    elif type == "id":
+                        return self.students[0].on_campus_students[0].co_tutor_name
+
+        else:
+            return None
     @property
     def username(self):
         return self.user_info.username

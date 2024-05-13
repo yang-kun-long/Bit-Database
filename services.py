@@ -10,10 +10,10 @@ from datetime import datetime, timedelta
 
 def get_login_logs(user_type, current_user_id):
     # 根据用户类型和当前用户ID获取登录日志数据
-    if user_type == 'admin':
+    if user_type == '院长':
         # 院长获取所有人员的登录日志
         logs = db.session.query(LoginEvent).all()
-    elif user_type == 'teacher':
+    elif user_type == '全职教师':
         # 教师获取导师ID是当前用户ID的所有学生的登录日志
         logs1 = db.session.query(LoginEvent).filter(
             LoginEvent.tutor_id == current_user_id
@@ -28,10 +28,9 @@ def get_login_logs(user_type, current_user_id):
     return logs
 
 def longin_log(user,ip_address):
-    if user.user_info.user_type == 'student':
-        student = Students.query.filter_by(id=user.id).first()
-        tutor_id = student.tutor_id
-        co_tutor_id = student.co_tutor_id
+    if user.user_info.user_type == '在校生':
+        tutor_id = user.get_teacher('正','id')
+        co_tutor_id = user.get_teacher('副','id')
     else:
         tutor_id = None
         co_tutor_id = None
@@ -41,7 +40,7 @@ def longin_log(user,ip_address):
         session_id=session.sid if 'sid' in session else None,
         tutor_id=tutor_id,
         co_tutor_id=co_tutor_id,
-        user_name=user.username
+        user_name=user.user_info.username
     )
     return login_event
 

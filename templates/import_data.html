@@ -6,43 +6,49 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/import_data.css') }}">
 </head>
 <body>
-    <h1>批量导入数据</h1>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
+{% include 'base/navbar.html' %}
+{% include 'base/internal_managemt_sidebar.html' %}
+<div class="contentmain">
+    <main>
+        <h1>批量导入数据</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
         <ul class="flashes">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
         </ul>
-      {% endif %}
-    {% endwith %}
-    <form method="post" action="/import_data" enctype="multipart/form-data">
-        <label for="file">选择文件：</label>
-        <input type="file" id="file" name="file" accept=".csv, .xlsx, .xls" required>
+        {% endif %}
+        {% endwith %}
+        <form method="post" action="/import_data" enctype="multipart/form-data">
+            <label for="file">选择文件：</label>
+            <input type="file" id="file" name="file" accept=".csv, .xlsx, .xls" required>
 
-        <label for="data_type">选择数据类型：</label>
-        <select id="data_type" name="data_type" required>
-            <option value="">请选择数据类型</option>
-            <option value="on_campus_students">在校生信息</option>
-            <option value="graduated_students">毕业生信息</option>
-            <option value="teacher">老师信息</option>
-            <option value="research_work">科研工作信息</option>
-            <option value="teaching_work">教学工作信息</option>
-            <option value="teaching_achievements">教学成果</option>
-            <option value="teaching_papers">教学论文</option>
-            <option value="textbooks">教材</option>
-            <option value="teaching_reform">教改</option>
-            <option value="research_achievements">科研成果</option>
-            <option value="research_papers">科研论文</option>
-            <option value="patents">专利</option>
-            <option value="copyrights">著作权</option>
-            <option value="admissions">招生信息</option>
-            <option value="international_cooperation">国际合作信息</option>
-            <option value="books">图书信息</option>
-        </select>
-
-        <button type="submit">导入数据</button>
-    </form>
-    <script src="{{ url_for('static', filename='js/import_data.js') }}"></script>
+            <label for="data_type">选择数据类型：</label>
+            <select id="data_type" name="data_type" required>
+                <option value="">请选择数据类型</option>
+                <option value="on_campus_students">在校生信息</option>
+                <option value="graduated_students">毕业生信息</option>
+                <option value="teacher">老师信息</option>
+                <option value="research_work">科研工作信息</option>
+                <option value="teaching_work">教学工作信息</option>
+                <option value="teaching_achievements">教学成果</option>
+                <option value="teaching_papers">教学论文</option>
+                <option value="textbooks">教材</option>
+                <option value="teaching_reform">教改</option>
+                <option value="research_achievements">科研成果</option>
+                <option value="research_papers">科研论文</option>
+                <option value="patents">专利</option>
+                <option value="copyrights">著作权</option>
+                <option value="admissions">招生信息</option>
+                <option value="international_cooperation">国际合作信息</option>
+                <option value="books">图书信息</option>
+            </select>
+            <button type="submit">导入数据</button>
+        </form>
+    </main>
+</div>
+<script src="{{ url_for('static', filename='js/import_data.js') }}"></script>
+{% include 'base/footer.html' %}
 </body>
 </html>

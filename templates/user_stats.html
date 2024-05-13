@@ -4,23 +4,28 @@
     <meta charset="UTF-8">
     <title>用户统计</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_stats.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 </head>
 <body>
-    <h1>用户统计</h1>
-    <div class="stats-container">
-        <h2>登录统计</h2>
-        <table>
-            <tr>
-                <th>用户ID</th>
-                <th>用户名</th>
-                <th>登录时间</th>
-                <th>登出时间</th>
-                <th>IP地址</th>
-                <th>会话ID</th>
-                <th>导师ID</th>
-                <th>副导师ID</th>
-            </tr>
-            {% for log in login_logs %}
+{% include 'base/navbar.html' %}
+{% include 'base/internal_managemt_sidebar.html' %}
+<div class="contentmain">
+    <main>
+        <h1>用户统计</h1>
+        <div class="stats-container">
+            <h2>登录统计</h2>
+            <table>
+                <tr>
+                    <th>用户ID</th>
+                    <th>用户名</th>
+                    <th>登录时间</th>
+                    <th>登出时间</th>
+                    <th>IP地址</th>
+                    <th>会话ID</th>
+                    <th>导师ID</th>
+                    <th>副导师ID</th>
+                </tr>
+                {% for log in login_logs %}
                 <tr>
                     <td>{{ log.user_id }}</td>
                     <td>{{ log.user_name }}</td>
@@ -31,9 +36,12 @@
                     <td>{{ log.tutor_id }}</td>
                     <td>{{ log.co_tutor_id }}</td>
                 </tr>
-            {% endfor %}
-        </table>
-    </div>
-    <script src="{{ url_for('static', filename='js/user_stats.js') }}"></script>
+                {% endfor %}
+            </table>
+        </div>
+    </main>
+</div>
+{% include 'base/footer.html' %}
+<script src="{{ url_for('static', filename='js/user_stats.js') }}"></script>
 </body>
 </html>

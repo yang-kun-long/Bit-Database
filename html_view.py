@@ -117,11 +117,11 @@ def book_management():
 @login_required
 def user_stats():
     # 获取当前用户的ID
-    current_user_id = current_user.id
+    current_user_id = current_user.work_id
 
     # 只有所长和全职教师可以访问此路由
-    if current_user.user_type == 'admin' or current_user.user_type == 'teacher':
-        login_logs = get_login_logs(current_user.user_type, current_user_id)
+    if current_user.user_info.user_type == '所长' or current_user.user_info.user_type == '全职教师':
+        login_logs = get_login_logs(current_user.user_info.user_type, current_user_id)
         return render_template('user_stats.html', login_logs=login_logs)
     else:
         return '您没有权限访问此页面', 403

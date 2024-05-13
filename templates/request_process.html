@@ -6,24 +6,16 @@
     <title>图书借阅请求处理</title>
     <!-- 引入Bootstrap CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
-<!--    <style>-->
-<!--        .container {-->
-<!--            max-width: 960px;-->
-<!--        }-->
-<!--        table {-->
-<!--            width: 100%;-->
-<!--            margin-top: 20px;-->
-<!--        }-->
-<!--        .btn {-->
-<!--            margin: 5px;-->
-<!--        }-->
-<!--    </style>-->
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>图书借阅请求处理</h1>
-        <table class="table table-striped">
-            <thead>
+{% include 'base/navbar.html' %}
+{% include 'base/internal_managemt_sidebar.html' %}
+<div class="contentmain">
+    <main>
+        <div class="container mt-5">
+            <h1>图书借阅请求处理</h1>
+            <table class="table table-striped">
+                <thead>
                 <tr>
                     <th>ID</th>
                     <th>请求者</th>
@@ -32,18 +24,20 @@
                     <th>申请理由</th>
                     <th>操作</th>
                 </tr>
-            </thead>
-            <tbody id="requestsTableBody">
+                </thead>
+                <tbody id="requestsTableBody">
                 <!-- 请求将通过JavaScript动态加载 -->
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 引入jQuery -->
-    <script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.min.js') }}"></script>
-    <!-- 引入Bootstrap JS -->
-    <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
-    <!-- 引入自定义JavaScript -->
-    <script src="{{ url_for('static', filename='js/request_process.js') }}"></script>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% include 'base/footer.html' %}
+<!-- 引入jQuery -->
+<script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.min.js') }}"></script>
+<!-- 引入Bootstrap JS -->
+<script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
+<!-- 引入自定义JavaScript -->
+<script src="{{ url_for('static', filename='js/request_process.js') }}"></script>
 </body>
 </html>
