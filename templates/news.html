@@ -6,51 +6,67 @@
     <!-- 引入 Bootstrap CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <!-- 引入自定义样式 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+    <!--    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <!-- 导航栏内容，可以使用您已有的 HTML 结构 -->
+{% include 'base/navbar.html' %}
+<div class="sidebar">
+    <nav class="col-12 bg-light">
+        <!-- 副导航栏 -->
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link" href="#news">新闻动态</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#notice">通知通告</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#activity">学术活动</a>
+            </li>
+        </ul>
     </nav>
-
-    <div class="container">
-        <h1>动态消息</h1>
-
-        <div class="row">
-            <!-- 新闻动态 -->
-            <h2>新闻动态</h2>
-            {% for news_item in news_items %}
-            <div class="col-md-4">
-                <div class="news-item">
-                    <h3>{{ news_item.title }}</h3>
-                    <p>撰稿人：{{ news_item.author }}</p>
-                    <p>发稿时间：{{ news_item.publish_date }}</p>
-                    <!-- 显示新闻图片 -->
-                    <img src="{{ url_for('static', filename='images/' ~ news_item.image_path) }}" alt="新闻图片">
-                    <p>{{ news_item.summary }}</p>
-                    <!-- 提供文件下载链接 -->
-                    <a href="{{ url_for('download_news_file', filename=news_item.file_path) }}" class="btn btn-primary">下载文件</a>
-                </div>
-            </div>
-            {% endfor %}
-
-            <!-- 通知通告 -->
-            <div class="col-md-4">
-                <h2>通知通告</h2>
-                <!-- 通知内容 -->
-            </div>
-
-            <!-- 学术活动 -->
-            <div class="col-md-4">
-                <h2>学术活动</h2>
-                <!-- 学术活动内容 -->
+</div>
+<div class="contentmain">
+    <main class="container">
+    <!-- 新闻动态 -->
+    <section id="news" class="col-md-8">
+        <h2>新闻动态</h2>
+        {% for news_item in news_items %}
+        <div class="col-md-4">
+            <div class="news-item">
+                <h3>{{ news_item.title }}</h3>
+                <p>撰稿人：{{ news_item.author }}</p>
+                <p>发稿时间：{{ news_item.publish_date }}</p>
+                <!-- 显示新闻图片 -->
+                <img src="{{ url_for('static', filename='images/' ~ news_item.image_path) }}" alt="新闻图片">
+                <p>{{ news_item.summary }}</p>
+                <!-- 提供文件下载链接 -->
+                <a href="{{ url_for('download_news_file', filename=news_item.file_path) }}"
+                   class="btn btn-primary">下载文件</a>
             </div>
         </div>
-    </div>
-
-    <!-- 引入 jQuery 和 Bootstrap JavaScript -->
-    <script src="{{ url_for('static', filename='js/jquery-3.5.1.slim.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+        {% endfor %}
+    </section>
+    <!-- 通知通告 -->
+    <section id="notice" class="col-md-4">
+        <div class="col-md-4" ,id="notice-item">
+            <h2>通知通告</h2>
+            <!-- 通知内容 -->
+        </div>
+    </section>
+    <!-- 学术活动 -->
+    <section id="activity" class="col-md-4">
+        <div class="col-md-4" ,id="activity-item">
+            <h2>学术活动</h2>
+            <!-- 学术活动内容 -->
+        </div>
+    </section>
+    </main>
+</div>
+{% include 'base/footer.html' %}
+<!-- 引入 jQuery 和 Bootstrap JavaScript -->
+<script src="{{ url_for('static', filename='js/jquery-3.5.1.slim.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

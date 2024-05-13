@@ -6,29 +6,32 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <!-- 引入本地的 Bootstrap CSS -->
 
 </head>
 <body>
     {% include 'base/navbar.html' %}
-    <nav class="col-12 bg-light">
+    <div class="sidebar">
+        <nav class="col-12 bg-light">
                     <!-- 副导航栏 -->
-                    <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#introduction">研究所简介</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#faculty">师资队伍</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#students">学生信息</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contact">联系我们</a>
-                        </li>
-                    </ul>
+              <ul class="nav nav-pills">
+                  <li class="nav-item">
+                      <a class="nav-link" href="#introduction">研究所简介</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#faculty">师资队伍</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#students">学生信息</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#contact">联系我们</a>
+                  </li>
+              </ul>
         </nav>
-
+    </div>
+    <div class="contentmain">
     <section id="introduction">
         <h2>研究所简介</h2>
         <p>这里是研究所的介绍内容，可以及时更新。</p>
@@ -159,8 +162,9 @@
         <h2>联系我们</h2>
         <p>这里是联系信息的介绍内容。</p>
     </section>
-    {% include 'base/footer.html' %}
 
+    </div>
+    {% include 'base/footer.html' %}
     <!-- 引入本地的 Bootstrap JavaScript -->
     <script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>

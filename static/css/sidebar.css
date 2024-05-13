@@ -1,0 +1,70 @@
+/* 侧导航栏样式 */
+.sidebar {
+    width: 140px; /* 侧边栏的固定宽度 */
+    /*相对于.contentmain定位，位于其左面*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh; /* 侧边栏高度设置为视口全高 */
+    background-color: #f5f5f5; /* 侧边栏背景颜色 */
+    overflow-x: hidden; /* 隐藏水平滚动条 */
+    padding-top: 60px; /* 一些顶部内边距 */
+    z-index: 10; /* 确保侧边栏在页面最上层 */
+}
+
+.sidebar .nav-link {
+    padding-left:5px; /* 左侧内边距 */
+    text-decoration: none;
+    font-size: 18px; /* 字体大小 */
+    color: #212529; /* 字体颜色 */
+    display: block; /* 块级显示 */
+    width: 100%; /* 让链接宽度填满侧边栏 */
+    box-sizing: border-box; /* 包括内边距在宽度内 */
+}
+.sidebar .nav-link2 {
+    padding-left:15px; /* 左侧内边距 */
+    text-decoration: none;
+    font-size: 15px; /* 字体大小 */
+    color: #212529; /* 字体颜色 */
+    display: block; /* 块级显示 */
+    width: 100%; /* 让链接宽度填满侧边栏 */
+    box-sizing: border-box; /* 包括内边距在宽度内 */
+}
+
+
+.sidebar a:hover,
+.sidebar a:focus {
+    color: #007bff; /* 鼠标悬停或聚焦时颜色 */
+    background-color: #ddd; /* 鼠标悬停或聚焦时背景颜色 */
+    outline: none; /* 移除聚焦轮廓 */
+}
+
+.sidebar .active {
+    background-color: #007bff; /* 激活状态背景颜色 */
+    color: white; /* 激活状态字体颜色 */
+}
+
+/* 页面内容样式 */
+.contentmain {
+    margin-left: 140px; /* 左边距等于侧边栏宽度加上一些间距 */
+    padding: 1px 16px;
+}
+main {
+    min-height: calc(100vh - 190px); /* 100vh 减去页脚和导航栏的高度 */
+}
+
+/* 当屏幕宽度小于700px时，改变侧导航栏和内容的布局 */
+@media screen and (max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .sidebar a {
+        float: left;
+    }
+    .content {
+        margin-left: 0;
+    }
+}
+

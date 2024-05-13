@@ -57,16 +57,7 @@ nav ul li a:hover, nav ul li a.active {
     color: #333;
 }
 
-/* 页脚样式 */
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
+
 
 /* 动态消息列表样式 */
 .content ul {

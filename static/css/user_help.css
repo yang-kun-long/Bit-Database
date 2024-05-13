@@ -6,41 +6,13 @@ body {
     background-color: #f4f4f4;
 }
 
-header, footer {
+header {
     background: #333;
     color: #fff;
     padding: 10px 20px;
     text-align: center;
 }
 
-nav {
-    background: #333;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
-
-nav ul {
-    list-style: none;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-nav ul li a:hover, nav ul li a.active {
-    background: #555;
-}
 
 main {
     margin-top: 50px; /* 导航栏高度 */

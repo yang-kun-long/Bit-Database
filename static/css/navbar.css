@@ -3,11 +3,10 @@
     /*位置在浏览器右上角*/
     right: 10px;
     top: 10px;
-
-
     position: absolute;
     display: inline-block; /* 使头像作为一个inline-block元素，以正确应用宽度和高度 */
     cursor: pointer;
+    z-index: 100;
 }
 
 .user-avatar img {
@@ -54,6 +53,7 @@
     padding: 0.5rem 1rem;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 100;
 }
 
 .navbar-brand {

@@ -3,49 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>教学科研 - 网络攻防对抗技术研究所</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/research.css') }}">
+    <!-- 引入Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
 
 </head>
 <body>
-    <header>
-        <h1>网络攻防对抗技术研究所</h1>
-    </header>
-    <nav>
-        <!-- 导航链接，可以链接到首页、关于我们等 -->
+{% include 'base/navbar.html' %}
+<div class="sidebar">
+    <nav class="col-12 bg-light">
+        <!-- 副导航栏 -->
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link" href="#teaching">教学工作</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#research_work">科研工作</a>
+            </li>
+        </ul>
     </nav>
+</div>
+<div class="contentmain"> <!-- Bootstrap 容器 -->
     <main>
         <!-- 教学工作 -->
-        <section id="teaching">
+        <section id="teaching" class="my-5">
             <h2>教学工作</h2>
-            {% for work in teaching_works %}
-                <div class="course-info">
-                    <h3>课程编号：{{ work.course_id }}</h3>
-                    <p>课程名称：{{ work.course_name }}</p>
-                    <p>课程性质：{{ work.course_nature }}</p>
-                    <p>学生层次：{{ work.student_level }}</p>
-                    <p>授课时间：{{ work.teaching_time }}</p>
-                    <p>主讲教师：{{ work.owner_names }}</p>
+            <div class="row"> <!-- 网格系统的行 -->
+                {% for work in teaching_works %}
+                <div class="col-md-6"> <!-- 网格系统的列 -->
+                    <div class="card"> <!-- 使用卡片组件 -->
+                        <div class="card-header">
+                            课程编号：{{ work.course_id }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ work.course_name }}</h5>
+                            <p class="card-text">课程性质：{{ work.course_nature }}</p>
+                            <p class="card-text">学生层次：{{ work.student_level }}</p>
+                            <p class="card-text">授课时间：{{ work.teaching_time }}</p>
+                            <p class="card-text">主讲教师：{{ work.owner_names }}</p>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </section>
 
         <!-- 科研工作 -->
-        <section id="research_work">
+        <section id="research_work" class="my-5">
             <h2>科研工作</h2>
-            {% for project in research_works %}
-                <div class="project-info">
-                    <h3>项目名称：{{ project.project_name }}</h3>
-                    <p>项目性质：{{ project.project_nature }}</p>
-                    <p>负责人：{{ project.owner_names }}</p>
-                    <p>开始时间：{{ project.start_date }}</p>
-                    <p>结束时间：{{ project.end_date }}</p>
-                    <!-- 可以添加项目开始时间、结束时间、项目成果等信息 -->
+            <div class="row">
+                {% for project in research_works %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            项目名称：{{ project.project_name }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.project_nature }}</h5>
+                            <p class="card-text">负责人：{{ project.owner_names }}</p>
+                            <p class="card-text">开始时间：{{ project.start_date }}</p>
+                            <p class="card-text">结束时间：{{ project.end_date }}</p>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </section>
     </main>
-    <footer>
-        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
-    </footer>
+
+</div>
+{% include 'base/footer.html' %}
+
+
+<!-- 引入jQuery和Bootstrap JavaScript -->
+<script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

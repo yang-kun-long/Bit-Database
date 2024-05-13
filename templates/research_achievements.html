@@ -4,15 +4,55 @@
     <meta charset="UTF-8">
     <title>研究成果 - 网络攻防对抗技术研究所</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/research_achievements.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
 </head>
 <body>
-    <header>
-        <h1>网络攻防对抗技术研究所</h1>
-    </header>
-    <nav>
-        <!-- 导航链接 -->
+{% include 'base/navbar.html' %}
+<div class="sidebar">
+    <nav class="col-12 bg-light">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#teaching">教学</a>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#teaching-achievements">教学成果</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#teaching-papers">教学论文</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#textbooks">教材</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#teaching-reform">教改</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#research">科研</a>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#research-achievements">科研成果</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#research-papers">科研论文</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#patents">专利</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link2" href="#copyrights">著作权</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- 其他侧边栏项... -->
+        </ul>
     </nav>
+</div>
+<div class="contentmain">
     <main>
         <!-- 教学栏目 -->
         <section id="teaching">
@@ -23,11 +63,11 @@
                 <h3>教学成果</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>获得年份</th>
-                            <th>成果名称</th>
-                            <th>层次</th>
-                        </tr>
+                    <tr>
+                        <th>获得年份</th>
+                        <th>成果名称</th>
+                        <th>层次</th>
+                    </tr>
                     </thead>
                     <!-- 表格内容 -->
                     {% for achievement in achievements.teaching.achievements %}
@@ -45,19 +85,19 @@
                 <h3>教学论文</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>发表年份</th>
-                            <th>论文题目</th>
-                            <th>期刊/会议名称</th>
-                            <th>刊号/会议时间</th>
-                        </tr>
+                    <tr>
+                        <th>发表年份</th>
+                        <th>论文题目</th>
+                        <th>期刊/会议名称</th>
+                        <th>刊号/会议时间</th>
+                    </tr>
                     </thead>
                     {% for paper in achievements.teaching.papers %}
                     <tr>
                         <td>{{ paper.publication_year }}</td>
                         <td>{{ paper.title }}</td>
                         <td>{{ paper.publication }}</td>
-                        <td>{{ paper.publication_number }} </td>
+                        <td>{{ paper.publication_number }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -68,11 +108,11 @@
                 <h3>教材</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>出版年份</th>
-                            <th>教材名称</th>
-                            <th>获奖信息</th>
-                        </tr>
+                    <tr>
+                        <th>出版年份</th>
+                        <th>教材名称</th>
+                        <th>获奖信息</th>
+                    </tr>
                     </thead>
                     {% for book in achievements.teaching.textbooks %}
                     <tr>
@@ -89,12 +129,12 @@
                 <h3>教改</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>获批年份</th>
-                            <th>项目名称</th>
-                            <th>层次</th>
-                            <th>描述</th>
-                        </tr>
+                    <tr>
+                        <th>获批年份</th>
+                        <th>项目名称</th>
+                        <th>层次</th>
+                        <th>描述</th>
+                    </tr>
                     </thead>
                     {% for reform in achievements.teaching.reform %}
                     <tr>
@@ -117,12 +157,12 @@
                 <h3>科研成果</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>获得年份</th>
-                            <th>成果名称</th>
-                            <th>层次</th>
-                            <th>描述</th>
-                        </tr>
+                    <tr>
+                        <th>获得年份</th>
+                        <th>成果名称</th>
+                        <th>层次</th>
+                        <th>描述</th>
+                    </tr>
                     </thead>
                     {% for achievement in achievements.research.achievements %}
                     <tr>
@@ -140,22 +180,22 @@
                 <h3>科研论文</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>发表年份</th>
-                            <th>论文题目</th>
-                            <th>期刊/会议名称</th>
-                            <th>刊号/会议时间</th>
-                        </tr>
+                    <tr>
+                        <th>发表年份</th>
+                        <th>论文题目</th>
+                        <th>期刊/会议名称</th>
+                        <th>刊号/会议时间</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for paper in achievements.research.papers %}
-                        <tr>
-                            <td>{{ paper.publication_year }}</td>
-                            <td>{{ paper.title }}</td>
-                            <td>{{ paper.publication }}</td>
-                            <td>{{ paper.publication_number }} </td>
-                        </tr>
-                        {% endfor %}
+                    {% for paper in achievements.research.papers %}
+                    <tr>
+                        <td>{{ paper.publication_year }}</td>
+                        <td>{{ paper.title }}</td>
+                        <td>{{ paper.publication }}</td>
+                        <td>{{ paper.publication_number }}</td>
+                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </section>
@@ -165,11 +205,11 @@
                 <h3>专利</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>申请号</th>
-                            <th>申请人</th>
-                            <th>发明创造名称</th>
-                        </tr>
+                    <tr>
+                        <th>申请号</th>
+                        <th>申请人</th>
+                        <th>发明创造名称</th>
+                    </tr>
                     </thead>
                     {% for patent in achievements.research.patents %}
                     <tr>
@@ -186,12 +226,12 @@
                 <h3>著作权</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>登记号</th>
-                            <th>著作权人</th>
-                            <th>软件名称</th>
-                        </tr>
+                    <tr>
+                        <th>编号</th>
+                        <th>登记号</th>
+                        <th>著作权人</th>
+                        <th>软件名称</th>
+                    </tr>
                     </thead>
                     {% for copyright in achievements.research.copyrights %}
                     <tr>
@@ -205,8 +245,8 @@
             </section>
         </section>
     </main>
-    <footer>
-        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
-    </footer>
+</div>
+{% include 'base/footer.html' %}
+
 </body>
 </html>

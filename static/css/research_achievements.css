@@ -9,7 +9,7 @@ body {
     line-height: 1.6;
 }
 
-header, footer {
+header{
     text-align: center;
     background: #f4f4f4;
     padding: 1em;
@@ -40,27 +40,7 @@ h3 {
     margin: 0.5em 0;
 }
 
-nav ul {
-    padding: 0;
-    list-style: none;
-}
 
-nav ul li {
-    display: inline;
-    margin-right: 10px;
-}
-
-nav a {
-    text-decoration: none;
-    padding: 5px 10px;
-    background: #e0e0e0;
-    color: #333;
-}
-
-nav a:hover, nav a.active {
-    background: #333;
-    color: #fff;
-}
 
 table {
     width: 100%;
@@ -88,8 +68,4 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #ddd;
-}
-
-footer {
-    margin-top: 1em;
 }

@@ -12,26 +12,27 @@ header {
     text-align: center;
 }
 
-/* static/css/navbar.css */
+
+
+/* 其他样式保持不变，以下是原始样式内容 */
 .nav-pills .nav-link {
-    border-radius: 0; /* 移除导航链接的圆角 */
-    margin-right: 5px; /* 导航链接之间的间距 */
-    padding: 10px 15px; /* 导航链接的内边距 */
-    background-color: #eee; /* 导航链接的背景颜色 */
-    border: 1px solid #ddd; /* 导航链接的边框 */
+    border-radius: 0;
+    margin-right: 5px;
+    padding: 10px 15px;
+    background-color: #eee;
+    border: 1px solid #ddd;
 }
 
 .nav-pills .nav-link.active,
 .nav-pills .nav-link:hover {
-    background-color: #007bff; /* 激活状态或鼠标悬停时的背景颜色 */
+    background-color: #007bff;
     color: white;
     border-color: #007bff;
 }
 
 .nav-pills .nav-link.active {
-    font-weight: bold; /* 激活状态时的字体加粗 */
+    font-weight: bold;
 }
-
 
 section {
     padding: 15px;
@@ -48,7 +49,7 @@ h1, h2, h3 {
 }
 
 .student-photos li {
-    display: inline-block; /* 或者使用 block */
+    display: inline-block;
     margin: 5px;
     border: 1px solid #ddd;
     padding: 10px;
@@ -58,9 +59,9 @@ h1, h2, h3 {
 }
 
 .student-photos img {
-    max-width: 100px; /* 或者您希望的任何宽度 */
-    max-height: 100px; /* 或者您希望的任何高度 */
-    border-radius: 50%; /* 圆形照片 */
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50%;
 }
 .faculty-table {
     width: 100%;
@@ -119,6 +120,7 @@ h1, h2, h3 {
 .graduate-students-table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+
 /* 响应式设计 */
 @media (max-width: 600px) {
     nav ul li {

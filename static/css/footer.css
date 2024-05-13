@@ -1,12 +1,17 @@
 /* footer.css */
 
 footer {
+    position: relative;
+    bottom: 0; /* 底部对齐 */
+    left: 0; /* 左边对齐 */
+    width: 100%; /* 宽度为100% */
     background-color: #db2929; /* 设置页脚背景颜色为黑色 */
     color: #ffffff; /* 设置页脚文本颜色为白色，以便在黑色背景上可见 */
     padding: 20px 0; /* 上下内边距 */
     border-top: 1px solid #333333; /* 上边框线，颜色为深灰色，以提供一些对比 */
     font-size: 0.9rem; /* 字体大小 */
     margin-top: 50px; /* 与页面内容的距离 */
+    z-index: 1000;
 }
 
 footer a {

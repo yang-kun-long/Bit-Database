@@ -4,25 +4,27 @@
     <meta charset="UTF-8">
     <title>用户帮助 - 网络攻防对抗技术研究所</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_help.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 
 </head>
 <body>
-    <header>
-        <h1>用户帮助 - 网络攻防对抗技术研究所</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="/user_help">用户帮助</a></li>
+{% include 'base/navbar.html' %}
+<div class="sidebar">
+    <nav class="col-12 bg-light">
+        <!-- 副导航栏 -->
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link" href="#manual">用户手册</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#index">索引查询</a>
+            </li>
         </ul>
     </nav>
+</div>
+<div class="contentmain">
     <main>
         <section id="user_help">
-            <h2>用户帮助</h2>
-            <p>为用户提供联机帮助。形式：用户手册/索引查询。</p>
-            <ul>
-                <li><a href="#manual">用户手册</a></li>
-                <li><a href="#index">索引查询</a></li>
-            </ul>
             <section id="manual">
                 <h3>用户手册</h3>
                 <p>这里是用户手册的内容...</p>
@@ -33,8 +35,7 @@
             </section>
         </section>
     </main>
-    <footer>
-        <p>版权所有 &copy; 2024 网络攻防对抗技术研究所</p>
-    </footer>
+</div>
+{% include 'base/footer.html' %}
 </body>
 </html>
