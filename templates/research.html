@@ -24,7 +24,7 @@
                     <p>课程性质：{{ work.course_nature }}</p>
                     <p>学生层次：{{ work.student_level }}</p>
                     <p>授课时间：{{ work.teaching_time }}</p>
-                    <p>主讲教师：{{ work.teacher.name }}</p>
+                    <p>主讲教师：{{ work.owner_names }}</p>
                 </div>
             {% endfor %}
         </section>
@@ -36,7 +36,7 @@
                 <div class="project-info">
                     <h3>项目名称：{{ project.project_name }}</h3>
                     <p>项目性质：{{ project.project_nature }}</p>
-                    <p>负责人：{{ project.teacher.name }}</p>
+                    <p>负责人：{{ project.owner_names }}</p>
                     <p>开始时间：{{ project.start_date }}</p>
                     <p>结束时间：{{ project.end_date }}</p>
                     <!-- 可以添加项目开始时间、结束时间、项目成果等信息 -->

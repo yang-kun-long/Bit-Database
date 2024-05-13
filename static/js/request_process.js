@@ -12,7 +12,7 @@ $(document).ready(function() {// 页面加载完成后执行
                 requests.forEach(function(request) {
                     var row = $('<tr>');
                     row.append(`<td>${request.id}</td>`);
-                    row.append(`<td>${request.requester.username}</td>`);
+                    row.append(`<td>${request.requester_name}</td>`);
                     row.append(`<td>${request.book.name}</td>`);
                     row.append(`<td>${request.request_date}</td>`);
                     row.append(`<td>${request.request_reason}</td>`);

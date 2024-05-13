@@ -4,6 +4,7 @@ from config import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from pypinyin import lazy_pinyin
 
+
 def get_id_from_work_id(work_id):
     user = Users.query.filter_by(work_id=work_id).first()
     if user:
@@ -72,7 +73,11 @@ class Users(UserMixin, db.Model):
             if hasattr(self, attr):
                 setattr(self, attr, value)
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        base_dict= {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name not in ['user_info', 'library_status',]}
+
+        base_dict['user_info'] = self.user_info.to_dict() if self.user_info else None
+        base_dict['library_status'] = self.library_status.to_dict() if self.library_status else None
+        return base_dict
     def __init__(self, work_id, username, phone, user_type,gender, email=None,nationality=None,
                  birth_date=None, english_name=None, remarks=None,password='123456'):
         self.work_id = work_id
@@ -122,6 +127,9 @@ class UserInfo(db.Model):
         self.birth_date = birth_date
         self.nationality = nationality
         self.remarks = remarks
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class Students(db.Model):
@@ -192,18 +200,6 @@ class GraduatedStudents(db.Model):
         self.student_id = self.student.id
         db.session.add(self.student)
 
-class LoginEvent(db.Model):
-    __tablename__ = 'login_events'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user_name = db.Column(db.String(50))
-    ip_address = db.Column(db.String(45))  # 存储IP地址，长度根据实际需要调整
-    login_time = db.Column(db.DateTime, default=datetime.utcnow)
-    logout_time = db.Column(db.DateTime)  # 登出时间可能为空，如果用户还在会话中
-    session_id = db.Column(db.String(255))  # 存储会话ID，用于自动登出
-
-    user = db.relationship('Users', backref=db.backref('login_events', lazy=True))
 
 # 教师表
 class Teachers(db.Model):
@@ -274,6 +270,20 @@ class FullTimeTeachers(db.Model):
                                 english_name=english_name, remarks=remarks,user_type='全职教师')
         self.teacher_id = self.teacher.id
         db.session.add(self.teacher)
+class LoginEvent(db.Model):
+    __tablename__ = 'login_events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_name = db.Column(db.String(50))
+    ip_address = db.Column(db.String(45))  # 存储IP地址，长度根据实际需要调整
+    login_time = db.Column(db.DateTime, default=datetime.utcnow)
+    logout_time = db.Column(db.DateTime)  # 登出时间可能为空，如果用户还在会话中
+    session_id = db.Column(db.String(255))  # 存储会话ID，用于自动登出
+    tutor_id = db.Column(db.String(50))  # 导师ID，可能为空，如果用户是导师
+    co_tutor_id = db.Column(db.String(50))  # 副导师ID，可能为空，如果用户是副导师
+
+    user = db.relationship('Users', backref=db.backref('login_events', lazy=True))
 
 
 class TeachingWorksTeacherAssociation(db.Model):
@@ -522,11 +532,14 @@ class Patents(db.Model):
     application_number = db.Column(db.String(100), nullable=False)  # 专利申请号
     inventors = db.relationship('Users', secondary=PatentInventorAssociation.__table__,
                                backref=db.backref('patents', lazy=True))  # 专利申请人，用户实体集，多对多关系，中间表PatentInventorAssociation
-    def __init__(self, application_year, title, application_number, inventors):
+    # inventors_name是专利申请人姓名集合
+    inventors_names= db.Column(db.String(255), nullable=True)  # 专利申请人姓名集合
+    def __init__(self, application_year, title, application_number, inventors, inventors_names):
         application_year=str(application_year)
         self.application_year = application_year
         self.title = title
         self.application_number = application_number
+        self.inventors_names = str(inventors_names)
         db.session.add(self)
         self.create_inventors_association(inventors)  # inventors是user_id的列表
 
@@ -553,10 +566,12 @@ class Copyrights(db.Model):
     software_name = db.Column(db.String(255), nullable=False)  # 软件名称
     authors = db.relationship('Users', secondary=CopyrightAuthorAssociation.__table__,
                               backref=db.backref('copyrights', lazy=True))  # 著作权人，用户实体集，多对多关系，中间表CopyrightAuthorAssociation
-    def __init__(self, registration_id, registration_number, software_name, authors):
+    authors_names= db.Column(db.String(255), nullable=True)  # 著作权人姓名集合
+    def __init__(self, registration_id, registration_number, software_name, authors, authors_names):
         self.registration_id = str(registration_id)
         self.registration_number =str( registration_number)
         self.software_name = str(software_name)
+        self.authors_names = str(authors_names)
         db.session.add(self)
         self.create_authors_association(authors)  # authors是user_id的列表
     def create_authors_association(self, authors):
@@ -618,6 +633,7 @@ class BookLoans(db.Model):#图书借阅记录
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
     brows_request_id = db.Column(db.Integer, db.ForeignKey('book_loan_requests.id'), nullable=True)  # 外键关联BookLoanRequest表
     return_request_id = db.Column(db.Integer, db.ForeignKey('book_loan_requests.id'), nullable=True)  # 外键关联BookLoanRequest表
+    should_return_date = db.Column(db.DateTime, nullable=False)  # 应还日期
     loan_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime)
     status = db.Column(db.String(20), nullable=False)  # 借阅状态
@@ -626,7 +642,8 @@ class BookLoans(db.Model):#图书借阅记录
     brows_request = db.relationship('BookLoanRequest', foreign_keys=[brows_request_id])
     return_request = db.relationship('BookLoanRequest', foreign_keys=[return_request_id])
 
-
+    def get_left_days(self):
+        return (self.should_return_date - datetime.now()).days
     def to_json(self):
         return{
             'id': self.id,
@@ -693,6 +710,7 @@ class BookLoanRequest(db.Model):
             'processing_note': self.processing_note,
             'request_type': self.request_type,
             'requester': self.requester.to_dict(),
+            'requester_name': self.requester.user_info.username,
             'book': self.book.to_json()
         }
 
@@ -709,3 +727,5 @@ class LibraryStatus(db.Model):#图书馆管理常量设置
     borrow_limit=db.Column(db.Integer,default=2, nullable=False) #2  # 单个用户借阅数量限制
     violation_limit=db.Column(db.Integer,default=3, nullable=False)  # 3  # 单个用户违规记录数量限制
     is_book_admin=db.Column(db.Boolean,default=False, nullable=False)  # 是否图书管理员
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

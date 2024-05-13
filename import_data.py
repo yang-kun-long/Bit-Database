@@ -252,6 +252,7 @@ def import_patents_info(df):
             title = row['发明创造名称']
             application_number = process_number(row['专利申请号'])
             inventors=process_number(row['申请人工号'])
+            inventors_names = row['申请人']
             inventors_ids = split_ids(inventors)
 
             # 检查数据库中是否已经存在相同的记录
@@ -259,12 +260,14 @@ def import_patents_info(df):
                     application_year=application_year,
                     title=title,
                     application_number=application_number,
+                    inventors_names=inventors_names
             ).first():
                 Patents(
                     application_year=application_year,
                     title=title,
                     application_number=application_number,
-                    inventors=inventors_ids
+                    inventors=inventors_ids,
+                    inventors_names=inventors_names
                 )
             if index % 100 == 0:  # 每100条记录提交一次
                 db.session.commit()
@@ -284,6 +287,7 @@ def import_copyrights_info(df):
             registration_id = process_number(row['编号'])
             registration_number = process_number(row['登记号'])
             authors = process_number(row['著作权人工号'])
+            authors_names = row['著作权人']
             authors_ids = split_ids(authors)
             software_name = row['软件名称']
 
@@ -291,13 +295,15 @@ def import_copyrights_info(df):
             if not Copyrights.query.filter_by(
                     registration_id=registration_id,
                     registration_number=registration_number,
-                    software_name=software_name
+                    software_name=software_name,
+                    authors_names=authors_names
             ).first():
                 Copyrights(
                     registration_id=registration_id,
                     registration_number=registration_number,
                     software_name=software_name,
-                    authors=authors_ids
+                    authors=authors_ids,
+                    authors_names=authors_names
                 )
 
             if index % 100 == 0:  # 每100条记录提交一次

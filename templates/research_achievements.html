@@ -78,7 +78,7 @@
                     <tr>
                         <td>{{ book.publication_year }}</td>
                         <td>{{ book.name }}</td>
-                        <td>{{ book.award_info }}</td>
+                        <td>{{ book.awad_info }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -174,7 +174,7 @@
                     {% for patent in achievements.research.patents %}
                     <tr>
                         <td>{{ patent.application_number }}</td>
-                        <td>{{ patent.inventors }}</td>
+                        <td>{{ patent.inventors_names }}</td>
                         <td>{{ patent.title }}</td>
                     </tr>
                     {% endfor %}
@@ -197,7 +197,7 @@
                     <tr>
                         <td>{{ copyright.registration_id }}</td>
                         <td>{{ copyright.registration_number }}</td>
-                        <td>{{ copyright.holder }}</td>
+                        <td>{{ copyright.authors_names }}</td>
                         <td>{{ copyright.software_name }}</td>
                     </tr>
                     {% endfor %}

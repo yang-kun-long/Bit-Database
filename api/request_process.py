@@ -38,6 +38,7 @@ def process_borrow_request(request_id):
             new_loan = BookLoans(book_id=browse_request.book_id,
                                  user_id=browse_request.requester_id,
                                  loan_date=datetime.utcnow(),
+                                 should_return_date=datetime.utcnow() + timedelta(days=get_borrow_period(user)),
                                  status='借阅中',)
             browse_request.status = '同意'
             db.session.add(new_loan)

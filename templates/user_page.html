@@ -20,15 +20,15 @@
                 <label>用户名:</label> <strong>{{ user.username }}</strong>
             </div>
             <div class="info-item">
-                <label>邮箱:</label> <strong>{{ user.email }}</strong>
+                <label>邮箱:</label> <strong>{{ user.user_info.email }}</strong>
                 <button class="edit-btn btn btn-sm btn-primary" data-field="email">修改</button>
             </div>
             <div class="info-item">
-                <label>手机号:</label> <strong>{{ user.phone }}</strong>
+                <label>手机号:</label> <strong>{{ user.user_info.phone }}</strong>
                 <button class="edit-btn btn btn-sm btn-primary" data-field="phone">修改</button>
             </div>
             <div class="info-item">
-                <label>用户类型:</label> <strong>{{ user.user_type }}</strong>
+                <label>用户类型:</label> <strong>{{ user.user_info.user_type }}</strong>
                 <!-- 用户类型可能不需要修改按钮，根据实际情况决定 -->
             </div>
             <div class="info-item">
@@ -43,13 +43,9 @@
                 <h4>{{ loan.book.name }}</h4>
                 <p>作者: {{ loan.book.authors }}</p>
                 <p>借阅日期: {{ loan.loan_date }}</p>
-                {% if loan.return_date %}
-                    <p>归还日期: {{ loan.return_date }}</p>
-                {% else %}
-                    <p>归还日期: 未归还</p>
-                {% endif %}
+                <p>最晚归还日期: {{ loan.should_return_date}}</p>
                 <p>状态: {{ loan.status }}</p>
-                <p>剩余归还天数: <span id="daysLeft-{{ loan.id }}">{{ loan.days_left }}</span></p>
+                <p>剩余归还天数: <span id="daysLeft-{{ loan.id }}">{{ loan.get_left_days() }}</span></p>
                 {% if not loan.return_date %}
                     <button class="return-book-btn btn btn-sm btn-primary" data-loan-id="{{ loan.id }}">还书申请</button>
                 {% endif %}

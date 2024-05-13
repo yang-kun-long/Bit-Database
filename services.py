@@ -3,6 +3,7 @@ from flask import session,flash
 from models import *
 from config import db
 from sqlalchemy import func,Integer
+from collections import defaultdict
 
 import os
 from datetime import datetime, timedelta
@@ -27,7 +28,7 @@ def get_login_logs(user_type, current_user_id):
     return logs
 
 def longin_log(user,ip_address):
-    if user.user_type == 'student':
+    if user.user_info.user_type == 'student':
         student = Students.query.filter_by(id=user.id).first()
         tutor_id = student.tutor_id
         co_tutor_id = student.co_tutor_id
@@ -112,21 +113,120 @@ def process_empty_values(value, default=None):
 
 #获取全职教师信息的函数
 def get_faculty_info(category):
-    teachers = db.session.query(Teachers).filter(
-        Teachers.category == category
-    ).all()
-    return teachers
+    # 初始化两个列表，分别存储全职和兼职教师的信息
+    faculty_info = []
+    faculty_part_info = []
+
+    # 根据category的值来决定查询全职还是兼职教师
+    if category == '全职':
+        # 查询全职教师信息
+        full_time_teachers = FullTimeTeachers.query.all()
+        for full_time_teacher in full_time_teachers:
+            # 构建全职教师信息字典
+            faculty_info.append({
+                'name': full_time_teacher.teacher.user.user_info.username,
+                'title': full_time_teacher.teacher.title,
+                'qualification': full_time_teacher.qualification,
+                'duty': full_time_teacher.duty,
+                'social_part_time': full_time_teacher.social_part_time,
+                'administrative_duty': full_time_teacher.administrative_duty,
+            })
+    elif category == '兼职':
+        # 查询兼职教师信息
+        part_time_teachers = PartTimeTeachers.query.all()
+        for part_time_teacher in part_time_teachers:
+            # 构建兼职教师信息字典
+            faculty_part_info.append({
+                'name': part_time_teacher.teacher.user.user_info.username,
+                'title': part_time_teacher.teacher.title,
+                'unit': part_time_teacher.work_unit,
+            })
+    else:
+        # 如果category不是我们预期的值，可以返回错误信息或者空列表
+        return "Invalid category", []
+
+    # 根据category的值返回相应的教师信息列表
+    if category == '全职':
+        return faculty_info
+    elif category == '兼职':
+        return faculty_part_info
+
 
 def get_students_by_year():
-    students_by_year = {}
-    for year, in sorted(Students.query.with_entities(func.date_part('year', Students.admission_time).cast(Integer)).filter(Students.is_graduate == False).distinct().all()):
-        students = Students.query.filter(
-            Students.is_graduate == False,
-            func.date_part('year', Students.admission_time) == year
-        ).order_by(Students.admission_time.asc()).all()  # 按照入学时间升序排列
-        students_by_year[year] = students
+    # 查询所有在读学生信息，按照入学时间升序排列
+    # 假设OnCampusStudents表与Students表通过student_id字段关联
+    # 同时Students表与Users表通过user_id字段关联，Users表与UserInfo表通过user_info_id字段关联
+    on_campus_students_query = OnCampusStudents.query.join(Students).join(Users).join(UserInfo).order_by(
+        Students.admission_time).all()
 
+    # 创建一个字典，用于按照入学年份对学生进行分组
+    students_by_year = defaultdict(list)
+
+    # 遍历所有在读学生，按照入学年份分组
+    for student in on_campus_students_query:
+        # 获取入学时间的年份部分
+        admission_year = student.student.admission_time.year
+        # 获取学生信息
+        student_info = {
+            'id': student.student.id,
+            'name': student.student.user.username,
+            'student_id': student.student.user.work_id,
+            'photo_path': student.student.user.user_info.photo_path,
+            'gender': student.student.user.user_info.gender,
+            'category': student.student.category,
+            'nationality': student.student.user.user_info.nationality,
+            'tutor': student.tutor_name  # 假设导师信息存储在tutor_name字段中
+        }
+        # 将学生信息添加到对应的年份分组中
+        students_by_year[admission_year].append(student_info)
+
+    # 返回按照入学年份分组的学生信息
     return students_by_year
+
+def get_teaching_works_info():
+    # 获取所有教学和科研信息
+    teaching_works_info = []
+    teaching_works_query = TeachingWork.query.all()
+    for work in teaching_works_query:
+        # 获取所有主讲教师的姓名，并用逗号隔开
+        owner_names = ', '.join([owner.user_info.username for owner in work.owner])
+
+        # 构建教学工作信息字典
+        work_info = {
+            'course_id': work.course_id,
+            'course_name': work.course_name,
+            'course_nature': work.course_nature,
+            'student_level': work.student_level,
+            'teaching_time': work.teaching_time,
+            'owner_names': owner_names  # 主讲教师姓名集合
+        }
+
+        # 将教学工作信息添加到列表中
+        teaching_works_info.append(work_info)
+
+        # 返回格式化后的教学工作信息列表
+    return teaching_works_info
+    #返回词典
+def get_research_works_info():
+    # 获取所有科研信息
+    research_works_info = []
+    research_works_query = ResearchWork.query.all()
+    for work in research_works_query:
+        # 获取所有参与者的姓名，并用逗号隔开
+        owner_names = ', '.join([owner.user_info.username for owner in work.owner])
+        # 构建科研工作信息字典
+        work_info = {
+            'project_name': work.project_name,
+            'project_nature': work.project_nature,
+            'owner_names': owner_names , # 参与者姓名集合
+            'start_date': work.start_date,
+            'end_date': work.end_date
+        }
+        # 将科研工作信息添加到列表中
+        research_works_info.append(work_info)
+        # 返回格式化后的科研工作信息列表
+
+    return research_works_info
 
 
 def get_file_type(file_obj):
@@ -142,18 +242,36 @@ def get_file_type(file_obj):
     file_extension = os.path.splitext(filename)[1][1:]
     return file_extension
 
-def get_graduated_students_by_year():
-    graduated_students_by_year = {}
-    for year, in sorted(
-            Students.query.with_entities(func.date_part('year', Students.admission_time).cast(Integer)).filter(
-                    Students.is_graduate == True).distinct().all()):
-        students = Students.query.filter(
-            Students.is_graduate == True,
-            func.date_part('year', Students.admission_time) == year
-        ).order_by(Students.admission_time.asc()).all()  # 按照入学时间升序排列
-        graduated_students_by_year[year] = students
 
-    return graduated_students_by_year
+def get_graduated_students_by_year():
+    # 查询所有毕业学生信息，按照毕业时间降序排列
+    # 假设GraduatedStudents表与Students表通过student_id字段关联
+    # 同时Students表与Users表通过user_id字段关联，Users表与UserInfo表通过user_info_id字段关联
+    graduated_students_query = GraduatedStudents.query.join(Students).join(Users).join(UserInfo).order_by(
+        GraduatedStudents.graduation_time.desc()).all()
+
+    # 创建一个字典，用于按照毕业年份对学生进行分组
+    students_graduate = defaultdict(list)
+
+    # 遍历所有毕业学生，按照毕业年份分组
+    for student in graduated_students_query:
+        # 获取毕业时间的年份部分
+        graduation_year = student.graduation_time.year
+        # 获取学生信息
+        student_info = {
+            'student_id': student.student.user.work_id,
+            'name': student.student.user.username,
+            'gender': student.student.user.user_info.gender,
+            'category': student.student.category,
+            'admission_time': student.student.admission_time,
+            'graduation_time': student.graduation_time,
+            'first_employment_unit': student.first_employment_unit
+        }
+        # 将学生信息添加到对应的年份分组中
+        students_graduate[graduation_year].append(student_info)
+
+    # 返回按照毕业年份分组的学生信息
+    return students_graduate
 
 
 def get_admissions_info():
@@ -213,7 +331,7 @@ def get_achievements_info():
     teaching_achievements = TeachingAchievements.query.all()
 
     # 查询教学论文，注意关联模型的查询可能需要使用适当的joins或subqueries,tupe=='教学'
-    teaching_papers = Papers.query.filter_by(tupe='教学').all()
+    teaching_papers = Papers.query.filter_by(type='教学').all()
 
     # 查询教材信息
     textbooks = TextBooks.query.all()
@@ -225,7 +343,7 @@ def get_achievements_info():
     research_achievements = ResearchAchievements.query.all()
 
     # 查询科研论文，同样注意关联模型的查询
-    research_papers = Papers.query.filter_by(tupe='科研').all()
+    research_papers = Papers.query.filter_by(type='科研').all()
 
     # 查询专利信息
     patents = Patents.query.all()
@@ -249,6 +367,8 @@ def get_achievements_info():
         }
     }
     return achievements
+
+
 
 def get_news_info():
     news_data = [
@@ -312,3 +432,5 @@ def get_borrow_period(user):
     return user.library_status.borrow_period
 def get_interval_date(user):
     return user.library_status.interval_date
+def get_left_days(loan):
+    return (loan.should_return_date-datetime.utcnow()).days

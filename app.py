@@ -15,7 +15,7 @@ app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(request_api, url_prefix='/api/request_process')
 
 
-#建立所有表，如果表存在，就删除后建立新的
+# 建立所有表，如果表存在，就删除后建立新的
 with app.app_context():
     # db.drop_all()
     db.create_all()

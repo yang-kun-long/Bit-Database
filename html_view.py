@@ -24,8 +24,8 @@ login_manager.login_message = u"请先登录。"
 
 # 用户加载函数
 @login_manager.user_loader
-def load_user(userid):
-    user = db.session.get(Users, userid)
+def load_user(user_id):
+    user = db.session.get(Users, user_id)
     if user:
         return user
     else:
@@ -47,10 +47,10 @@ def research_achievements():
 @views_blueprint.route('/research')
 def research():
     # 将教学和科研信息传递给模板
-    teachers = Teachers.query.all()
-    teaching_works = TeachingWork.query.all()
-    research_works = ResearchWork.query.all()
-    return render_template('research.html', teachers=teachers,
+
+    teaching_works = get_teaching_works_info()
+    research_works = get_research_works_info()
+    return render_template('research.html',
                            teaching_works=teaching_works, research_works=research_works)
 @views_blueprint.route('/news')
 def news():
@@ -131,7 +131,7 @@ def login():
     if request.method == 'POST':
         userid = request.form['userid']
         password = request.form['password']
-        user = db.session.get(Users, userid)
+        user = Users.query.filter_by(work_id=str(userid)).first()
         print(user)
 
         # 如果用户存在且密码匹配，登录用户
@@ -203,11 +203,14 @@ def activate():
 def user_page():
     user_id = get_current_user_id()  # 假设这是从会话或令牌中获取当前用户ID的函数
     user = Users.query.get(user_id)
-    user_loans = BookLoans.query.filter_by(user_id=user_id, return_date=None).all()
+    user_loans = BookLoans.query.filter_by(user_id=user_id, status='借阅中').all()
+    left_days = []
+    for loan in user_loans:
+        left_days.append(get_left_days(loan))
 
 
     # 渲染模板并将用户信息、借阅列表和request_ids传递给模板
-    return render_template('user_page.html', user=user, user_loans=user_loans)
+    return render_template('user_page.html', user=user, user_loans=user_loans,left_days=left_days)
 
 
 @views_blueprint.route('/logout')
