@@ -8,7 +8,7 @@ from config import app
 def generate_activation_code(user_id, expiration=3600):
     payload = {
         'user_id': user_id,
-        'exp': datetime.utcnow() + timedelta(seconds=expiration)
+        'exp': datetime.now() + timedelta(seconds=expiration)
     }
     return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 def send_email(to_email, subject, content,id):

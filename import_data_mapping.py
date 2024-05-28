@@ -28,11 +28,16 @@ graduated_students_mapping = {
     '手机': 'phone',
     '备注': 'remarks',
     '毕业时间': 'graduation_time',
-    '首次就业单位': 'first_employment_unit'
+    '首次就业单位': 'first_employment_unit',
+    '导师姓名': 'tutor_name',
+    '副导师姓名': 'co_tutor_name',
+    '导师工号': 'tutor_id',
+    '副导师工号': 'co_tutor_id',
 }
 # 映射字典 - 全职教师
 full_time_mapping = {
     '工号': 'teacher_id',
+    '学历': 'education',
     '姓名': 'username',
     '英文名': 'english_name',
     '性别': 'gender',
@@ -51,6 +56,7 @@ full_time_mapping = {
 # 映射字典 - 兼职教师
 part_time_mapping = {
     '工号': 'teacher_id',
+    '学历': 'education',
     '姓名': 'username',
     '英文名': 'english_name',
     '性别': 'gender',

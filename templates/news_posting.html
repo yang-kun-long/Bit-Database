@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>研究所动态消息发布</title>
+    <link rel="stylesheet" href="static/bootstrap-4.6.2-dist/css/bootstrap.min.css">
+    <style>
+        .editor {
+            border: 1px solid #ccc;
+            min-height: 200px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>研究所动态消息发布</h1>
+        <form id="newsForm">
+            <div class="form-group">
+                <label for="title">标题</label>
+                <input type="text" class="form-control" id="title" placeholder="请输入标题" required>
+            </div>
+            <div class="form-group">
+                <label for="author">撰稿人</label>
+                <input type="text" class="form-control" id="author" placeholder="请输入撰稿人姓名" required>
+            </div>
+            <div class="form-group">
+                <label for="content">内容</label>
+                <div class="editor" id="content" contenteditable="true" placeholder="请输入内容"></div>
+            </div>
+            <div class="form-group">
+                <button type="button" id="insertImageBtn" class="btn btn-secondary">插入图片</button>
+            </div>
+            <button type="submit" class="btn btn-primary">提交</button>
+        </form>
+    </div>
+
+    <script src="static/jquery-3.5.1/jquery-3.5.1.js"></script>
+    <script src="static/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/news_posting.js"></script>
+</body>
+</html>

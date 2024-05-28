@@ -30,23 +30,24 @@ def process_borrow_request(request_id):
 
     try:
     # if True:
-        book = Books.query.get(browse_request.book_id)
+        print(browse_request.book_id)
+        book = Books.query.filter_by(book_id=browse_request.book_id).first()
         if action == '同意' and book.available:
 
             book.available = False
 
             new_loan = BookLoans(book_id=browse_request.book_id,
                                  user_id=browse_request.requester_id,
-                                 loan_date=datetime.utcnow(),
-                                 should_return_date=datetime.utcnow() + timedelta(days=get_borrow_period(user)),
+                                 loan_date=datetime.now(),
+                                 should_return_date=datetime.now() + timedelta(days=get_borrow_period(user)),
                                  status='借阅中',)
             browse_request.status = '同意'
             db.session.add(new_loan)
 
         elif action == '拒绝':
             browse_request.status = '拒绝'
-        browse_request.process_date = datetime.utcnow()
-        browse_request.processor_id = user_id
+        browse_request.process_date = datetime.now()
+        browse_request.processor_id = user.work_id
         browse_request.processing_note = note
         db.session.commit()
         return jsonify({'message': f'图书借阅请求已{action}'}), 200
@@ -76,28 +77,31 @@ def process_return_request(request_id):
     if action not in ['同意', '拒绝']:
         return jsonify({'message': '无效的操作'}), 400
     try:
-        book = Books.query.get(return_request.book_id)
+    # if True:
+        book = Books.query.filter_by(book_id=return_request.book_id).first()
         if action == '同意' and not book.available:
+
             book.available = True
 
             book_loan = BookLoans.query.filter_by(book_id=return_request.book_id, user_id=return_request.requester_id, return_date=None).first()
-            book_loan.return_date = datetime.utcnow()
-            if book_loan.loan_date < datetime.utcnow() - timedelta(days=get_borrow_period(book_loan.requester)):
+            book_loan.return_date = datetime.now()
+
+            if book_loan.loan_date < datetime.now() - timedelta(days=get_borrow_period(book_loan.requester)):
                 #创建违规记录
                 new_violation = ViolationRecords(user_id=return_request.requester_id, loan_id=book_loan.id,
-                                        description='超时归还', violation_date=datetime.utcnow(),
+                                        description='超时归还', violation_date=datetime.now(),
                                         user=return_request.requester)
                 db.session.add(new_violation)
 
-            book_loan.return_date = datetime.utcnow()
+            book_loan.return_date = datetime.now()
             book_loan.status = '已归还'
             return_request.status = '同意'
 
             #如果超时
         elif action == '拒绝':
             return_request.status = '拒绝'
-        return_request.process_date = datetime.utcnow()
-        return_request.processor_id = user_id
+        return_request.process_date = datetime.now()
+        return_request.processor_id = user.work_id
         return_request.processing_note = note
         db.session.commit()
         return jsonify({'message': f'图书归还请求已{action}'}), 200

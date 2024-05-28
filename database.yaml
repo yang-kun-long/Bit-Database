@@ -10,4 +10,10 @@ books:
   overdue_reminder_days: 3
   borrow_limit: 2
   violation_limit: 3
+databas:
+  dbname: bitdatabase
+  user: ykl
+  password: Ykl12138
+  host: 120.46.85.207
+  port: 26000
 

@@ -35,7 +35,7 @@ def longin_log(user,ip_address):
         tutor_id = None
         co_tutor_id = None
     login_event = LoginEvent(
-        user_id=user.id,
+        user_id=user.work_id,
         ip_address=ip_address,
         session_id=session.sid if 'sid' in session else None,
         tutor_id=tutor_id,
@@ -45,7 +45,7 @@ def longin_log(user,ip_address):
     return login_event
 
 def calculate_days_left(loan_date, loan_period):# 计算书籍借阅剩余天数
-    today = datetime.utcnow()
+    today = datetime.now()
     due_date = loan_date + timedelta(days=loan_period)
     days_left = (due_date - today).days
     return max(days_left, 0)
@@ -71,20 +71,31 @@ def split_ids(ids):
     """
     # 先替换中文分号为英文分号
     ids = ids.replace('；', ';')
+    # 去除空格
+    ids = ids.strip()
     # 再按分号分割
     ids_list = ids.split(';')
     # 去除空字符串
     ids_list = list(filter(lambda x: x!= '', ids_list))
     ids_list = [str(id) for id in ids_list]
     return ids_list
-
+def create_association(id_list,number_list,Model):
+    for i in range(len(id_list)):
+        # print(i, id_list[i], number_list[i].id)
+        if len(id_list[i]) == 0:
+            continue
+        for inventor_id in id_list[i]:
+            association = Model(project_id=number_list[i].id, user_id=inventor_id)
+            db.session.add(association)
 def process_number(value):
     """
     处理数字,如果是整数或者浮点数，则返回字符串
     浮点数转换为整数
     如果是字符串，则返回本身
     """
-    if isinstance(value, int) or isinstance(value, float):
+    if value==''or pd.isna(value):
+        return None
+    elif isinstance(value, int) or isinstance(value, float):
         return str(int(value))
     elif isinstance(value, str):
         return value
@@ -153,10 +164,11 @@ def get_faculty_info(category):
 
 def get_students_by_year():
     # 查询所有在读学生信息，按照入学时间升序排列
-    # 假设OnCampusStudents表与Students表通过student_id字段关联
-    # 同时Students表与Users表通过user_id字段关联，Users表与UserInfo表通过user_info_id字段关联
-    on_campus_students_query = OnCampusStudents.query.join(Students).join(Users).join(UserInfo).order_by(
-        Students.admission_time).all()
+    # 学生表中的graduation_time字段为None表示学生为在读书生
+    #不再有在校生表，所以不用查询
+    #从学生表中获取在校生信息并按照入学年份分组
+    on_campus_students_query = Students.query.filter(Students.graduation_time == None).order_by(
+        Students.admission_time.asc()).all()
 
     # 创建一个字典，用于按照入学年份对学生进行分组
     students_by_year = defaultdict(list)
@@ -164,16 +176,16 @@ def get_students_by_year():
     # 遍历所有在读学生，按照入学年份分组
     for student in on_campus_students_query:
         # 获取入学时间的年份部分
-        admission_year = student.student.admission_time.year
+        admission_year = student.admission_time.year
         # 获取学生信息
         student_info = {
-            'id': student.student.id,
-            'name': student.student.user.username,
-            'student_id': student.student.user.work_id,
-            'photo_path': student.student.user.user_info.photo_path,
-            'gender': student.student.user.user_info.gender,
-            'category': student.student.category,
-            'nationality': student.student.user.user_info.nationality,
+            'id': student.id,
+            'name': student.user.username,
+            'student_id': student.user.work_id,
+            'photo_path': student.user.user_info.photo_path,
+            'gender': student.user.user_info.gender,
+            'category': student.category,
+            'nationality': student.user.user_info.nationality,
             'tutor': student.tutor_name  # 假设导师信息存储在tutor_name字段中
         }
         # 将学生信息添加到对应的年份分组中
@@ -244,10 +256,11 @@ def get_file_type(file_obj):
 
 def get_graduated_students_by_year():
     # 查询所有毕业学生信息，按照毕业时间降序排列
-    # 假设GraduatedStudents表与Students表通过student_id字段关联
-    # 同时Students表与Users表通过user_id字段关联，Users表与UserInfo表通过user_info_id字段关联
-    graduated_students_query = GraduatedStudents.query.join(Students).join(Users).join(UserInfo).order_by(
-        GraduatedStudents.graduation_time.desc()).all()
+    # 学生表中的graduation_time字段不为None表示学生已毕业
+    # 不再有毕业学生表，所以不用查询
+    # 从学生表中获取毕业生信息并按照毕业年份分组
+    graduated_students_query = Students.query.filter(Students.graduation_time != None).order_by(
+        Students.graduation_time.desc()).all()
 
     # 创建一个字典，用于按照毕业年份对学生进行分组
     students_graduate = defaultdict(list)
@@ -258,11 +271,11 @@ def get_graduated_students_by_year():
         graduation_year = student.graduation_time.year
         # 获取学生信息
         student_info = {
-            'student_id': student.student.user.work_id,
-            'name': student.student.user.username,
-            'gender': student.student.user.user_info.gender,
-            'category': student.student.category,
-            'admission_time': student.student.admission_time,
+            'student_id': student.user.work_id,
+            'name': student.user.username,
+            'gender': student.user.user_info.gender,
+            'category': student.category,
+            'admission_time': student.admission_time,
             'graduation_time': student.graduation_time,
             'first_employment_unit': student.first_employment_unit
         }
@@ -397,7 +410,7 @@ def get_current_user_id():
 def check_overdue_books(user_id):
     db_session = get_db_session()
     # 设置提醒日期为当前时间之前的三天
-    due_date = datetime.utcnow() - timedelta(days=3)
+    due_date = datetime.now() - timedelta(days=3)
     # 查询指定用户所有已批准但未归还且即将到期的借阅记录
     overdue_loans = db_session.query(BookLoans).filter(
         BookLoans.status == 'approved',
@@ -432,4 +445,4 @@ def get_borrow_period(user):
 def get_interval_date(user):
     return user.library_status.interval_date
 def get_left_days(loan):
-    return (loan.should_return_date-datetime.utcnow()).days
+    return (loan.should_return_date-datetime.now()).days

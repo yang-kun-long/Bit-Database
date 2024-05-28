@@ -3,7 +3,7 @@ from datetime import datetime
 from config import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from pypinyin import lazy_pinyin
-
+from sqlalchemy.sql import func
 
 def get_id_from_work_id(work_id):
     user = Users.query.filter_by(work_id=work_id).first()
@@ -25,9 +25,9 @@ class Institution(db.Model):
     email = db.Column(db.String(255), nullable=False)  # 研究所邮箱
     website = db.Column(db.String(255), nullable=False)  # 研究所网站
     logo_path = db.Column(db.String(255), nullable=False)  # 研究所logo路径
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # 创建时间
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # 更新时间
-    operator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # 更新人ID，外键关联Users表
+    created_at = db.Column(db.DateTime, default=datetime.now)  # 创建时间
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)  # 更新时间
+    operator_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)  # 更新人ID，外键关联Users表
     operator = db.relationship('Users', backref=db.backref('institutions', lazy=True))  # 更新人对象，反向引用
 
 
@@ -36,9 +36,9 @@ class Users(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)  # 用户ID，主键
-    work_id = db.Column(db.String(20), nullable=False)  # 工号
+    work_id = db.Column(db.String(20), nullable=False, unique=True, index=True)  # 工号，唯一，可做索引
     password_hash = db.Column(db.String(528), nullable=False)  # 密码哈希
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # 创建时间
+    created_at = db.Column(db.DateTime, default=datetime.now)  # 创建时间
     last_login = db.Column(db.DateTime, default=None)  # 最后登录时间
     login_fail_count = db.Column(db.Integer, default=0)  # 登录失败次数
     last_fail_login = db.Column(db.DateTime, default=None)  # 上次登录失败时间
@@ -52,18 +52,16 @@ class Users(UserMixin, db.Model):
         return self.user_info.english_name
     def get_teacher(self,zheng,type):
         if self.students:
-            if self.students[0].on_campus_students:
-                if zheng == "正":
-                    if type == "name":
-                        return self.students[0].on_campus_students[0].tutor_name
-                    elif type == "id":
-                        return self.students[0].on_campus_students[0].tutor_id
-                elif zheng == "副":
-                    if type == "name":
-                        return self.students[0].on_campus_students[0].co_tutor_name
-                    elif type == "id":
-                        return self.students[0].on_campus_students[0].co_tutor_name
-
+            if zheng == "正":
+                if type == "name":
+                    return self.students[0].tutor_name
+                elif type == "id":
+                    return self.students[0].tutor_id
+            elif zheng == "副":
+                if type == "name":
+                    return self.students[0].co_tutor_name
+                elif type == "id":
+                    return self.students[0].co_tutor_name
         else:
             return None
     @property
@@ -103,7 +101,7 @@ class Users(UserMixin, db.Model):
         self.user_info = UserInfo( user_id=work_id, username=username, phone=phone, user_type=user_type,gender=gender, email=email,
                 nationality=nationality, birth_date=birth_date, english_name=english_name, remarks=remarks)
         self.user_info_id = self.user_info.id
-        self.created_at = datetime.utcnow()
+        self.created_at = datetime.now()
         self.last_login = None
         self.login_fail_count = 0
         self.last_fail_login = None
@@ -154,69 +152,33 @@ class Students(db.Model):
     __tablename__ = 'students'
 
     id = db.Column(db.Integer, primary_key=True)  # 学生ID，主键
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) # 学生
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False) # 学生
     category = db.Column(db.String(20), nullable=False)  # 学生类别（本科、硕士、博士）
     admission_time = db.Column(db.Date, nullable=False)  # 入学时间
     user = db.relationship('Users', backref=db.backref('students', lazy=True))  # 学生对象，反向引用
 
-    def __init__(self, student_id, category, admission_time, username, phone,gender,user_type, email=None,nationality=None,
-                 birth_date=None, remarks=None,english_name=None):
-        self.category = category
-        self.admission_time = admission_time
-        self.user = Users(work_id=student_id, password='123456', username=username, phone=phone,user_type=user_type,
-                          gender=gender,email=email,birth_date=birth_date,english_name=english_name, remarks=remarks,
-                          nationality=nationality)
-        self.user_id = self.user.id
-        db.session.add(self.user)
-
-class OnCampusStudents(db.Model):
-    __tablename__ = 'on_campus_students'
-
-    id = db.Column(db.Integer, primary_key=True)  # 在校生ID，主键
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)  # 学生学号，外键关联学生表
-    student = db.relationship('Students', backref=db.backref('on_campus_students', lazy=True))  # 学生实体，通过student_id字段，一对一关系
     tutor_id = db.Column(db.String(50), nullable=True)  # 导师ID，不做关联，因为有些人的导师在别的院系
     co_tutor_id = db.Column(db.String(50), nullable=True)  # 副导师ID，不做关联，因为有些人的副导师在别的院系
     tutor_name = db.Column(db.String(50), nullable=True)  # 导师姓名
     co_tutor_name = db.Column(db.String(50), nullable=True)  # 副导师姓名
-
-
-    def __init__(self, student_id, tutor_id, co_tutor_id, tutor_name, co_tutor_name,category,
-                 admission_time, username, phone,gender, email=None,nationality=None, birth_date=None,
-                 remarks=None,english_name=None):
-        student_id=str(student_id)
-        self.tutor_id = tutor_id
-        self.co_tutor_id = co_tutor_id
+    graduation_time = db.Column(db.Date, nullable=True)  # 毕业时间
+    first_employment_unit = db.Column(db.String(50), nullable=True)  # 初次就业单位
+    def __init__(self, student_id, category, admission_time, username, phone,gender,user_type,tutor_id=None,co_tutor_id=None,
+                 tutor_name=None,co_tutor_name=None,graduation_time=None,first_employment_unit=None, email=None,nationality=None,
+                 birth_date=None, remarks=None,english_name=None):
+        self.tutor_id = str(tutor_id)
+        self.co_tutor_id = str(co_tutor_id)
         self.tutor_name = tutor_name
         self.co_tutor_name = co_tutor_name
-
-        self.student = Students(student_id=student_id, category=category, admission_time=admission_time,
-                                username=username, phone=phone,gender=gender, email=email,nationality=nationality,
-                                birth_date=birth_date, remarks=remarks,english_name=english_name,user_type='在校生')
-        self.student_id = self.student.id
-        db.session.add(self.student)
-
-class GraduatedStudents(db.Model):
-    __tablename__ = 'graduated_students'
-
-
-    id = db.Column(db.Integer, primary_key=True)  # 毕业生ID，主键
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)  # 外键关联学生表
-    student = db.relationship('Students', backref=db.backref('graduated_students', lazy=True))  # 学生实体，通过student_id字段，一对一关系
-    graduation_time = db.Column(db.Date, nullable=False)  # 毕业时间
-    first_employment_unit = db.Column(db.String(50), nullable=False)  # 初次就业单位
-
-    def __init__(self, student_id, graduation_time, first_employment_unit,category,
-                 admission_time,username, phone,gender, email=None,nationality=None, birth_date=None,
-                 remarks=None,english_name=None,   ):
-        student_id=str(student_id)
         self.graduation_time = graduation_time
         self.first_employment_unit = first_employment_unit
-        self.student = Students(student_id=student_id, category=category, admission_time=admission_time,
-                                username=username, phone=phone, gender=gender, email=email,nationality=nationality,
-                                birth_date=birth_date, remarks=remarks, english_name=english_name,user_type='毕业生')
-        self.student_id = self.student.id
-        db.session.add(self.student)
+        self.category = category
+        self.admission_time = admission_time
+        self.user = Users(work_id=str(student_id), password='123456', username=username, phone=phone,user_type=user_type,
+                          gender=gender,email=email,birth_date=birth_date,english_name=english_name, remarks=remarks,
+                          nationality=nationality)
+        self.user_id = self.user.id
+        db.session.add(self.user)
 
 
 # 教师表
@@ -224,13 +186,15 @@ class Teachers(db.Model):
     __tablename__ = 'teachers'
     id = db.Column(db.Integer, primary_key=True)  # 教师ID，主键
     title = db.Column(db.String(50), nullable=True)  # 职称
-    user_id= db.Column(db.Integer , db.ForeignKey('users.id'),unique=True,nullable=False)
+    education = db.Column(db.String(50), nullable=True)  # 教师学历
+    user_id= db.Column(db.String(20) , db.ForeignKey('users.work_id'),unique=True,nullable=False)
     user = db.relationship('Users', backref=db.backref('teachers', lazy=True))  # 教师对象，反向引用
 
 
-    def __init__(self,title, teacher_id, username, phone,gender, user_type, email=None,nationality=None,
+    def __init__(self,title, teacher_id, username, phone,gender, user_type,education ,email=None,nationality=None,
                  birth_date=None, english_name=None, remarks=None,):
         self.title = title
+        self.education = education
         self.user = Users(work_id=teacher_id,  password='123456',username=username,
                           phone=phone,user_type=user_type,gender=gender,email=email,nationality=nationality,
                           birth_date=birth_date,english_name=english_name, remarks=remarks)
@@ -246,13 +210,13 @@ class PartTimeTeachers(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)  # 教师工号，外键关联Teacher表
     teacher = db.relationship('Teachers', backref=db.backref('part_time_teachers', lazy=True))  # 教师实体，通过teacher_id字段，一对一关系
 
-    def __init__(self,work_unit,  teacher_id, title, username, phone,gender, email=None,nationality=None,
+    def __init__(self,work_unit,  teacher_id, title, username, phone,gender,education, email=None,nationality=None,
                      birth_date=None, english_name=None, remarks=None,):
         teacher_id=str(teacher_id)
         self.work_unit = work_unit
 
         self.teacher = Teachers(title=title,teacher_id=teacher_id, username=username,phone=phone,
-                                gender=gender, email=email,nationality=nationality, birth_date=birth_date,
+                                gender=gender, education=education, email=email,nationality=nationality, birth_date=birth_date,
                                 english_name=english_name, remarks=remarks,user_type='兼职教师')
         self.teacher_id = self.teacher.id
         db.session.add(self.teacher)
@@ -263,14 +227,14 @@ class FullTimeTeachers(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # 全职教师ID，主键
 
     qualification = db.Column(db.String(50), nullable=True)  # 导师资格
-    duty = db.Column(db.String(50), nullable=True)  # 研究所职务
-    social_part_time = db.Column(db.String(50), nullable=True)  # 社会兼职
-    administrative_duty = db.Column(db.String(50), nullable=True)  # 学院行政职务
+    duty = db.Column(db.Text, nullable=True)  # 研究所职务
+    social_part_time = db.Column(db.Text, nullable=True)  # 社会兼职
+    administrative_duty = db.Column(db.Text, nullable=True)  # 学院行政职务
     office_phone = db.Column(db.String(20), nullable=True)  # 办公电话
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)  # 教师工号，外键关联Teacher表
     teacher = db.relationship('Teachers', backref=db.backref('full_time_teachers', lazy=True))  # 教师实体，通过teacher_id字段，一对一关系
     def __init__(self, teacher_id, title, qualification, duty, social_part_time, administrative_duty,office_phone,
-                 username, phone,gender,email=None,nationality=None,
+                 username, phone,gender,education, email=None,nationality=None,
                      birth_date=None, english_name=None, remarks=None,):
 
         teacher_id=str(teacher_id)
@@ -283,7 +247,7 @@ class FullTimeTeachers(db.Model):
             self.office_phone = ''
         else:
             self.office_phone = str(office_phone)
-        self.teacher = Teachers(title=title, teacher_id=teacher_id, username=username, phone=phone,
+        self.teacher = Teachers(title=title, teacher_id=teacher_id, username=username, education=education,phone=phone,
                                 gender=gender, email=email, nationality=nationality, birth_date=birth_date,
                                 english_name=english_name, remarks=remarks,user_type='全职教师')
         self.teacher_id = self.teacher.id
@@ -292,10 +256,10 @@ class LoginEvent(db.Model):
     __tablename__ = 'login_events'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'))
     user_name = db.Column(db.String(50))
     ip_address = db.Column(db.String(45))  # 存储IP地址，长度根据实际需要调整
-    login_time = db.Column(db.DateTime, default=datetime.utcnow)
+    login_time = db.Column(db.DateTime, default=datetime.now)
     logout_time = db.Column(db.DateTime)  # 登出时间可能为空，如果用户还在会话中
     session_id = db.Column(db.String(255))  # 存储会话ID，用于自动登出
     tutor_id = db.Column(db.String(50))  # 导师ID，可能为空，如果用户是导师
@@ -308,15 +272,15 @@ class TeachingWorksTeacherAssociation(db.Model):
     __tablename__ = 'teaching_works_teacher_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    teaching_work_id = db.Column(db.Integer, db.ForeignKey('teaching_work.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('teaching_work.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
 
 
 class TeachingWork(db.Model):
     __tablename__ = 'teaching_work'
 
     id = db.Column(db.Integer, primary_key=True)  # 课程ID，主键
-    course_id = db.Column(db.String(20), nullable=False)  # 课程编号
+    course_id = db.Column(db.String(20), nullable=False) # 课程编号,唯一，不可重复，可为索引
     course_name = db.Column(db.String(100), nullable=False)  # 课程名称
     course_nature = db.Column(db.String(50), nullable=False)  # 课程性质
     student_level = db.Column(db.String(50), nullable=False)  # 学生层次
@@ -328,19 +292,14 @@ class TeachingWork(db.Model):
         secondary=TeachingWorksTeacherAssociation.__table__,
         backref=db.backref('teaching_works', lazy='dynamic')
     )
-    def __init__(self, course_id, course_name, course_nature, student_level, teaching_time, teachers):
+    def __init__(self, course_id, course_name, course_nature, student_level, teaching_time, ):
         self.course_id = course_id
         self.course_name = course_name
         self.course_nature = course_nature
         self.student_level = student_level
         self.teaching_time = teaching_time
-        db.session.add(self)
-        self.create_teachers_association(teachers)#teachers是教师id的列表
-    def create_teachers_association(self, teachers):
-        for teacher in teachers:
-            user_id=get_id_from_work_id(teacher)
-            association = TeachingWorksTeacherAssociation(teaching_work_id=self.id, user_id=user_id)
-            db.session.add(association)
+
+
 
 # 定义与研究工作表的关联,多对多关系
 class ResearchWorkTeacherAssociation(db.Model):
@@ -348,15 +307,15 @@ class ResearchWorkTeacherAssociation(db.Model):
     __tablename__ ='research_work_teacher_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    research_work_id = db.Column(db.Integer, db.ForeignKey('research_work.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('research_work.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
 
 
 class ResearchWork(db.Model):
     __tablename__ = 'research_work'
 
     id = db.Column(db.Integer, primary_key=True)  # 科研工作ID，主键
-    project_id = db.Column(db.String(20), nullable=False)  # 项目编号
+    project_id = db.Column(db.String(20), nullable=False)  # 项目编号,唯一，不可重复，可为索引
     project_name = db.Column(db.String(100), nullable=False)  # 项目名称
     project_nature = db.Column(db.String(50), nullable=False)  # 项目性质
     start_date = db.Column(db.Date, nullable=True)  # 项目开始日期
@@ -368,19 +327,13 @@ class ResearchWork(db.Model):
         secondary=ResearchWorkTeacherAssociation.__table__,
         backref=db.backref('research_works', lazy='dynamic')
     )
-    def __init__(self,project_id, project_name, project_nature, start_date, end_date, teachers):
+    def __init__(self,project_id, project_name, project_nature, start_date, end_date, ):
         self.project_id = project_id
         self.project_name = project_name
         self.project_nature = project_nature
         self.start_date = start_date
         self.end_date = end_date
-        db.session.add(self)
-        self.create_teachers_association(teachers)  # teachers是教师id的列表
-    def create_teachers_association(self, teachers):
-        for teacher in teachers:
-            user_id=get_id_from_work_id(teacher)
-            association = ResearchWorkTeacherAssociation(research_work_id=self.id, user_id=user_id)
-            db.session.add(association)
+
 
 
 
@@ -388,8 +341,8 @@ class TeachingAchievementTeacherAssociation(db.Model):
     __tablename__ = 'teaching_achievements_teachers_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    achievement_id = db.Column(db.Integer, db.ForeignKey('teaching_achievements.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('teaching_achievements.id'), nullable=False)
 class TeachingAchievements(db.Model):
     __tablename__ = 'teaching_achievements'
 
@@ -400,26 +353,19 @@ class TeachingAchievements(db.Model):
     description = db.Column(db.Text, nullable=True)  # 成果描述
     owner = db.relationship('Users', secondary=TeachingAchievementTeacherAssociation.__table__,
                                backref=db.backref('teaching_achievements', lazy=True))  # 教师实体集,多对多关系，中间表TeachingAchievementTeacherAssociation
-    def __init__(self,level,  achievement_year, name, description, teachers):
+    def __init__(self,level,  achievement_year, name, description, ):
         achievement_year=str(achievement_year)
         self.achievement_year = achievement_year
         self.name = name
         self.level = level
         self.description = description
-        db.session.add(self)
-        self.create_teachers_association(teachers)  # teachers是教师id的列表
-    def create_teachers_association(self, teachers):
-        for teacher in teachers:
-            user_id=get_id_from_work_id(teacher)
-            association = TeachingAchievementTeacherAssociation(user_id=user_id, achievement_id=self.id)
-            db.session.add(association)
 
 class PaperAuthorAssociation(db.Model):
     __tablename__ = 'paper_author_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    paper_id = db.Column(db.Integer, db.ForeignKey('papers.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('papers.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
 
 class Papers(db.Model):
     __tablename__ = 'papers'
@@ -433,26 +379,19 @@ class Papers(db.Model):
     publication_number = db.Column(db.String(100), nullable=False)  # 刊号/会议时间
     authors = db.relationship('Users', secondary=PaperAuthorAssociation.__table__,
                               backref=db.backref('papers', lazy=True))  # 作者，用户实体集，多对多关系，中间表PaperAuthorAssociation
-    def __init__(self, publication_year, type, title, publication, publication_number, authors):
+    def __init__(self, publication_year, type, title, publication, publication_number, ):
         self.publication_year = str(publication_year)
         self.type = type
         self.title = title
         self.publication = publication
         self.publication_number = publication_number
-        db.session.add(self)
-        self.create_authors_association(authors)  # authors是user_id的列表
-    def create_authors_association(self, authors):
-        for author in authors:
-            user_id=get_id_from_work_id(author)
-            association = PaperAuthorAssociation(paper_id=self.id, user_id=user_id)
-            db.session.add(association)
 
 class BookAuthorAssociation(db.Model):
     __tablename__ = 'book_author_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('textbooks.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('textbooks.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
 class TextBooks(db.Model):
 
     __tablename__ = 'textbooks'
@@ -464,25 +403,18 @@ class TextBooks(db.Model):
     awad_info = db.Column(db.String(255), nullable=True)  # 获奖信息
     authors = db.relationship('Users', secondary=BookAuthorAssociation.__table__,
                               backref=db.backref('textbooks', lazy=True))  # 作者，用户实体集，多对多关系，中间表BookAuthorAssociation
-    def __init__(self, publication_year, name, awad_info, authors):
+    def __init__(self, publication_year, name, awad_info, ):
         publication_year=str(publication_year)
         self.publication_year = publication_year
         self.name = name
         self.awad_info = awad_info
-        db.session.add(self)
-        self.create_authors_association(authors)  # authors是user_id的列表
-    def create_authors_association(self, authors):
-        for author in authors:
-            user_id=get_id_from_work_id(author)
-            association = BookAuthorAssociation(book_id=self.id, user_id=user_id)
-            db.session.add(association)
 
 class TeachingReformTeacherAssociation(db.Model):
     __tablename__ = 'teaching_reform_projects_teachers_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    reform_id = db.Column(db.Integer, db.ForeignKey('teaching_reform_projects.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('teaching_reform_projects.id'), nullable=False)
 class TeachingReformProjects(db.Model):
     __tablename__ = 'teaching_reform_projects'
 
@@ -493,25 +425,19 @@ class TeachingReformProjects(db.Model):
     description = db.Column(db.Text, nullable=True)
     owner = db.relationship('Users', secondary=TeachingReformTeacherAssociation.__table__,
                                           backref=db.backref('teaching_reform_projects', lazy=True))  # 教师实体集,多对多关系，中间表TeachingReformTeacherAssociation
-    def __init__(self, approval_year, level, name, description, associated_teachers):
+    def __init__(self, approval_year, level, name, description, ):
         approval_year=str(approval_year)
         self.approval_year = approval_year
         self.name = name
         self.level = level
         self.description = description
-        db.session.add(self)
-        self.create_teachers_association(associated_teachers)  # associated_teachers是教师id的列表
-    def create_teachers_association(self, associated_teachers):
-        for teacher in associated_teachers:
-            user_id=get_id_from_work_id(teacher)
-            association = TeachingReformTeacherAssociation(user_id=user_id, reform_id=self.id)
-            db.session.add(association)
+
 class ResearchAchievementAuthorAssociation(db.Model):
     __tablename__ ='research_achievements_authors_association'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    achievement_id = db.Column(db.Integer, db.ForeignKey('research_achievements.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('research_achievements.id'), nullable=False)
 class ResearchAchievements(db.Model):
     __tablename__ ='research_achievements'
 
@@ -522,58 +448,49 @@ class ResearchAchievements(db.Model):
     description = db.Column(db.Text, nullable=True)  # 成果描述
     authors = db.relationship('Users', secondary=ResearchAchievementAuthorAssociation.__table__,
                               backref=db.backref('research_achievements', lazy=True))  # 作者，用户实体集，多对多关系，中间表ResearchAchievementAuthorAssociation
-    def __init__(self, achievement_year,level, name, description, authors):
+    def __init__(self, achievement_year,level, name, description):
         achievement_year=str(achievement_year)
         self.achievement_year = achievement_year
         self.name = name
         self.level = level
         self.description = description
-        db.session.add(self)
-        self.create_authors_association(authors)  # authors是user_id的列表
-    def create_authors_association(self, authors):
-        for author in authors:
-            user_id=get_id_from_work_id(author)
-            association = ResearchAchievementAuthorAssociation(user_id=user_id, achievement_id=self.id)
-            db.session.add(association)
+
 
 class PatentInventorAssociation(db.Model):
     __tablename__ = 'patent_inventor_association'
     id = db.Column(db.Integer, primary_key=True)
-    patent_id = db.Column(db.Integer, db.ForeignKey('patents.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('patents.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
 class Patents(db.Model):
     __tablename__ = 'patents'
 
     id = db.Column(db.Integer, primary_key=True)  # 专利ID，主键
-    application_year = db.Column(db.String(50), nullable=False)  # 申请年份
+    application_year = db.Column(db.Date, nullable=False)  # 申请年份
     title = db.Column(db.String(255), nullable=False)  # 专利名称
-    application_number = db.Column(db.String(100), nullable=False)  # 专利申请号
+    application_number = db.Column(db.String(100), nullable=False, unique=True, index=True)  # 专利申请号,唯一值，可做索引
+    status = db.Column(db.String(50), nullable=False)  # 专利状态（如：申请、授权、实施、驳回等）
     inventors = db.relationship('Users', secondary=PatentInventorAssociation.__table__,
-                               backref=db.backref('patents', lazy=True))  # 专利申请人，用户实体集，多对多关系，中间表PatentInventorAssociation
-    # inventors_name是专利申请人姓名集合
-    inventors_names= db.Column(db.String(255), nullable=True)  # 专利申请人姓名集合
-    def __init__(self, application_year, title, application_number, inventors, inventors_names):
-        application_year=str(application_year)
+                               backref=db.backref('patents', lazy=True))  # 专利发明人，用户实体集，多对多关系，中间表PatentInventorAssociation
+    # inventors_name是专利发明人人姓名集合
+    inventors_names= db.Column(db.String(255), nullable=True)  # 专利发明人姓名集合
+    #专利权人姓名集合
+    shareholders= db.Column(db.String(255), nullable=True)
+    def __init__(self, application_year, title, application_number, inventors_names,shareholders, status):
+        self.application_number = application_number
         self.application_year = application_year
         self.title = title
-        self.application_number = application_number
+        self.status = status
+        self.shareholders = shareholders
         self.inventors_names = str(inventors_names)
-        db.session.add(self)
-        self.create_inventors_association(inventors)  # inventors是user_id的列表
 
-    def create_inventors_association(self, inventors):
-        for inventor in inventors:
-            user_id=get_id_from_work_id(inventor)
-            association = PatentInventorAssociation(patent_id=self.id, user_id=user_id)
-            db.session.add(association)
 
 
 
 class CopyrightAuthorAssociation(db.Model):
     __tablename__ = 'copyrights_authors_association'
     id = db.Column(db.Integer, primary_key=True)
-    copyright_id = db.Column(db.Integer, db.ForeignKey('copyrights.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('copyrights.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
 class Copyrights(db.Model):
     __tablename__ = 'copyrights'
 
@@ -585,18 +502,12 @@ class Copyrights(db.Model):
     authors = db.relationship('Users', secondary=CopyrightAuthorAssociation.__table__,
                               backref=db.backref('copyrights', lazy=True))  # 著作权人，用户实体集，多对多关系，中间表CopyrightAuthorAssociation
     authors_names= db.Column(db.String(255), nullable=True)  # 著作权人姓名集合
-    def __init__(self, registration_id, registration_number, software_name, authors, authors_names):
+    def __init__(self, registration_id, registration_number, software_name,  authors_names):
         self.registration_id = str(registration_id)
         self.registration_number =str( registration_number)
         self.software_name = str(software_name)
         self.authors_names = str(authors_names)
-        db.session.add(self)
-        self.create_authors_association(authors)  # authors是user_id的列表
-    def create_authors_association(self, authors):
-        for author in authors:
-            user_id=get_id_from_work_id(author)
-            association = CopyrightAuthorAssociation(copyright_id=self.id, user_id=user_id)
-            db.session.add(association)
+
 
 
 class AdmissionInfo(db.Model):
@@ -627,15 +538,16 @@ class InternationalPartnership(db.Model):
 class Books(db.Model):#图书信息
     __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.String(100), nullable=False, unique=True, index=True)#图书ID，唯一值，可做索引
     name = db.Column(db.String(100), nullable=False)
-    authors = db.Column(db.String(100), nullable=False)
-    publish_year = db.Column(db.String(50), nullable=False)
-    location = db.Column(db.String(50))  # 图书当前位置
+    authors = db.Column(db.String(100), nullable=True)
+    publish_year = db.Column(db.String(50), nullable=True)
+    location = db.Column(db.String(50), nullable=True)  # 图书当前位置
     available = db.Column(db.Boolean, default=True)  # 图书是否可借
 
     def to_json(self):
         return {
-            'id': self.id,
+            'id': self.book_id,
             'name': self.name,
             'authors': self.authors,
             'publish_year': self.publish_year,
@@ -647,8 +559,8 @@ class Books(db.Model):#图书信息
 class BookLoans(db.Model):#图书借阅记录
     __tablename__ = 'book_loans'
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
-    user_id = db.Column(db.Integer,db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
+    book_id = db.Column(db.String(100), db.ForeignKey('books.book_id'), nullable=False)
+    user_id = db.Column(db.String(20),db.ForeignKey('users.work_id'), nullable=False)  # 外键关联Users表
     brows_request_id = db.Column(db.Integer, db.ForeignKey('book_loan_requests.id'), nullable=True)  # 外键关联BookLoanRequest表
     return_request_id = db.Column(db.Integer, db.ForeignKey('book_loan_requests.id'), nullable=True)  # 外键关联BookLoanRequest表
     should_return_date = db.Column(db.DateTime, nullable=False)  # 应还日期
@@ -677,7 +589,7 @@ class BookLoans(db.Model):#图书借阅记录
 class ViolationRecords(db.Model):#违规记录
     __tablename__ = 'violation_records'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # 外键关联Users表
+    user_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)  # 外键关联Users表
     loan_id = db.Column(db.Integer, db.ForeignKey('book_loans.id'), nullable=False)  # 外键关联BookLoans表
     violation_date = db.Column(db.DateTime, nullable=False)
     loans = db.relationship('BookLoans', backref=db.backref('violation_records', lazy='dynamic'))
@@ -689,10 +601,10 @@ class BookLoanRequest(db.Model):
     __tablename__ = 'book_loan_requests'
 
     id = db.Column(db.Integer, primary_key=True)
-    requester_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    processor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # 处理人ID，可以为空
-    book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
-    request_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    requester_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
+    processor_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=True)  # 处理人ID，可以为空
+    book_id = db.Column(db.String(100), db.ForeignKey('books.book_id'), nullable=False)
+    request_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     process_date = db.Column(db.DateTime)
     status = db.Column(db.String(50), nullable=False)  # 例如：'待处理', 'Approved', 'Rejected'
     request_reason = db.Column(db.Text)  # 申请理由
@@ -747,3 +659,23 @@ class LibraryStatus(db.Model):#图书馆管理常量设置
     is_book_admin=db.Column(db.Boolean,default=False, nullable=False)  # 是否图书管理员
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+# 资料下载
+class ResourceDownload(db.Model):
+    __tablename__ ='resource_downloads'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    url = db.Column(db.String(200), nullable=True)
+    type = db.Column(db.String(20), nullable=False)  # 资料类型
+    work_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
+    author = db.relationship('Users', backref=db.backref('resource', lazy='dynamic'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'url': self.url,
+            'type': self.type,
+            'work_id': self.work_id,
+            'author': self.author.to_dict()
+        }

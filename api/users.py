@@ -11,6 +11,7 @@ def update_user_info():
     user_id = get_current_user_id()
 
     user = Users.query.get(user_id)
+    user_info=user.user_info
     if not user:
         return jsonify({'message': '用户不存在'}), 404
 
@@ -22,8 +23,8 @@ def update_user_info():
             user.password = data['value']
         else:
             # 根据前端发送的 field 动态设置属性
-            if hasattr(user, data['field']):
-                setattr(user, data['field'], data['value'])
+            if hasattr(user_info, data['field']):
+                setattr(user_info, data['field'], data['value'])
             else:
                 # 如果用户模型没有对应的属性，可以返回错误或者忽略
                 return jsonify({'message': '无效的字段'}), 400

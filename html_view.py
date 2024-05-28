@@ -147,7 +147,7 @@ def login():
             else:
                 flash('您的账户未激活，请先激活。')
                 activation_code = generate_activation_code(userid)
-                send_verification_code(user.email, activation_code, userid)
+                send_verification_code(user.user_info.email, activation_code, userid)
                 return redirect(url_for('html_view.activate'))  # 重定向到激活页面
         # 否则，提示用户名或密码错误
         else:
@@ -168,7 +168,7 @@ def activate():
             # 解码令牌
             payload = jwt.decode(activation_code, app.config['SECRET_KEY'], algorithms=['HS256'])
             user_id = payload['user_id']
-            user = Users.query.get(user_id)
+            user = Users.query.filter_by(work_id=str(user_id)).first()
             if user and not user.is_active:
                 # 激活用户账户
                 user.is_active = True
@@ -180,7 +180,8 @@ def activate():
                 # 登录用户并重定向到首页或某个特定页面
                 login_user(user)
                 flash('账户已成功激活。')
-                return redirect(url_for('html_view.user_index'))  # 重定向到首页
+                # 重定向到首页
+                return redirect(url_for('html_view.index'))
             else:
                 flash('账户已激活或激活码无效。')
                 return render_template('activation_failed.html')
@@ -203,7 +204,7 @@ def activate():
 def user_page():
     user_id = get_current_user_id()  # 假设这是从会话或令牌中获取当前用户ID的函数
     user = Users.query.get(user_id)
-    user_loans = BookLoans.query.filter_by(user_id=user_id, status='借阅中').all()
+    user_loans = BookLoans.query.filter_by(user_id=user.work_id, status='借阅中').all()
     left_days = []
     for loan in user_loans:
         left_days.append(get_left_days(loan))
@@ -217,11 +218,11 @@ def user_page():
 @login_required
 def logout():
     # 获取当前登录用户的最后一条登录记录
-    last_login = db.session.query(LoginEvent).filter_by(user_id=current_user.id
+    last_login = db.session.query(LoginEvent).filter_by(user_id=current_user.work_id
                                 ).order_by(LoginEvent.id.desc()).first()
     if last_login:
         # 设置登出时间
-        last_login.logout_time = datetime.utcnow()
+        last_login.logout_time = datetime.now()
         # 提交数据库更改
         db.session.commit()
     # 清除用户会话
@@ -262,6 +263,9 @@ def update_user_info():
 
     # 返回用户主页
     return redirect(url_for('html_view.user_page'))
+@views_blueprint.route('/news_posting', methods=['GET', 'POST'])
+def news_posting():
+    return render_template('news_posting.html')
 # 导入用户的路由
 @views_blueprint.route('/import_data', methods=['GET', 'POST'])
 def import_data():

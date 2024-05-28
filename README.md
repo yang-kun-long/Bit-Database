@@ -1,54 +1,115 @@
 # Bit-Database
 ## 现有的表
-### 研究所简介表：（Institution）
-- id: 研究所ID，主键
-- name: 研究所名称
-- short_name: 研究所简称
-- introduction: 研究所简介
-- address: 研究所地址
-- phone: 研究所电话
-- fax: 研究所传真
-- email: 研究所邮箱
-- website: 研究所网站
-- logo_path: 研究所logo路径
-- created_at: 创建时间
-- updated_at: 更新时间
-- operator_id：更新人ID，外键关联Users表
-- operator: 更新人对象，反向引用
+### 研究所简介表 (Institution)
+
+#### 字段说明
+
+| 字段名         | 数据类型          | 描述                         | 是否主键 | 是否可为空 | 备注         |
+|---------------|-------------------|------------------------------|----------|------------|--------------|
+| id            | Integer           | 研究所ID                     | 是       | 否         | 主键         |
+| name          | String            | 研究所名称                   | 否       | 否         |              |
+| short_name    | String            | 研究所简称                   | 否       | 是         |              |
+| introduction  | Text              | 研究所简介                   | 否       | 是         |              |
+| address       | String            | 研究所地址                   | 否       | 是         |              |
+| phone         | String            | 研究所电话                   | 否       | 是         |              |
+| fax           | String            | 研究所传真                   | 否       | 是         |              |
+| email         | String            | 研究所邮箱                   | 否       | 是         |              |
+| website       | String            | 研究所网站                   | 否       | 是         | URL格式     |
+| logo_path     | String            | 研究所logo路径               | 否       | 是         | 文件路径     |
+| created_at    | DateTime          | 创建时间                     | 否       | 是         | 自动生成     |
+| updated_at    | DateTime          | 更新时间                     | 否       | 是         | 自动生成     |
+| operator_id   | Integer           | 更新人ID                     | 否       | 是         | 外键关联Users表 |
+| operator      | Object            | 更新人对象                   | 否       | 是         | 反向引用     |
+
+#### 备注
+
+- `operator_id` 字段作为外键，关联到 `Users` 表的主键，用于记录是哪个用户进行了最后一次更新操作。
+- `operator` 字段为反向引用字段，它引用 `Users` 表中与 `operator_id` 对应的用户对象。
+- `created_at` 和 `updated_at` 字段通常由数据库自动维护，记录实体的创建和最后更新时间。
 
 
-### 用户表：（Users）
-- id: 用户ID，主键
-- password_hash: 密码哈希
-- created_at: 创建时间
-- last_login: 最后登录时间
-- login_fail_count: 登录失败次数
-- last_fail_login: 上次登录失败时间
-- is_active: 是否激活
+### Users 模型
 
-- user_info_id: 用户信息ID，外键关联UserInfo表
-- user_info: 用户信息对象，反向引用
-- library_status_id: 图书馆常量设置ID，外键关联LibraryStatus表
-- library_status: 图书馆常量设置对象，反向引用
-- papers: 论文实体集，多对多关系,中间表PaperAuthorAssociation
-- Textbooks: 教材实体集，多对多关系,中间表BookAuthorAssociation
-- research_achievements: 科研成果实体集，多对多关系,中间表ResearchAchievementAuthorAssociation
-- patents: 专利实体集，多对多关系,中间表PatentAuthorAssociation
-- copyrights：著作权实体集，多对多关系,中间表CopyrightAuthorAssociation
+#### 描述
 
-### 用户信息表：（UserInfo）
-- id: 用户信息ID，主键
-- user_id: 用户ID，外键关联Users表
-- email: 邮箱
-- phone: 手机号
-- username: 用户名
-- english_name: 英文姓名
-- gender: 性别
-- user_type: 用户类型
-- photo_path: 照片路径
-- birth_date: 出生日期
-- nationality ：国籍
-- remarks: 备注信息
+`Users` 模型代表系统中的用户账户，包含用户的认证信息和个人资料的外键。
+
+##### 字段说明
+
+| 字段名             | 数据类型        | 描述                         | 是否可为空 | 默认值           | 关联模型         |
+|--------------------|-----------------|------------------------------|------------|------------------|------------------|
+| id                 | Integer         | 用户ID，主键                 | 否         | 自增             |                  |
+| work_id            | String(20)     | 工号                         | 否         |                  |                  |
+| password_hash      | String(528)    | 密码哈希                     | 否         |                  |                  |
+| created_at         | DateTime        | 创建时间                     | 是         | 当前时间戳       |                  |
+| last_login         | DateTime        | 最后登录时间                 | 是         | None             |                  |
+| login_fail_count   | Integer         | 登录失败次数                 | 是         | 0                |                  |
+| last_fail_login     | DateTime        | 上次登录失败时间             | 是         | None             |                  |
+| is_active          | Boolean         | 是否激活                     | 是         | False            |                  |
+| user_info_id       | Integer         | 用户信息ID，外键             | 否         |                  | UserInfo         |
+| user_info          | Object          | 用户信息对象，反向引用       | 是         |                  | UserInfo         |
+| library_status_id  | Integer         | 图书馆常量设置ID，外键     | 否         |                  | LibraryStatus    |
+| library_status     | Object          | 图书馆常量设置对象，反向引用 | 是         |                  | LibraryStatus    |
+
+###### 方法说明
+
+- `get_english_name(self)`: 返回用户信息中的英文名字段。
+- `get_teacher(self, zheng, type)`: 根据提供的 `zheng` 和 `type` 参数，返回学生的导师或共同导师的名称或ID。
+- `username` 属性: 返回用户信息中的用户名字段。
+- `set_password(self, password)`: 设置用户的密码，通过哈希处理。
+- `check_password(self, password)`: 检查提供的密码是否与用户的哈希密码匹配。
+- `get_id(self)`: 返回用户ID的字符串表示。
+- `activate(self)`: 激活用户账户。
+- `reset_password(self, new_password)`: 重置用户密码为提供的新密码。
+- `update_info(self, **kwargs)`: 根据提供的关键字参数更新用户信息。
+- `to_dict(self)`: 返回用户的字典表示，不包括 `user_info` 和 `library_status` 字段。
+
+###### 反向引用
+
+- `user_info`: 通过 `UserInfo` 模型关联用户详细信息。
+- `library_status`: 通过 `LibraryStatus` 模型关联图书馆状态信息。
+
+###### 默认值
+
+- 新建用户时，`is_active` 默认为 `False`，表示未激活。
+- `last_login` 默认为 `None`。
+- `login_fail_count` 默认为 `0`。
+- `password_hash` 默认为哈希处理后的 '123456'。
+
+### UserInfo 模型
+
+#### 描述
+
+`UserInfo` 模型用于存储用户的详细信息，包括用户名、邮箱、手机号等。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值                 | 备注    |
+|-----------------|-----------------|--------------------|------------|-------------------------|----------|
+| **id**          | Integer         | 用户信息ID，主键   | 否         | 自增                   |          |
+| **email**       | String(100)    | 邮箱               | 是         | None                    | 如果未提供邮箱，则使用用户ID生成默认邮箱 |
+| **phone**       | String(20)     | 手机号             | 是         | None                    |          |
+| **username**    | String(50)     | 用户名             | 否         | None                    | 用户登录时的用户名 |
+| **english_name**| String(50)     | 英文姓名           | 是         | 根据用户名生成拼音     |          |
+| **gender**      | String(10)     | 性别               | 是         | None                    |          |
+| **user_type**   | String(20)     | 用户类型           | 否         | None                    |          |
+| **photo_path**  | String(255)    | 照片路径           | 是         | "images/avatar.png"    | 默认头像 |
+| **birth_date**  | Date            | 出生日期           | 是         | None                    |          |
+| **nationality** | String(50)     | 国籍               | 是         | None                    |          |
+| **remarks**     | Text            | 备注信息           | 是         | None                    |          |
+
+#### 初始化方法
+
+`UserInfo` 类的构造函数接受多个参数，用以初始化用户信息。如果未提供邮箱，将使用用户ID生成一个默认的邮箱地址。如果未提供英文姓名，将使用中文用户名的拼音作为英文姓名。
+
+#### 方法说明
+
+- `__init__(self, user_id, username, phone, user_type, gender, email=None, nationality=None, birth_date=None, english_name=None, remarks=None, photo_path="images/avatar.png")`: 初始化用户信息，设置用户名、邮箱、手机号、用户类型、性别、英文姓名、照片路径、出生日期、国籍和备注信息。
+- `to_dict(self)`: 将用户信息对象转换为字典，方便进行数据序列化或传递。
+
+#### 默认值
+
+- `photo_path` 字段的默认值为 "images/avatar.png"，表示如果没有提供照片路径，则使用默认头像。
 
 ### 图书馆常量设置表：（LibraryStatus）
 - id: 图书馆常量设置ID，主键
@@ -60,246 +121,1248 @@
 - violation_limit: 单个用户违规记录数量限制 默认3
 - is_book_admin: 是否图书管理员
 
-### 学生表：
--id: 学生ID，主键
-- student_id: 学生学号,索引
-- category: 学生类别（本科、硕士、博士）
-- admission_time: 入学时间
-- user: 关联至Users表，通过student_id字段，一对一关系
+### 学生表
 
-### 在校生表：
-- id: 在校生ID，主键
-- student_id: 学生学号，外键关联学生表
-- student: 学生实体，通过student_id字段，一对一关系
-- tutor_id: 导师ID，不做关联，因为有些人的导师在别的院系
-- co_tutor_id: 副导师ID，不做关联，因为有些人的副导师在别的院系
-- tutor_name: 导师姓名
-- co_tutor_name: 副导师姓名
+#### 描述
 
-### 毕业生表：
-- id: 毕业生ID，主键
-- student_id: 学生学号，外键关联学生表
-- student: 学生实体，通过student_id字段，一对一关系
-- graduation_time: 毕业时间
-- first_employment_unit: 初次就业单位
+学生表用于存储学生的详细信息，包括学生的类别（如本科、硕士、博士）、入学时间以及与用户表的关联信息。
 
-### 教师表：(Teacher)
-- id: 教师ID，主键
-- teacher_id: 教师工号，索引
-- title: 职称
-- user:用户实体，通过teacher_id字段，一对一关系
+#### 字段说明
 
-### 兼职教师表：(PartTimeTeacher)
-- id: 兼职教师ID，主键
-- teacher_id: 教师工号，外键关联Teacher表
-- work_unit：工作单位
-- teacher: 教师实体，通过teacher_id字段，一对一关系
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值                 | 关联模型         |
+|-----------------|-----------------|--------------------|------------|-------------------------|------------------|
+| **id**          | Integer         | 学生记录ID，主键   | 否         | 自增                   |                  |
+| **user_id**     | Integer         | 用户ID，外键       | 否         | None                    | 用户表           |
+| **category**    | String(20)     | 学生类别           | 否         | None                    |                  |
+| **admission_time** | Date            | 入学时间           | 否         | None                    |                  |
+| **user**        | Object          | 用户对象，反向引用 | 是         | None                    | 用户表            |
 
-### 全职教师表：(FullTimeTeacher)
-- id: 全职教师ID，主键
-- teacher_id: 教师工号，外键关联Teacher表
-- qualification: 导师资格
-- duty: 研究所职务
-- social_part_time: 社会兼职
-- administrative_duty: 学院行政职务
-- office_phone: 办公电话
+#### 初始化方法
 
-### 用户登录表：(LoginEvent)
-- id: 登录事件ID，主键
-- user_id: 用户ID，外键关联Users表
-- user_name: 用户名
-- ip_address: IP地址
-- login_time: 登录时间
-- logout_time: 登出时间
-- session_id: 会话ID
-- user: 用户实体，通过user_id字段，多对一关系
+学生表的构造函数接受学生记录的相关信息，包括学生类别、入学时间以及用户表所需的所有参数。构造函数中，首先创建了一个用户表实例，然后将其与学生表实例关联。
 
-### 教学工作表：(TeachingWork)
-- id: 课程ID，主键
-- course_id: 课程编号
-- course_name: 课程名称
-- course_nature: 课程性质
-- student_level: 学生层次
-- teaching_time: 授课时间
-- owner: 用户实体集,多对多关系，中间表TeachingWorkTeacherAssociation
+#### 方法说明
 
-#### 教师教学关系表：(TeachingWorkTeacherAssociation)
-- id: 关系ID，主键
-- user_id: 用户ID，外键关联Users表
-- teaching_work_id: 教学工作ID
+- `__init__(self, student_id, category, admission_time, username, phone, gender, user_type, email=None, nationality=None, birth_date=None, remarks=None, english_name=None)`: 初始化学生记录，创建关联的用户表对象，并将该对象添加到数据库会话中。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `user`: 通过用户表关联用户信息，允许从学生表对象访问用户详情。
+
+#### 外键关系
+
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了学生表能够引用用户表中的相应记录。
+
+#### 注意事项
+
+- 在创建学生表记录时，也同时创建了一个用户表记录，并将两者关联。这意味着用户信息和学生信息将一起被添加到数据库中。
+
+### 在校生表
+
+#### 描述
+
+在校生表用于存储在校（即当前注册和活跃）学生的详细信息，包括与学生表的关联、导师信息等。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                             | 是否可为空 | 默认值           | 关联模型           |
+|----------------------|-----------------|----------------------------------|------------|------------------|--------------------|
+| **id**               | Integer         | 在校生记录ID，主键               | 否         | 自增             |                    |
+| **student_id**       | Integer         | 学生学号，外键关联学生表         | 否         | None             | 学生表             |
+| **student**          | Object          | 学生实体，一对一关系              | 是         | None             | 学生表             |
+| **tutor_id**         | String(50)     | 导师ID，不进行外键关联           | 是         | None             |                    |
+| **co_tutor_id**      | String(50)     | 副导师ID，不进行外键关联         | 是         | None             |                    |
+| **tutor_name**       | String(50)     | 导师姓名                         | 是         | None             |                    |
+| **co_tutor_name**    | String(50)     | 副导师姓名                       | 是         | None             |                    |
+
+#### 初始化方法
+
+在校生表的构造函数接受在校记录的相关信息，包括学生学号、导师ID、副导师ID、导师姓名、副导师姓名以及创建学生记录所需的所有参数。
+
+#### 方法说明
+
+- `__init__(self, student_id, tutor_id, co_tutor_id, tutor_name, co_tutor_name, category, admission_time, username, phone, gender, email=None, nationality=None, birth_date=None, remarks=None, english_name=None)`: 初始化在校生记录，创建关联的学生记录，并将其添加到数据库会话中。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `student`: 通过学生表关联学生信息，允许从在校生表对象访问学生详情。
+
+#### 外键关系
+
+- `student_id`: 与学生表的 `id` 字段形成外键关系，确保了在校生表能够引用学生表中的相应记录。
+
+#### 注意事项
+
+- 在创建在校生表记录时，也同时创建了一个学生表记录，并将两者关联。这意味着学生信息和在校生信息将一起被添加到数据库中。
+- `tutor_id` 和 `co_tutor_id` 字段不进行数据库外键关联，因为导师和副导师可能属于不同的院系，不具备直接的数据库关联关系。
+
+### 毕业生表
+
+#### 描述
+
+毕业生表用于存储毕业生的详细信息，包括毕业时间、初次就业单位以及与学生表的关联。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                             | 是否可为空 | 默认值           | 关联模型           |
+|----------------------|-----------------|----------------------------------|------------|------------------|--------------------|
+| **id**               | Integer         | 毕业生记录ID，主键               | 否         | 自增             |                    |
+| **student_id**       | Integer         | 学生学号，外键关联学生表         | 否         | None             | 学生表             |
+| **student**          | Object          | 学生实体，一对一关系              | 是         | None             | 学生表             |
+| **graduation_time**  | Date            | 毕业时间                         | 否         | None             |                    |
+| **first_employment_unit** | String(50)     | 初次就业单位                     | 否         | None             |                    |
+
+#### 初始化方法
+
+毕业生表的构造函数接受毕业生记录的相关信息，包括学生学号、毕业时间、初次就业单位以及创建学生记录所需的所有参数。
+
+#### 方法说明
+
+- `__init__(self, student_id, graduation_time, first_employment_unit, category, admission_time, username, phone, gender, email=None, nationality=None, birth_date=None, remarks=None, english_name=None)`: 初始化毕业生记录，创建关联的学生记录，并将其添加到数据库会话中。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `student`: 通过学生表关联学生信息，允许从毕业生表对象访问学生详情。
+
+#### 外键关系
+
+- `student_id`: 与学生表的 `id` 字段形成外键关系，确保了毕业生表能够引用学生表中的相应记录。
+
+#### 注意事项
+
+- 在创建毕业生表记录时，也同时创建了一个学生表记录，并将两者关联。这意味着学生信息和毕业生信息将一起被添加到数据库中。
+
+### 教师表
+
+#### 描述
+
+教师表用于存储教师的详细信息，包括职称、与用户表的关联等。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 教师记录ID，主键   | 否         | 自增             |                  |
+| **title**       | String(50)     | 职称               | 是         | None             |                  |
+| **user_id**     | Integer         | 用户ID，外键       | 否         | 唯一，非空       | 用户表           |
+| **user**        | Object          | 用户对象，反向引用 | 是         | None             | 用户表           |
+
+#### 初始化方法
+
+教师表的构造函数接受教师记录的相关信息，包括职称、教师工号以及其他创建用户记录所需的所有参数。
+
+#### 方法说明
+
+- `__init__(self, title, teacher_id, username, phone, gender, user_type, email=None, nationality=None, birth_date=None, english_name=None, remarks=None)`: 初始化教师记录，创建关联的用户记录，并将其添加到数据库会话中。
+
+#### 默认值
+
+- `password`: 用户表记录的密码字段默认为哈希处理后的 '123456'。
+
+#### 反向引用
+
+- `user`: 通过用户表关联用户信息，允许从教师表对象访问用户详情。
+
+#### 外键关系
+
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了教师表能够引用用户表中的相应记录。
+
+#### 注意事项
+
+- 在创建教师表记录时，也同时创建了一个用户表记录，并将两者关联。这意味着用户信息和教师信息将一起被添加到数据库中。
+- `user_id` 字段被设置为唯一，意味着不同的教师记录不能关联到同一个用户记录。
+
+### 兼职教师表
+
+#### 描述
+
+兼职教师表用于存储兼职教师的详细信息，包括工作单位、与教师表的关联等。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 兼职教师记录ID，主键 | 否         | 自增             |                  |
+| **work_unit**   | String(50)     | 工作单位           | 是         | None             |                  |
+| **teacher_id**  | Integer         | 教师工号，外键     | 否         | None             | 教师表           |
+| **teacher**     | Object          | 教师实体，一对一关系 | 是         | None             | 教师表           |
+
+#### 初始化方法
+
+兼职教师表的构造函数接受兼职教师记录的相关信息，包括工作单位、教师工号以及其他创建教师记录所需的所有参数。
+
+#### 方法说明
+
+- `__init__(self, work_unit, teacher_id, title, username, phone, gender, email=None, nationality=None, birth_date=None, english_name=None, remarks=None)`: 初始化兼职教师记录，创建关联的教师记录，并将其添加到数据库会话中。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `teacher`: 通过教师表关联教师信息，允许从兼职教师表对象访问教师详情。
+
+#### 外键关系
+
+- `teacher_id`: 与教师表的 `id` 字段形成外键关系，确保了兼职教师表能够引用教师表中的相应记录。
+
+#### 注意事项
+
+- 在创建兼职教师表记录时，也同时创建了一个教师表记录，并将两者关联。这意味着教师信息和兼职教师信息将一起被添加到数据库中。
+- `teacher_id` 字段作为外键，确保兼职教师记录与教师记录之间的一对一关联关系。
+
+### 全职教师表
+
+#### 描述
+
+全职教师表用于存储全职教师的详细信息，包括职称、导师资格、研究所职务、社会兼职、学院行政职务、办公电话以及与教师表的关联等。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值 | 关联模型         |
+|----------------------|-----------------|------------------------------|------------|----------|------------------|
+| **id**               | Integer         | 全职教师记录ID，主键         | 否         |         |                  |
+| **qualification**    | String(50)     | 导师资格                     | 是         | None    |                  |
+| **duty**             | String(50)     | 研究所职务                   | 是         | None    |                  |
+| **social_part_time** | String(50)     | 社会兼职                     | 是         | None    |                  |
+| **administrative_duty** | String(50)     | 学院行政职务                 | 是         | None    |                  |
+| **office_phone**     | String(20)     | 办公电话                     | 是         | ''      |                  |
+| **teacher_id**       | Integer         | 教师工号，外键               | 否         | None    | 教师表           |
+| **teacher**          | Object          | 教师实体，一对一关系          | 是         | None    | 教师表           |
+
+#### 初始化方法
+
+全职教师表的构造函数接受全职教师记录的相关信息，包括教师工号、职称、导师资格、研究所职务、社会兼职、学院行政职务、办公电话以及其他创建教师记录所需的所有参数。
+
+#### 方法说明
+
+- `__init__(self, teacher_id, title, qualification, duty, social_part_time, administrative_duty, office_phone, username, phone, gender, email=None, nationality=None, birth_date=None, english_name=None, remarks=None)`: 初始化全职教师记录，创建关联的教师记录，并将其添加到数据库会话中。
+
+#### 默认值
+
+- `office_phone`: 如果未提供办公电话，则默认为空字符串。
+
+#### 反向引用
+
+- `teacher`: 通过教师表关联教师信息，允许从全职教师表对象访问教师详情。
+
+#### 外键关系
+
+- `teacher_id`: 与教师表的 `id` 字段形成外键关系，确保了全职教师表能够引用教师表中的相应记录。
+
+#### 注意事项
+
+- 在创建全职教师表记录时，也同时创建了一个教师表记录，并将两者关联。这意味着教师信息和全职教师信息将一起被添加到数据库中。
+- `teacher_id` 字段作为外键，确保全职教师记录与教师记录之间的一对一关联关系。
+
+### 登录事件表
+
+#### 描述
+
+登录事件表用于记录用户登录系统的行为，包括用户ID、用户名、IP地址、登录和登出时间、会话ID以及导师或副导师ID。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值                 | 关联模型         |
+|-----------------|-----------------|--------------------|------------|-------------------------|------------------|
+| **id**          | Integer         | 登录事件记录ID，主键 | 否         | 自增                   |                  |
+| **user_id**     | Integer         | 用户ID，外键       | 是         | None                    | 用户表           |
+| **user_name**   | String(50)     | 用户名             | 是         | None                    |                  |
+| **ip_address**  | String(45)      | IP地址             | 是         | None                    |                  |
+| **login_time**  | DateTime        | 登录时间           | 否         | 当前时间戳             |                  |
+| **logout_time** | DateTime        | 登出时间           | 是         | None                    |                  |
+| **session_id**  | String(255)     | 会话ID             | 是         | None                    |                  |
+| **tutor_id**    | String(50)      | 导师ID             | 是         | None                    |                  |
+| **co_tutor_id** | String(50)      | 副导师ID           | 是         | None                    |                  |
+
+#### 反向引用
+
+- `user`: 通过用户表关联用户信息，允许从登录事件表对象访问用户详情。
+
+#### 外键关系
+
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了登录事件表能够引用用户表中的相应记录。
+
+#### 默认值
+
+- `login_time`: 默认为当前时间戳，用于记录用户登录的具体时间点。
+
+#### 注意事项
+
+- `logout_time`: 该字段可能为空，表示用户可能还在会话中，尚未登出。
+- `ip_address`: 长度根据实际存储的IP地址需要进行调整，确保能够正确存储IPv4或IPv6地址。
+- `session_id`: 用于识别用户的会话，可以用于实现自动登出等功能。
+- `tutor_id` 和 `co_tutor_id`: 这些字段可能为空，用于记录用户是否为导师或副导师，以及相应的ID。
+
+### 教学工作与教师关联表
+
+#### 描述
+
+教学工作与教师关联表用于建立教学工作和教师之间的关联关系，确保能够追踪哪些教师参与了哪些教学工作。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                             | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|----------------------------------|------------|------------------|-------------------|
+| **id**               | Integer         | 关联记录ID，主键                 | 否         | 自增             |                   |
+| **teaching_work_id** | Integer         | 教学工作ID，外键                 | 否         | None             | 教学工作表        |
+| **user_id**          | Integer         | 用户ID，外键                     | 否         | None             | 用户表           |
+
+#### 外键关系
+
+- `teaching_work_id`: 与教学工作表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教学工作记录。
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教师用户记录。
+
+#### 注意事项
+
+- 该表中的每条记录都代表了一个特定的教学工作与一个特定教师之间的关联。
+- 由于`teaching_work_id`和`user_id`字段都被设置为非空（`nullable=False`），因此在创建记录时必须指定这两个字段的值。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当教师参与新的教学工作或完成某项教学工作时，应更新此表以反映这些变化。
+- 此表可以用于生成教学工作分配报告或教师工作量统计。
+
+### 教学工作表
+
+#### 描述
+
+教学工作表用于存储教学工作的详细信息，包括课程编号、课程名称、课程性质、学生层次和授课时间。此外，通过多对多关系表`TeachingWorksTeacherAssociation`与用户表关联，以表示哪些教师负责哪些教学工作。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 教学工作ID，主键   | 否         | 自增             |                  |
+| **course_id**   | String(20)     | 课程编号           | 否         | None             |                  |
+| **course_name** | String(100)    | 课程名称           | 否         | None             |                  |
+| **course_nature** | String(50)     | 课程性质           | 否         | None             |                  |
+| **student_level** | String(50)     | 学生层次           | 否         | None             |                  |
+| **teaching_time** | String(50)     | 授课时间           | 否         | None             |                  |
+
+#### 多对多关系
+
+- `owner`: 通过`TeachingWorksTeacherAssociation`表与`Users`表建立多对多关系，表示教学工作和教师之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, course_id, course_name, course_nature, student_level, teaching_time, teachers)`: 初始化教学工作记录，并将教师与教学工作相关联。
+
+#### 方法说明
+
+- `create_teachers_association(self, teachers)`: 创建教学工作与教师之间的关联记录。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `teaching_works`: 在`Users`模型中，通过`owner`关系提供的反向引用属性，允许从教师对象访问其负责的所有教学工作。
+
+#### 注意事项
+
+- `teachers`参数在构造函数中接收的是一个教师ID的列表，用于初始化时建立教学工作与教师的关联。
+- `get_id_from_work_id(teacher)`函数用于从教师的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+### 研究工作与教师关联表
+
+#### 描述
+
+研究工作与教师关联表用于建立研究工作和教师之间的关联关系，确保能够追踪哪些教师参与了哪些研究工作。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|-------------------|
+| **id**               | Integer         | 关联记录ID，主键   | 否         | 自增             |                   |
+| **research_work_id** | Integer         | 研究工作ID，外键   | 否         | None             | 研究工作表        |
+| **user_id**          | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+
+#### 外键关系
+
+- `research_work_id`: 与研究工作表的 `id` 字段形成外键关系，确保了关联表能够引用具体的研究工作记录。
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教师用户记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当教师参与新的研究工作或完成某项研究工作时，应更新此表以反映这些变化。
+- 此表可以用于生成研究工作分配报告或教师工作量统计。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `research_works` 反向引用属性，允许从教师对象访问其参与的所有研究工作。
+
+### 研究工作表
+
+#### 描述
+
+研究工作表用于存储科研工作的详细信息，包括项目编号、项目名称、项目性质、项目开始和结束日期。此外，通过多对多关系表`ResearchWorkTeacherAssociation`与用户表关联，以表示哪些教师参与了哪些科研工作。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 科研工作ID，主键   | 否         | 自增             |                  |
+| **project_id**  | String(20)     | 项目编号           | 否         | None             |                  |
+| **project_name** | String(100)    | 项目名称           | 否         | None             |                  |
+| **project_nature** | String(50)     | 项目性质           | 否         | None             |                  |
+| **start_date**  | Date            | 项目开始日期       | 是         | None             |                  |
+| **end_date**    | Date            | 项目结束日期       | 是         | None             |                  |
+
+#### 多对多关系
+
+- `owner`: 通过`ResearchWorkTeacherAssociation`表与`Users`表建立多对多关系，表示科研工作和教师之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, project_id, project_name, project_nature, start_date, end_date, teachers)`: 初始化科研工作记录，并将教师与科研工作相关联。
+
+#### 方法说明
+
+- `create_teachers_association(self, teachers)`: 创建科研工作与教师之间的关联记录。
+
+#### 默认值
+
+- `start_date` 和 `end_date`: 项目开始和结束日期字段可以为空，允许记录尚未开始或结束日期未知的项目。
+
+#### 反向引用
+
+- `research_works`: 在`Users`模型中，通过
 
 
-### 科研工作表：(ResearchWork)
-- id: 科研工作ID，主键
-- project_name: 项目名称
-- project_nature: 项目性质
-- start_date: 项目开始日期
-- end_date: 项目结束日期
-- teacher_id: 承担项目的教师ID
-- associated_teachers: 教师实体集,多对多关系，中间表ResearchWorkTeacherAssociation
+### 教学成果与教师关联表
 
-#### 教师科研关系表：(ResearchWorkTeacherAssociation)
-- id: 关系ID，主键
-- teacher_id: 教师ID
-- research_work_id: 科研工作ID
+#### 描述
 
+教学成果与教师关联表用于建立教学成果和教师之间的关联关系，确保能够追踪哪些教师取得了哪些教学成果。
 
+#### 字段说明
 
-### 教学成果表：
-- id: 成果ID，主键
-- achievement_year: 成果年份
-- name: 成果名称
-- description: 成果描述
-- teachers: 教师实体集,多对多关系，中间表TeachingAchievementTeacherAssociation
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|-------------------|
+| **id**          | Integer         | 关联记录ID，主键   | 否         | 自增             |                   |
+| **user_id**     | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+| **achievement_id** | Integer         | 教学成果ID，外键   | 否         | None             | 教学成果表       |
 
-#### 教学成果与教师关系表：（TeachingAchievementTeacherAssociation）
-- id: 关系ID，主键
-- teacher_id: 教师ID，外键关联Teacher表
-- achievement_id: 教学成果ID，外键关联TeachingAchievements表
+#### 外键关系
 
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教师用户记录。
+- `achievement_id`: 与教学成果表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教学成果记录。
 
-### 论文表：
-- id: 论文ID，主键
-- publication_year: 发表年份
-- tupe: 类型：教学，科研
-- title: 论文题目
-- publication: 期刊/会议名称
-- publication_number: 刊号/会议时间
-- authors: 作者，用户实体集，多对多关系，中间表PaperAuthorAssociation
+#### 默认值
 
-#### 论文与作者关系表：（PaperAuthorAssociation）
-- id: 关系ID，主键
-- paper_id: 论文ID，外键关联Papers表
-- user_id: 作者ID，外键关联user表
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当教师取得新的教学成果或更新现有成果时，应更新此表以反映这些变化。
+- 此表可以用于生成教师的教学成果报告或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `teaching_achievements` 反向引用属性，允许从教师对象访问其取得的所有教学成果。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `user_id` 和 `achievement_id` 是有效的，并且分别对应用户表和教学成果表中的现有记录。
 
 
-### 教材表；(Textbooks)
-- id: 教材ID，主键
-- publication_year: 出版年份
-- name: 教材名称
-- awad_info: 获奖信息
-- authors: 作者，用户实体集，多对多关系，中间表BookAuthorAssociation
 
-#### 教材与作者关系表：（BookAuthorAssociation）
-- id: 关系ID，主键
-- book_id: 教材ID，外键关联Books表
-- user_id: 作者ID，外键关联user表
+### 教学成果表
 
-### 教改表：（TeachingReformProjects）
-- id: 教改ID，主键
-- approval_year: 批准年份
-- name: 教改项目名称
-- description: 教改项目描述
-- level:层次：国家、省部、校级
-- associated_teachers: 教师实体集,多对多关系，中间表TeachingReformTeacherAssociation
+#### 描述
 
-#### 教改与教师关系表：（TeachingReformTeacherAssociation）
-- id: 关系ID，主键
-- teacher_id: 教师ID，外键关联Teacher表
-- reform_id: 教改ID，外键关联TeachingReformProjects表
+教学成果表用于存储教师取得的教学成果的详细信息，包括成果年份、成果名称、级别和成果描述。通过多对多关系与用户表关联，表示哪些教师取得了哪些教学成果。
 
-### 科研成果表：（ResearchAchievements）
-- id: 科研成果ID，主键
-- achievement_year: 成果年份
-- name: 成果名称
-- level:层次：国家、省部、校级
-- description: 成果描述
-- authors: 用户实体集,多对多关系，中间表ResearchAchievementAuthorAssociation
+#### 字段说明
 
-#### 科研成果与用户关系表：（ResearchAchievementAuthorAssociation）
-- id: 关系ID，主键
-- user_id: 用户ID，外键关联Users表
-- achievement_id: 科研成果ID，外键关联ResearchAchievements表
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 教学成果ID，主键   | 否         | 自增             |                  |
+| **achievement_year** | String(50)     | 成果年份           | 否         | None             |                  |
+| **name**             | String(255)    | 成果名称           | 否         | None             |                  |
+| **level**            | String(50)     | 级别               | 否         | None             |                  |
+| **description**      | Text            | 成果描述           | 是         | None             |                  |
 
+#### 多对多关系
 
-### 专利表：（Patents）
-- id: 专利ID，主键
-- application_year: 申请年份
-- title: 专利名称
-- application_number: 专利申请号
-- Authors: 专利申请人，用户实体集，多对多关系，中间表PatentInventorAssociation
-#### 专利与申请人关系表：（PatentAuthorAssociation）
-- id: 关系ID，主键
-- patent_id: 专利ID，外键关联Patents表
-- user_id: 申请人ID，外键关联Users表
+- `owner`: 通过`TeachingAchievementTeacherAssociation`表与`Users`表建立多对多关系，表示教学成果和教师之间的关联。
 
-### 软件著作权表：（Copyrights）
-- id: 著作权ID，主键
-- registration_id: 注册号
-- registration_number: 登记号
-- software_name: 软件名称
-- authors: 著作权人，用户实体集，多对多关系，中间表CopyrightAuthorAssociation
-#### 软件著作权与著作权人关系表：（CopyrightAuthorAssociation）
-- id: 关系ID，主键
-- copyright_id: 著作权ID，外键关联Copyrights表
-- user_id: 著作权人ID，外键关联Users表
+#### 初始化方法
 
-### 招生信息表：（AdmissionInfo）
-- id: 招生信息ID，主键
-- category: 招生类别
-- technical_requirements: 技术要求
-- study_mode: 学习形式（全日制、在职、远程教育等）
-- work_schedule: 工作时间
-- other_requirements: 其他要求
-- contact_person: 联系人
-- contact_information: 联系信息
+- `__init__(self, level, achievement_year, name, description, teachers)`: 初始化教学成果记录，并将教师与教学成果相关联。
 
-### 国际合作项目表: （InternationalPartnerships）
-- id:合作项目ID，主键
-- name: 大学/企业名称
-- country: 所属国家
-- project: 合作项目
-- start_date: 合作开始时间
-- end_date: 合作结束时间
-- status: 合作状态（如：进行中、已完成、暂停等）
-- description: 合作项目描述或详情
+#### 方法说明
 
-### 图书表：（Books）
-- id: 图书ID，主键
-- name: 书名
-- authors: 作者
-- publish_year: 出版年份
-- location: 图书当前位置
-- available: 图书是否可借
+- `create_teachers_association(self, teachers)`: 创建教学成果与教师之间的关联记录。
 
-### 图书借阅记录表：（BookLoans）
-- id: 借阅记录ID，主键
-- book_id: 图书ID，外键关联Books表
-- user_id: 用户ID，外键关联Users表
-- brows_request_id: 借阅请求ID，外键关联BookLoanRequest表
-- return_request_id: 归还请求ID，外键关联BookLoanRequest表
-- loan_date: 借阅日期
-- return_date: 归还日期
-- status: 借阅状态（如：借出、归还、遗失、丢失、过期等）
-- book: 图书实体，通过book_id字段，多对一关系
-- requester: 用户实体，通过user_id字段，多对一关系
-- browser_request: 借阅请求实体，通过brows_request_id字段，多对一关系
-- return_request: 归还请求实体，通过return_request_id字段，多对一关系
+#### 默认值
 
-### 违规记录表：（ViolationRecords）
-- id: 违规记录ID，主键
-- user_id: 用户ID，外键关联Users表
-- loan_id: 图书借阅记录ID，外键关联BookLoans表
-- violation_date: 违规日期
-- description: 违规描述
-- user: 用户实体，通过user_id字段，多对一关系
-- loan: 图书借阅记录实体，通过loan_id字段，多对一关系
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `teaching_achievements`: 在`Users`模型中，通过`owner`关系提供的反向引用属性，允许从教师对象访问其取得的所有教学成果。
+
+#### 注意事项
+
+- `teachers`参数在构造函数中接收的是一个教师ID的列表，用于初始化时建立教学成果与教师的关联。
+- `get_id_from_work_id(teacher)`函数用于从教师的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
 
 
-### 借阅请求表：（BookLoanRequest）
-- id: 借阅请求ID，主键
-- requester_id: 请求者ID，外键关联Users表
-- processor_id: 处理人ID，外键关联Users表
-- book_id: 图书ID，外键关联Books表
-- request_date: 请求日期
-- process_date: 处理日期
-- status: 借阅请求状态（如：待处理、已批准、已拒绝等）
-- request_reason: 请求理由
-- processing_note: 处理备注
-- request_type: 申请类型（如：借阅、还书等）
-- requester: 请求者实体，通过requester_id字段，多对一关系
-- processor: 处理人实体，通过processor_id字段，多对一关系
-- book: 图书实体，通过book_id字段，多对一关系
+### 论文作者关联表
+
+#### 描述
+
+论文作者关联表用于建立论文与作者（用户）之间的关联关系，确保能够追踪哪些用户是哪些论文的作者。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 关联记录ID，主键   | 否         | 自增             |                  |
+| **paper_id**    | Integer         | 论文ID，外键       | 否         | None             | 论文表           |
+| **user_id**     | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+
+#### 外键关系
+
+- `paper_id`: 与论文表的 `id` 字段形成外键关系，确保了关联表能够引用具体的论文记录。
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的用户（作者）记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当用户作为新论文的作者或已有论文的作者信息更新时，应更新此表以反映这些变化。
+- 此表可以用于生成作者的论文发表记录或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `papers` 反向引用属性，允许从用户对象访问其作为作者的所有论文。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `paper_id` 和 `user_id` 是有效的，并且分别对应论文表和用户表中的现有记录。
+
+
+
+
+### 论文表
+
+#### 描述
+
+论文表用于存储论文的详细信息，包括发表年份、类型、题目、期刊/会议名称和刊号/会议时间。通过多对多关系表`PaperAuthorAssociation`与用户表关联，以表示哪些用户是论文的作者。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 论文ID，主键       | 否         | 自增             |                  |
+| **publication_year** | String(50)     | 发表年份           | 否         | None             |                  |
+| **type**             | String(50)     | 类型：教学，科研   | 否         | None             |                  |
+| **title**            | String(255)    | 论文题目           | 否         | None             |                  |
+| **publication**      | String(100)    | 期刊/会议名称     | 否         | None             |                  |
+| **publication_number** | String(100)    | 刊号/会议时间     | 否         | None             |                  |
+
+#### 多对多关系
+
+- `authors`: 通过`PaperAuthorAssociation`表与`Users`表建立多对多关系，表示论文和作者（用户）之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, publication_year, type, title, publication, publication_number, authors)`: 初始化论文记录，并将用户（作者）与论文相关联。
+
+#### 方法说明
+
+- `create_authors_association(self, authors)`: 创建论文与用户（作者）之间的关联记录。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 反向引用
+
+- `papers`: 在`Users`模型中，通过`authors`关系提供的反向引用属性，允许从用户对象访问其作为作者的所有论文。
+
+#### 注意事项
+
+- `authors`参数在构造函数中接收的是一个用户ID的列表，用于初始化时建立论文与作者的关联。
+- `get_id_from_work_id(author)`函数用于从作者的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+
+
+### 教材作者关联表
+
+#### 描述
+
+图书作者关联表用于建立教材与作者（用户）之间的关联关系，确保能够追踪哪些用户是哪些图书的作者。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 关联记录ID，主键   | 否         | 自增             |                  |
+| **book_id**     | Integer         | 图书ID，外键       | 否         | None             | 图书表           |
+| **user_id**     | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+
+#### 外键关系
+
+- `book_id`: 与图书表的 `id` 字段形成外键关系，确保了关联表能够引用具体的图书记录。
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的用户（作者）记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当用户作为新图书的作者或已有图书的作者信息更新时，应更新此表以反映这些变化。
+- 此表可以用于生成作者的图书出版记录或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `books` 反向引用属性，允许从用户对象访问其作为作者的所有图书。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `book_id` 和 `user_id` 是有效的，并且分别对应图书表和用户表中的现有记录。
+
+
+### 教材表
+
+#### 描述
+
+教材表用于存储教材的详细信息，包括出版年份、教材名称和获奖信息。通过多对多关系表`BookAuthorAssociation`与用户表关联，以表示哪些用户是教材的作者。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 教材ID，主键       | 否         | 自增             |                  |
+| **publication_year** | String(50)     | 出版年份           | 否         | None             |                  |
+| **name**             | String(255)    | 教材名称           | 否         | None             |                  |
+| **awad_info**        | String(255)    | 获奖信息           | 是         | None             |                  |
+
+#### 多对多关系
+
+- `authors`: 通过`BookAuthorAssociation`表与`Users`表建立多对多关系，表示教材和作者（用户）之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, publication_year, name, awad_info, authors)`: 初始化教材记录，并将用户（作者）与教材相关联。
+
+#### 方法说明
+
+- `create_authors_association(self, authors)`: 创建教材与用户（作者）之间的关联记录。
+
+#### 默认值
+
+- `awad_info`: 获奖信息字段可以为空，用于存储教材的获奖情况或相关信息。
+
+#### 反向引用
+
+- `textbooks`: 在`Users`模型中，通过`authors`关系提供的反向引用属性，允许从用户对象访问其作为作者的所有教材。
+
+#### 注意事项
+
+- `authors`参数在构造函数中接收的是一个用户ID的列表，用于初始化时建立教材与作者的关联。
+- `get_id_from_work_id(author)`函数用于从作者的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+
+### 教学改革项目与教师关联表
+
+#### 描述
+
+教学改革项目与教师关联表用于建立教学改革项目和教师之间的关联关系，确保能够追踪哪些教师参与了哪些教学改革项目。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|-----------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**          | Integer         | 关联记录ID，主键   | 否         | 自增             |                  |
+| **user_id**     | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+| **reform_id**   | Integer         | 教学改革项目ID，外键 | 否         | None             | 教学改革项目表   |
+
+#### 外键关系
+
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教师用户记录。
+- `reform_id`: 与教学改革项目表的 `id` 字段形成外键关系，确保了关联表能够引用具体的教学改革项目记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当教师参与新的教学改革项目或已有项目的教师信息更新时，应更新此表以反映这些变化。
+- 此表可以用于生成教师的教学改革项目参与报告或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `teaching_reform_projects` 反向引用属性，允许从教师对象访问其参与的所有教学改革项目。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `user_id` 和 `reform_id` 是有效的，并且分别对应用户表和教学改革项目表中的现有记录。
+
+
+
+### 教学改革项目表
+
+#### 描述
+
+教学改革项目表用于存储教学改革项目的详细信息，包括批准年份、项目名称、级别和项目描述。通过多对多关系表`TeachingReformTeacherAssociation`与用户表关联，以表示哪些教师参与了哪些教学改革项目。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 教学改革项目ID，主键 | 否         | 自增             |                  |
+| **approval_year**    | String(50)     | 批准年份           | 否         | None             |                  |
+| **name**             | String(255)    | 项目名称           | 否         | None             |                  |
+| **level**            | String(50)     | 级别               | 否         | None             |                  |
+| **description**      | Text            | 项目描述           | 是         | None             |                  |
+
+#### 多对多关系
+
+- `owner`: 通过`TeachingReformTeacherAssociation`表与`Users`表建立多对多关系，表示教学改革项目和教师之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, approval_year, level, name, description, associated_teachers)`: 初始化教学改革项目记录，并将教师与教学改革项目相关联。
+
+#### 方法说明
+
+- `create_teachers_association(self, associated_teachers)`: 创建教学改革项目与教师之间的关联记录。
+
+#### 默认值
+
+- `description`: 项目描述字段可以为空，用于存储教学改革项目的详细信息。
+
+#### 反向引用
+
+- `teaching_reform_projects`: 在`Users`模型中，通过`owner`关系提供的反向引用属性，允许从教师对象访问其参与的所有教学改革项目。
+
+#### 注意事项
+
+- `associated_teachers`参数在构造函数中接收的是一个教师ID的列表，用于初始化时建立教学改革项目与教师的关联。
+- `get_id_from_work_id(teacher)`函数用于从教师的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+
+
+### 科研成果与作者关联表
+
+#### 描述
+
+科研成果与作者关联表用于建立科研成果和作者（用户）之间的关联关系，确保能够追踪哪些用户是哪些科研成果的作者或贡献者。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 关联记录ID，主键   | 否         | 自增             |                  |
+| **user_id**          | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+| **achievement_id**   | Integer         | 科研成果ID，外键  | 否         | None             | 科研成果表       |
+
+#### 外键关系
+
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的用户（作者）记录。
+- `achievement_id`: 与科研成果表的 `id` 字段形成外键关系，确保了关联表能够引用具体的科研成果记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当用户作为新科研成果的作者或已有科研成果的作者信息更新时，应更新此表以反映这些变化。
+- 此表可以用于生成作者的科研成果发表记录或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `research_achievements` 反向引用属性，允许从用户对象访问其作为作者的所有科研成果。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `user_id` 和 `achievement_id` 是有效的，并且分别对应用户表和科研成果表中的现有记录。
+
+
+### 科研成果表
+
+#### 描述
+
+科研成果表用于存储科研成果的详细信息，包括成果年份、成果名称、级别和成果描述。通过多对多关系表`ResearchAchievementAuthorAssociation`与用户表关联，以表示哪些用户是科研成果的作者。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 科研成果ID，主键   | 否         | 自增             |                  |
+| **achievement_year** | String(50)     | 成果年份           | 否         | None             |                  |
+| **name**             | String(255)    | 成果名称           | 否         | None             |                  |
+| **level**            | String(50)     | 级别               | 否         | None             |                  |
+| **description**      | Text            | 成果描述           | 是         | None             |                  |
+
+#### 多对多关系
+
+- `authors`: 通过`ResearchAchievementAuthorAssociation`表与`Users`表建立多对多关系，表示科研成果和作者（用户）之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, achievement_year, level, name, description, authors)`: 初始化科研成果记录，并将用户（作者）与科研成果相关联。
+
+#### 方法说明
+
+- `create_authors_association(self, authors)`: 创建科研成果与用户（作者）之间的关联记录。
+
+#### 默认值
+
+- `description`: 成果描述字段可以为空，用于存储科研成果的详细信息。
+
+#### 反向引用
+
+- `research_achievements`: 在`Users`模型中，通过`authors`关系提供的反向引用属性，允许从用户对象访问其作为作者的所有科研成果。
+
+#### 注意事项
+
+- `authors`参数在构造函数中接收的是一个用户ID的列表，用于初始化时建立科研成果与作者的关联。
+- `get_id_from_work_id(author)`函数用于从作者的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+
+### 发明专利与发明人关联表
+
+#### 描述
+
+发明专利与发明人关联表用于建立发明专利和发明人（用户）之间的关联关系，确保能够追踪哪些用户是哪些发明专利的发明人。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 关联记录ID，主键   | 否         | 自增             |                  |
+| **patent_id**        | Integer         | 发明专利ID，外键   | 否         | None             | 发明专利表       |
+| **user_id**          | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+
+#### 外键关系
+
+- `patent_id`: 与发明专利表的 `id` 字段形成外键关系，确保了关联表能够引用具体的发明专利记录。
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的用户（发明人）记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当用户作为新发明专利的发明人或已有发明专利的发明人信息更新时，应更新此表以反映这些变化。
+- 此表可以用于生成发明人的发明专利记录或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `patents` 反向引用属性，允许从用户对象访问其作为发明人的所有发明专利。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `patent_id` 和 `user_id` 是有效的，并且分别对应发明专利表和用户表中的现有记录。
+
+
+### 发明专利表
+
+#### 描述
+
+发明专利表用于存储发明专利的详细信息，包括申请年份、专利名称、专利申请号以及专利申请人的姓名集合。通过多对多关系表`PatentInventorAssociation`与用户表关联，以表示哪些用户是发明专利的发明人。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|------------------------------|------------|------------------|------------------|
+| **id**               | Integer         | 专利ID，主键                 | 否         | 自增             |                  |
+| **application_year** | String(50)     | 申请年份                     | 否         | None             |                  |
+| **title**            | String(255)    | 专利名称                     | 否         | None             |                  |
+| **application_number** | String(100)    | 专利申请号                   | 否         | None             |                  |
+| **inventors_names**  | String(255)    | 专利申请人姓名集合           | 是         | None             |                  |
+  
+#### 多对多关系
+
+- `inventors`: 通过`PatentInventorAssociation`表与`Users`表建立多对多关系，表示发明专利和发明人（用户）之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, application_year, title, application_number, inventors, inventors_names)`: 初始化专利记录，并将用户（发明人）与专利相关联。
+
+#### 方法说明
+
+- `create_inventors_association(self, inventors)`: 创建专利与用户（发明人）之间的关联记录。
+
+#### 默认值
+
+- `inventors_names`: 专利申请人姓名集合字段可以为空，用于存储专利申请人的姓名集合。
+
+#### 反向引用
+
+- `patents`: 在`Users`模型中，通过`inventors`关系提供的反向引用属性，允许从用户对象访问其作为发明人的所有专利。
+
+#### 注意事项
+
+- `inventors`参数在构造函数中接收的是一个用户ID的列表，用于初始化时建立专利与发明人的关联。
+- `get_id_from_work_id(inventor)`函数用于从发明人的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+
+### 著作权与作者关联表
+
+#### 描述
+
+著作权与作者关联表用于建立版权作品和作者（用户）之间的关联关系，确保能够追踪哪些用户是版权作品的作者或拥有者。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|--------------------|------------|------------------|------------------|
+| **id**               | Integer         | 关联记录ID，主键   | 否         | 自增             |                  |
+| **copyright_id**     | Integer         | 版权作品ID，外键   | 否         | None             | 版权作品表       |
+| **user_id**          | Integer         | 用户ID，外键       | 否         | None             | 用户表           |
+
+#### 外键关系
+
+- `copyright_id`: 与版权作品表的 `id` 字段形成外键关系，确保了关联表能够引用具体的版权作品记录。
+- `user_id`: 与用户表的 `id` 字段形成外键关系，确保了关联表能够引用具体的用户（作者）记录。
+
+#### 默认值
+
+- 无特定默认值，所有外键字段都要求在创建记录时明确指定。
+
+#### 维护说明
+
+- 当用户作为新版权作品的作者或已有版权作品的作者信息更新时，应更新此表以反映这些变化。
+- 此表可以用于生成作者的版权作品记录或统计分析。
+
+#### 反向引用
+
+- 通过在用户表中定义的 `copyrights` 反向引用属性，允许从用户对象访问其作为作者的所有版权作品。
+
+#### 注意事项
+
+- 在创建关联记录时，必须确保提供的 `copyright_id` 和 `user_id` 是有效的，并且分别对应版权作品表和用户表中的现有记录。
+
+
+### 著作权作品表
+
+#### 描述
+
+著作权作品表用于存储著作权作品的详细信息，包括注册号、登记号、软件名称以及著作权人姓名集合。通过多对多关系表`CopyrightAuthorAssociation`与用户表关联，以表示哪些用户是著作权作品的著作权人。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|------------------------------|------------|------------------|------------------|
+| **id**               | Integer         | 著作权作品ID，主键           | 否         | 自增             |                  |
+| **registration_id**  | String(100)    | 注册号                       | 否         | None             |                  |
+| **registration_number** | String(100)    | 登记号                       | 否         | None             |                  |
+| **software_name**    | String(255)    | 软件名称                     | 否         | None             |                  |
+| **authors_names**    | String(255)    | 著作权人姓名集合             | 是         | None             |                  |
+
+#### 多对多关系
+
+- `authors`: 通过`CopyrightAuthorAssociation`表与`Users`表建立多对多关系，表示著作权作品和著作权人（用户）之间的关联。
+
+#### 初始化方法
+
+- `__init__(self, registration_id, registration_number, software_name, authors, authors_names)`: 初始化著作权作品记录，并将用户（著作权人）与著作权作品相关联。
+
+#### 方法说明
+
+- `create_authors_association(self, authors)`: 创建著作权作品与用户（著作权人）之间的关联记录。
+
+#### 默认值
+
+- `authors_names`: 著作权人姓名集合字段可以为空，用于存储著作权人的姓名集合。
+
+#### 反向引用
+
+- `copyrights`: 在`Users`模型中，通过`authors`关系提供的反向引用属性，允许从用户对象访问其作为著作权人的所有著作权作品。
+
+#### 注意事项
+
+- `authors`参数在构造函数中接收的是一个用户ID的列表，用于初始化时建立著作权作品与著作权人的关联。
+- `get_id_from_work_id(author)`函数用于从著作权人的工作ID中获取用户ID，该函数的具体实现未在代码中给出，但可以假设它能够正确地完成这项任务。
+
+### 招生信息表
+
+#### 描述
+
+招生信息表用于存储招生相关的详细信息，包括招生类别、技术要求、学习形式、工作时间、其他要求、联系人和联系信息。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值           | 备注             |
+|----------------------|-----------------|------------------------------|------------|------------------|-------------------|
+| **id**               | Integer         | 招生信息记录ID，主键         | 否         | 自增             |                   |
+| **category**         | String(50)     | 招生类别                     | 否         | None             |                   |
+| **technical_requirements** | Text            | 技术要求                     | 是         | None             | 详细描述技术背景等要求 |
+| **study_mode**       | String(50)     | 学习形式                     | 是         | None             |                   |
+| **work_schedule**    | String(100)    | 工作时间                     | 是         | None             |                   |
+| **other_requirements** | Text            | 其他要求                     | 是         | None             | 附加条件或说明    |
+| **contact_person**  | String(50)     | 联系人                       | 是         | None             |                   |
+| **contact_information** | String(100)    | 联系信息                     | 是         | None             | 电话、邮箱等      |
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值或可为空。
+
+#### 维护说明
+
+- 当招生要求更新或有新的招生类别时，应更新此表以反映这些变化。
+- 此表可以用于发布招生公告或提供给潜在申请者查询。
+
+#### 注意事项
+
+- `technical_requirements`、`other_requirements`字段为Text类型，可存储较长的文本信息。
+- 联系人和联系信息应确保准确无误，以便于潜在申请者能够顺利联系到招生负责人。
+
+### 国际合作项目表
+
+#### 描述
+
+国际合作项目表用于存储与国际大学或企业合作的详细信息，包括合作伙伴名称、所属国家、合作项目、合作时间、合作状态和合作项目描述。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值           | 备注             |
+|----------------------|-----------------|------------------------------|------------|------------------|-------------------|
+| **id**               | Integer         | 合作伙伴记录ID，主键         | 否         | 自增             |                   |
+| **name**             | String(255)    | 大学/企业名称               | 否         | None             |                   |
+| **country**          | String(100)    | 所属国家                     | 否         | None             |                   |
+| **project**          | String(255)    | 合作项目                     | 否         | None             |                   |
+| **start_date**       | Date            | 合作开始时间                 | 是         | None             |                   |
+| **end_date**         | Date            | 合作结束时间                 | 是         | None             |                   |
+| **status**           | String(50)     | 合作状态                     | 是         | None             | 例如：进行中、已完成、暂停等 |
+| **description**     | Text            | 合作项目描述或详情           | 是         | None             | 详细描述合作内容、目标等 |
+
+#### 默认值
+
+- `start_date` 和 `end_date`: 合作开始和结束时间字段可以为空，用于记录合作的时间跨度。
+- `status`: 合作状态字段可以为空，用于描述合作的当前状态。
+- `description`: 合作项目描述字段可以为空，用于提供合作项目的详细描述。
+
+#### 维护说明
+
+- 当建立新的国际合作伙伴关系或现有合作更新时，应更新此表以反映这些变化。
+- 此表可以用于查询合作伙伴信息、合作项目详情和合作状态。
+
+#### 注意事项
+
+- 在创建或更新合作伙伴关系记录时，应确保提供的名称、国家和项目信息准确无误。
+- 合作状态和描述字段应根据实际情况填写，以便于跟踪和管理合作关系。
+
+### 图书信息表
+
+#### 描述
+
+图书信息表用于存储图书馆中图书的详细信息，包括书名、作者、出版年份、当前位置以及图书的可借状态。
+
+#### 字段说明
+
+| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 备注             |
+|-----------------|-----------------|--------------------|------------|------------------|-------------------|
+| **id**          | Integer         | 图书记录ID，主键   | 否         | 自增             |                   |
+| **name**        | String(100)    | 书名               | 否         | None             |                   |
+| **authors**     | String(100)    | 作者               | 否         | None             |                   |
+| **publish_year**| String(50)     | 出版年份           | 否         | None             |                   |
+| **location**    | String(50)     | 图书当前位置       | 是         | None             | 图书的具体位置   |
+| **available**   | Boolean         | 图书是否可借       | 否         | True              | 默认为可借状态   |
+
+#### 默认值
+
+- `available`: 图书是否可借字段默认为 `True`，表示图书默认状态下是可供借阅的。
+
+#### 方法说明
+
+- `to_json(self)`: 将图书记录转换为JSON格式的字典，方便进行数据交换和展示。
+
+### 图书借阅记录表
+
+#### 描述
+
+图书借阅记录表用于存储图书馆中图书的借阅记录，包括借阅的图书ID、借阅人ID、借阅请求ID、应还日期、实际借阅和归还日期以及借阅状态。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|------------------------------|------------|------------------|------------------|
+| **id**               | Integer         | 借阅记录ID，主键             | 否         | 自增             |                  |
+| **book_id**          | Integer         | 图书ID，外键                | 否         | None             | 图书信息表       |
+| **user_id**          | Integer         | 用户ID，外键                | 否         | None             | 用户表           |
+| **brows_request_id** | Integer         | 浏览请求ID，外键            | 是         | None             | 借阅请求表       |
+| **return_request_id** | Integer         | 归还请求ID，外键            | 是         | None             | 借阅请求表       |
+| **should_return_date** | DateTime        | 应还日期                     | 否         | None             |                  |
+| **loan_date**        | DateTime        | 借阅日期                     | 否         | None             |                  |
+| **return_date**      | DateTime        | 实际归还日期                 | 是         | None             |                  |
+| **status**           | String(20)     | 借阅状态                     | 否         | None             |                  |
+
+#### 反向引用
+
+- `book`: 通过图书信息表关联图书信息，允许从借阅记录访问图书详情。
+- `requester`: 通过用户表关联借阅人信息，允许从借阅记录访问用户详情。
+- `brows_request`: 通过借阅请求表关联浏览请求信息。
+- `return_request`: 通过借阅请求表关联归还请求信息。
+
+#### 方法说明
+
+- `get_left_days(self)`: 计算并返回借阅图书剩余的天数。
+- `to_json(self)`: 将借阅记录转换为JSON格式的字典，方便进行数据交换和展示。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值或可为空。
+
+#### 注意事项
+
+- `brows_request_id` 和 `return_request_id` 字段作为外键关联借阅请求表，可能为空，表示该记录可能不涉及特定的浏览或归还请求。
+- `should_return_date` 字段用于标识图书的应还日期，而 `return_date` 字段记录了图书的实际归还日期。
+- `status` 字段用于标识当前的借阅状态，如“在借”、“已还”、“逾期”等。
+
+
+### 违规记录表
+
+#### 描述
+
+违规记录表用于存储图书馆中用户违规借阅图书的记录，包括用户ID、关联的借阅记录ID、违规日期、违规描述以及与用户和借阅记录的关联信息。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值           | 关联模型         |
+|----------------------|-----------------|------------------------------|------------|------------------|------------------|
+| **id**               | Integer         | 违规记录ID，主键             | 否         | 自增             |                  |
+| **user_id**          | Integer         | 用户ID，外键                | 否         | None             | 用户表           |
+| **loan_id**          | Integer         | 借阅记录ID，外键            | 否         | None             | 借阅记录表       |
+| **violation_date**   | DateTime        | 违规日期                     | 否         | None             |                  |
+| **description**      | Text            | 违规描述                     | 否         | None             |                  |
+
+#### 反向引用
+
+- `loans`: 通过借阅记录表关联借阅信息，允许从违规记录访问相关的借阅详情。
+- `user`: 通过用户表关联用户信息，允许从违规记录访问用户详情。
+
+#### 默认值
+
+- 无特定默认值，所有字段都具有明确值。
+
+#### 注意事项
+
+- `user_id` 字段作为外键关联用户表，用于标识违规的用户。
+- `loan_id` 字段作为外键关联借阅记录表，用于标识违规行为关联的具体借阅事件。
+- `violation_date` 字段记录了违规行为发生的具体日期。
+- `description` 字段用于详细描述违规的具体情况，例如逾期不还、损坏图书等。
+
+### 图书借阅请求表
+
+#### 描述
+
+图书借阅请求表用于存储用户对图书的借阅或归还请求信息，包括请求人ID、处理人ID、图书ID、请求日期、处理日期、状态、申请理由和处理备注。
+
+#### 字段说明
+
+| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值                     | 关联模型         |
+|----------------------|-----------------|------------------------------|------------|----------------------------|------------------|
+| **id**               | Integer         | 请求记录ID，主键             | 否         | 自增                       |                  |
+| **requester_id**     | Integer         | 请求人ID，外键              | 否         | None                       | 用户表           |
+| **processor_id**     | Integer         | 处理人ID，外键              | 是         | None                       | 用户表           |
+| **book_id**          | Integer         | 图书ID，外键                | 否         | None                       | 图书信息表       |
+| **request_date**     | DateTime        | 请求日期                     | 否         | 当前时间戳                 |                  |
+| **process_date**     | DateTime        | 处理日期                     | 是         | None                       |                  |
+| **status**           | String(50)     | 请求状态                     | 否         | '待处理'                   |                  |
+| **request_reason**   | Text            | 申请理由                     | 是         | None                       |                  |
+| **processing_note**  | Text            | 处理备注                     | 是         | None                       |                  |
+| **request_type**     | String(10)     | 申请类型，如 借阅、还书    | 否         | None                       |                  |
+
+#### 反向引用
+
+- `requester`: 通过用户表关联请求人信息，允许从请求记录访问请求人详情。
+- `processor`: 通过用户表关联处理人信息，允许从请求记录访问处理人详情。
+- `book`: 通过图书信息表关联图书信息，允许从请求记录访问图书详情。
+
+#### 初始化方法
+
+- `__init__(self, requester_id, book_id, request_type, request_reason, request_date, status='待处理', processing_note=None, processor_id=None, process_date=None)`: 初始化借阅请求记录。
+
+#### 方法说明
+
+- `to_dict(self)`: 将借阅请求记录转换为字典格式，方便进行数据交换和展示。
+- `__repr__(self)`: 提供对象的字符串表示，方便调试和日志记录。
+
+#### 默认值
+
+- `request_date`: 默认为当前时间戳。
+
+#### 注意事项
+
+- `requester_id` 字段作为外键关联用户表，用于标识发起请求的用户。
+- `processor_id` 字段作为外键关联用户表，用于标识处理请求的用户，可以为空，表示可能尚未分配处理人或处理已完成。
+- `status` 字段用于标识请求的当前状态，如“待处理”、“已批准”、“已拒绝”等。
+- `request_type` 字段用于标识请求的类型，如借阅或还书。
+
+
+### 图书馆管理常量设置表
+
+#### 描述
+
+图书馆管理常量设置表用于定义图书馆管理的各种参数设置，包括借阅间隔日期、借阅期限、超期提醒天数、单个用户借阅数量限制以及单个用户违规记录数量限制等。
+
+#### 字段说明
+
+| 字段名                   | 数据类型     | 描述                             | 是否可为空 | 默认值 | 备注         |
+|--------------------------|--------------|----------------------------------|------------|---------|--------------|
+| **id**                   | Integer      | 设置记录ID，主键                 | 否         |         |              |
+| **interval_date**        | Integer      | 间隔日期，天数                   | 否         | 5       | 两次借阅的最小间隔天数 |
+| **borrow_period**        | Integer      | 借阅期限，天数                   | 否         | 30      | 图书借阅的有效期限 |
+| **overdue_reminder_days**| Integer      | 超出期限提醒天数                 | 否         | 3       | 超期前的提醒天数 |
+| **borrow_limit**         | Integer      | 单个用户借阅数量限制             | 否         | 2       | 每次最多借阅的图书数量 |
+| **violation_limit**      | Integer      | 单个用户违规记录数量限制         | 否         | 3       | 用户违规记录的最大允许数量 |
+| **is_book_admin**        | Boolean      | 是否图书管理员                   | 否         | False   | 标识是否具有图书管理员权限 |
+
+#### 方法说明
+
+- `to_dict(self)`: 将图书馆管理常量设置记录转换为字典格式，方便进行数据交换和展示。
+
+#### 默认值
+
+- `interval_date`: 默认间隔日期为5天。
+- `borrow_period`: 默认借阅期限为30天。
+- `overdue_reminder_days`: 默认超期提醒天数为3天。
+- `borrow_limit`: 默认单个用户借阅数量限制为2本。
+- `violation_limit`: 默认单个用户违规记录数量限制为3次。
+- `is_book_admin`: 默认不是图书管理员。
+
+#### 注意事项
+
+- 这些设置通常由图书馆管理员进行配置，用于控制图书馆的日常运营和管理。
+- 所有参数都具有明确的默认值，便于在初始化设置时使用。
+
+
 
 ## 待添加：
 - 动态消息表：（News）
