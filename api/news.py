@@ -77,6 +77,8 @@ def submit_news():
     # 可能为空，如果是多个，则用逗号分隔
     #去除空格
     attachments_links = attachmentslink.strip()
+    #将其中的中文逗号替换为英文逗号
+    attachments_links = attachments_links.replace('，', ',')
     if attachments_links:
         attachments_links = attachmentslink.split(',')
     else:
@@ -85,14 +87,14 @@ def submit_news():
     file_paths = []
     if files:
         for file in files:
-    
-            filename = secure_filename(file.filename)
-            UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads/files')
-            create_upload_folder(UPLOAD_FOLDER)
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
-            file.save(file_path)
-            file_paths.append(url_for('static', filename='uploads/files/' + filename))
-    #附件链接添加至附件文件路径列表
+            if file and file.filename != '':
+                filename = secure_filename(file.filename)
+                UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads/files')
+                create_upload_folder(UPLOAD_FOLDER)
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(file_path)
+                file_paths.append(url_for('static', filename='uploads/files/' + filename))
+        #附件链接添加至附件文件路径列表
     file_paths.extend(attachments_links)
     #创建新闻对象并保存到数据库
     news = News(title=title, author=author, cover=cover_path, content=content, attachments=file_paths,
@@ -101,5 +103,23 @@ def submit_news():
     db.session.commit()
     # 假设保存成功
     return jsonify(success=True, message='新闻内容提交成功'), 200
+# 获取新闻列表
+@news_bp.route('/news-list', methods=['GET'])
+def news_list():
+    # 假设数据库中有 10 条新闻
+    news_list = News.query.all()
+    # 将新闻列表转换为 JSON 格式
+    news_list_json = [news.to_dict() for news in news_list]
+    return jsonify(news_list_json), 200
 
+# 获取单条新闻内容
+@news_bp.route('/news/<int:news_id>', methods=['GET'])
+def news_detail(news_id):
+    # 根据新闻 ID 查询数据库
+    news = News.query.filter_by(id=news_id).first()
+    if not news:
+        abort(404)  # 如果没有找到新闻，返回 404 错误
+    # 将新闻内容转换为 JSON 格式
+    news_json = news.to_dict()
+    return jsonify(news_json), 200
 

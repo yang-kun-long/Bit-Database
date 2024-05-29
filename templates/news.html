@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>动态消息 - 网络攻防对抗技术研究所</title>
     <!-- 引入 Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="static/bootstrap-4.6.2-dist/css/bootstrap.min.css">
     <!-- 引入自定义样式 -->
     <!--    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
@@ -32,44 +32,37 @@
 </div>
 <div class="contentmain">
     <main class="container">
-    <!-- 新闻动态 -->
-    <section id="news" class="col-md-8">
-        <h2>新闻动态</h2>
-        {% for news_item in news_items %}
-        <div class="col-md-4">
-            <div class="news-item">
-                <h3>{{ news_item.title }}</h3>
-                <p>撰稿人：{{ news_item.author }}</p>
-                <p>发稿时间：{{ news_item.publish_date }}</p>
-                <!-- 显示新闻图片 -->
-                <img src="{{ url_for('static', filename='images/' ~ news_item.image_path) }}" alt="新闻图片">
-                <p>{{ news_item.summary }}</p>
-                <!-- 提供文件下载链接 -->
-                <a href="{{ url_for('download_news_file', filename=news_item.file_path) }}"
-                   class="btn btn-primary">下载文件</a>
+        <!-- 新闻动态 -->
+        <section id="news" class="col-md-8">
+            <h2>新闻动态</h2>
+            <div class="col-md-4">
+                <div id="news-list-container">
+
+                </div>
             </div>
-        </div>
-        {% endfor %}
-    </section>
-    <!-- 通知通告 -->
-    <section id="notice" class="col-md-4">
-        <div class="col-md-4" ,id="notice-item">
-            <h2>通知通告</h2>
-            <!-- 通知内容 -->
-        </div>
-    </section>
-    <!-- 学术活动 -->
-    <section id="activity" class="col-md-4">
-        <div class="col-md-4" ,id="activity-item">
-            <h2>学术活动</h2>
-            <!-- 学术活动内容 -->
-        </div>
-    </section>
+        </section>
+        <!-- 通知通告 -->
+        <section id="notice" class="col-md-4">
+            <div class="col-md-4" ,id="notice-item">
+                <h2>通知通告</h2>
+            </div>
+        </section>
+        <!-- 学术活动 -->
+        <section id="activity" class="col-md-4">
+            <div class="col-md-4" ,id="activity-item">
+                <h2>学术活动</h2>
+                <!-- 学术活动内容 -->
+            </div>
+        </section>
     </main>
 </div>
 {% include 'base/footer.html' %}
 <!-- 引入 jQuery 和 Bootstrap JavaScript -->
-<script src="{{ url_for('static', filename='js/jquery-3.5.1.slim.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<!-- jQuery -->
+<script src="static/jquery-3.5.1/jquery-3.5.1.js"></script>
+<!-- Bootstrap JS -->
+<script src="static/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+<!-- 引入自定义 JavaScript -->
+<script src="{{ url_for('static', filename='js/news.js') }}"></script>
 </body>
 </html>

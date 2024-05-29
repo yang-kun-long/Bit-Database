@@ -688,6 +688,19 @@ class News(db.Model):
     category = db.Column(db.String(100), nullable=False)  # 新闻动态、通知通告、学术活动
     author = db.Column(db.String(100), nullable=False)
     create_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    publish_time = db.Column(db.DateTime, nullable=False)
+    publish_time = db.Column(db.DateTime, nullable=True)
     attachments = db.Column(db.ARRAY(db.String()), nullable=True)  # 使用数组存储附件地址
     cover = db.Column(db.String(255), nullable=True)  # 封面属性
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'content': self.content,
+            'link': self.link,
+            'category': self.category,
+            'author': self.author,
+            'create_time': self.create_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'publish_time': self.publish_time.strftime('%Y-%m-%d %H:%M:%S') if self.publish_time else None,
+            'attachments': self.attachments,
+            'cover': self.cover
+        }

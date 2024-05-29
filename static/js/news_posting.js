@@ -91,7 +91,8 @@ $(document).ready(function () {
         //获取作者
         var category = $('#categorySelect').val().trim();
         var author = $('#author').val().trim();
-        var content = $('#content').text().trim(); // 获取内容字段的文本
+        // 获取内容字段的文本和图像
+        var content = $('#content').html();
         var link = $('#link').val(); // 获取外部链接
         var attachmentLink = $('#attachmentLink').val(); // 获取附件链接
         if (!author || !title) {
