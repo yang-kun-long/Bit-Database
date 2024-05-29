@@ -687,6 +687,7 @@ class News(db.Model):
     link = db.Column(db.String(255), nullable=True)  # 外部链接，如果content为空，则使用此链接
     category = db.Column(db.String(100), nullable=False)  # 新闻动态、通知通告、学术活动
     author = db.Column(db.String(100), nullable=False)
-    publish_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    create_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    publish_time = db.Column(db.DateTime, nullable=False)
     attachments = db.Column(db.ARRAY(db.String()), nullable=True)  # 使用数组存储附件地址
     cover = db.Column(db.String(255), nullable=True)  # 封面属性
