@@ -8,6 +8,7 @@
     <!-- 引入自定义样式 -->
     <!--    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
 </head>
 <body>
 {% include 'base/navbar.html' %}
@@ -35,26 +36,26 @@
         <!-- 新闻动态 -->
         <section id="news" class="col-md-8">
             <h2>新闻动态</h2>
-            <div class="col-md-4">
-                <div id="news-list-container">
-
-                </div>
+            <div class="photo-wall" id="news-photo-wall">
+                <!-- 照片墙将被动态添加到此处 -->
             </div>
         </section>
         <!-- 通知通告 -->
         <section id="notice" class="col-md-4">
-            <div class="col-md-4" ,id="notice-item">
-                <h2>通知通告</h2>
+            <h2>通知通告</h2>
+            <div class="photo-wall" id="notice-photo-wall">
+                <!-- 照片墙将被动态添加到此处 -->
             </div>
         </section>
         <!-- 学术活动 -->
         <section id="activity" class="col-md-4">
-            <div class="col-md-4" ,id="activity-item">
-                <h2>学术活动</h2>
-                <!-- 学术活动内容 -->
+            <h2>学术活动</h2>
+            <div class="photo-wall" id="activity-photo-wall">
+                <!-- 照片墙将被动态添加到此处 -->
             </div>
         </section>
     </main>
+    <!-- ... 其他部分保持不变 ... -->
 </div>
 {% include 'base/footer.html' %}
 <!-- 引入 jQuery 和 Bootstrap JavaScript -->

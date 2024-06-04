@@ -1,0 +1,140 @@
+/* 基础样式 */
+body, html {
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.news-content {
+    margin-bottom: 20px;
+}
+
+.news-content p {
+    text-align: justify;
+    /* 其他正文样式 */
+}
+
+/* 分隔线样式 */
+hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.attachments-container {
+    background-color: #f9f9f9;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+}
+
+.attachments-container h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.attachments-container ul {
+    padding-left: 20px;
+}
+
+.attachments-container li {
+    margin-bottom: 5px;
+}
+/* 新闻详情样式 */
+.news-detail {
+    width: 100%;
+    padding: 40px 20px;
+}
+
+.news-title {
+    font-weight: bold;
+    /*与上方的距离*/
+    margin-top: 300px;
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+.news-author,
+.news-time {
+    color: #666;
+    font-size: 1em;
+    margin-bottom: 1em;
+}
+
+.news-content {
+    margin-top: 20px;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.news-attachments {
+    margin-top: 30px;
+}
+
+.attachment-link {
+    margin-right: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.attachment-link:hover {
+    text-decoration: underline;
+}
+/* 新闻正文内容样式 */
+.news-content {
+    font-family: 'Arial', sans-serif; /* 字体 */
+    line-height: 1.6; /* 行高 */
+    color: #333; /* 文字颜色 */
+     /* 文本居中 */
+    text-align: justify;
+    text-justify: inter-word;
+    /* 字体大小 */
+    margin-top: 20px; /* 与上边距 */
+    margin-bottom: 20px; /* 与下边距 */
+}
+
+.news-content p {
+    margin-bottom: 1em; /* 设置段落间距 */
+/*    居中*/
+    text-align: center;
+}
+
+.news-content img {
+    max-width: 30%; /* 使图片宽度不超过其容器 */
+    height: auto; /* 保持图片宽高比 */
+    display: block; /* 图片自适应显示 */
+    margin-left: auto; /* 图片居中 */
+    margin-right: auto;
+    border-radius: 5px; /* 圆角边框，根据需要添加 */
+}
+
+/* 其他样式保持不变 */
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .news-title {
+        font-size: 2em;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .news-detail {
+        padding: 20px 10px;
+    }
+}

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Blueprint, send_from_directory, abort, url_for
+from flask import request, jsonify, Blueprint,  abort, url_for
 from werkzeug.utils import secure_filename
 import os
 from config import app , db  # 假设您的配置文件名为 config.py，并且 Flask 实例名为 app
@@ -29,28 +29,10 @@ def upload_image():
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(file_path)
         # 返回图片的 URL 路径给前端
+        # 返回相对路径，前端可以直接使用
         return jsonify(success=True, filepath=url_for('static', filename='uploads/images/' + filename)), 200
     else:
         return jsonify(error='不支持的文件类型'), 400
-@news_bp.route('/upload-file', methods=['POST'])
-def upload_file():
-    ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'xls', 'xlsx'}
-    if 'file' not in request.files:
-        return jsonify(error='没有文件部分'), 400
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify(error='没有选择文件'), 400
-    if file and allowed_file(file.filename,ALLOWED_EXTENSIONS):
-        filename = secure_filename(file.filename)
-        UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads/files')
-        create_upload_folder(UPLOAD_FOLDER)
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(file_path)
-        # 返回文件的 URL 路径给前端
-        return jsonify(success=True, filepath=url_for('static', filename='uploads/files/' + filename)), 200
-    else:
-        return jsonify(error='不支持的文件类型'), 400
-
 @news_bp.route('/submit-news', methods=['POST'])
 def submit_news():
     # 这里仅为示例，您需要根据实际情况处理表单数据
@@ -67,10 +49,9 @@ def submit_news():
     #存储封面图片文件并获取路径
     if cover != None:
         filename = secure_filename(cover.filename)
-        UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads/covers')
-        create_upload_folder(UPLOAD_FOLDER)
-        cover_path = os.path.join(UPLOAD_FOLDER, filename)
-        cover.save(cover_path)
+        # 使用相对路径存储图片文件，不需要绝对路径
+        cover_path = os.path.join('static/uploads/images', filename)
+        cover.save(os.path.join(app.root_path, cover_path))
     else:
         cover_path = None
     #attachments_link为一个字符串
@@ -106,14 +87,14 @@ def submit_news():
 # 获取新闻列表
 @news_bp.route('/news-list', methods=['GET'])
 def news_list():
-    # 假设数据库中有 10 条新闻
-    news_list = News.query.all()
+    # 查询时间最新的 10 条新闻
+    news_list = News.query.order_by(News.create_time.desc()).limit(10).all()
     # 将新闻列表转换为 JSON 格式
     news_list_json = [news.to_dict() for news in news_list]
     return jsonify(news_list_json), 200
 
 # 获取单条新闻内容
-@news_bp.route('/news/<int:news_id>', methods=['GET'])
+@news_bp.route('/<int:news_id>', methods=['GET'])
 def news_detail(news_id):
     # 根据新闻 ID 查询数据库
     news = News.query.filter_by(id=news_id).first()

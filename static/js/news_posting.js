@@ -105,6 +105,11 @@ $(document).ready(function () {
             alert('请提供内容或输入有效的外部链接。');
             return;
         }
+        // 检查封面是否上传，如果没有上传，则提示用户
+        if (!globalData.cover) {
+            alert('请上传封面图片。');
+            return;
+        }
 
         formData.append('author', author);
         formData.append('title', title);
@@ -129,13 +134,18 @@ $(document).ready(function () {
             processData: false,
             success: function (response) {
                 console.log('新闻提交成功', response);
-                // 提交成功后的逻辑，例如清空表单或提示用户
-                // ...
+                // 提交成功后的逻辑，提示用户
+                alert('新闻提交成功！');
+                // 刷新页面
+                window.location.reload();
+
             },
             error: function (xhr, status, error) {
                 console.error('新闻提交失败', error);
-                // 提交失败后的逻辑，例如显示错误信息
-                // ...
+                // 提交失败后的逻辑，显示错误信息
+                alert('新闻提交失败：' + error);
+                // 刷新页面
+                window.location.reload();
             }
         });
     });

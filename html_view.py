@@ -320,8 +320,15 @@ def import_data():
     return render_template('import_data.html')
 
 # 检查文件是否允许上传
-
-
+@views_blueprint.route('/news_model', methods=['GET', 'POST'])
+def news_model():
+    return render_template('news_model.html')
+@views_blueprint.route('/upload_materials', methods=['GET', 'POST'])
+def upload_materials():
+    return render_template('upload_materials.html')
+@views_blueprint.route('/materials_model', methods=['GET', 'POST'])
+def materials_model():
+    return render_template('materials_model.html')
 
 def blueprint(app):
     app.register_blueprint(views_blueprint)

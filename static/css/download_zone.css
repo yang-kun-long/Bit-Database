@@ -1,79 +1,76 @@
-/* download_zone.css */
-
-/* 重置浏览器默认样式 */
-* {
+/* static/css/download_zone.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f4;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
-/* 页面整体样式 */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
-}
-
-/* 导航栏样式 */
-nav {
-    background: #333;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
-
-nav ul {
-    list-style: none;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-nav ul li a:hover, nav ul li a.active {
-    background: #555;
-}
-
-/* 页面内容区域样式 */
-.content {
-    padding: 20px;
-    margin: 20px 0;
+.contentmain {
     background: #fff;
-    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.content h2 {
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#files-list {
+    margin-top: 30px;
+}
+
+.file-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-item h4 {
     color: #333;
+    margin: 0 0 10px;
 }
 
-/* 页脚样式 */
-footer {
-    background: #333;
+.file-item p {
+    color: #666;
+    margin: 0 0 5px;
+}
+
+.file-item a {
+    display: inline-block;
     color: #fff;
-    text-align: center;
-    padding: 10px 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    background-color: #007bff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
 }
 
-/* 下载专区主页样式 */
-#download_home {
-    /* 下载专区主页内容样式 */
+.file-item a:hover {
+    background-color: #0056b3;
+}
+.page-title {
+    color: #333;
+    font-size: 2.5em; /* 可以根据需要调整字体大小 */
+    margin-bottom: 20px; /* 添加一些底部边距 */
+}
+/* 可以添加一些响应式设计的样式 */
+@media (max-width: 768px) {
+    .contentmain {
+        padding: 10px;
+    }
+
+    .file-item h4 {
+        font-size: 18px;
+    }
+
+    .file-item p {
+        font-size: 14px;
+    }
 }
 
-/* 下载专区内部页面样式 */
-#thesis_topic_materials, #mid_term_materials, #defense_materials, #degree_thesis_materials, #patent_materials, #meeting_materials, #superior_files, #other_materials {
-    /* 各个内部页面内容样式 */
-}

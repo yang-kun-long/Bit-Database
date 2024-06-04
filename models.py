@@ -668,8 +668,9 @@ class ResourceDownload(db.Model):
     url = db.Column(db.String(200), nullable=True)
     type = db.Column(db.String(20), nullable=False)  # 资料类型
     work_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
-    author = db.relationship('Users', backref=db.backref('resource', lazy='dynamic'))
+    author = db.Column(db.String(100), nullable=True)  # 作者
 
+    introduction = db.Column(db.Text, nullable=True)# 简介
     def to_dict(self):
         return {
             'id': self.id,
@@ -690,7 +691,7 @@ class News(db.Model):
     create_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     publish_time = db.Column(db.DateTime, nullable=True)
     attachments = db.Column(db.ARRAY(db.String()), nullable=True)  # 使用数组存储附件地址
-    cover = db.Column(db.String(255), nullable=True)  # 封面属性
+    cover = db.Column(db.String(255), nullable=False)  # 封面属性
     def to_dict(self):
         return {
             'id': self.id,
