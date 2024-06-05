@@ -26,7 +26,9 @@ class Institution(db.Model):
     website = db.Column(db.String(255), nullable=False)  # 研究所网站
     logo_path = db.Column(db.String(255), nullable=False)  # 研究所logo路径
     created_at = db.Column(db.DateTime, default=datetime.now)  # 创建时间
-    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)  # 更新时间
+    # 是否启用，默认启用
+    is_active = db.Column(db.Boolean, default=False)
+    
     operator_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)  # 更新人ID，外键关联Users表
     operator = db.relationship('Users', backref=db.backref('institutions', lazy=True))  # 更新人对象，反向引用
 
@@ -669,8 +671,8 @@ class ResourceDownload(db.Model):
     type = db.Column(db.String(20), nullable=False)  # 资料类型
     work_id = db.Column(db.String(20), db.ForeignKey('users.work_id'), nullable=False)
     author = db.Column(db.String(100), nullable=True)  # 作者
-
     introduction = db.Column(db.Text, nullable=True)# 简介
+    
     def to_dict(self):
         return {
             'id': self.id,

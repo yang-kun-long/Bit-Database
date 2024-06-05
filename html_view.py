@@ -330,5 +330,13 @@ def upload_materials():
 def materials_model():
     return render_template('materials_model.html')
 
+@views_blueprint.route('/system_settings_page', methods=['GET', 'POST'])
+def system_settings_page():
+    return render_template('system_settings_page.html')
+
+@views_blueprint.route('/introduction_update_page', methods=['GET', 'POST'])
+def introduction_update_page():
+    return render_template('introduction_update_page.html')
+
 def blueprint(app):
     app.register_blueprint(views_blueprint)

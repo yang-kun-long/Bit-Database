@@ -409,8 +409,10 @@ def get_current_user_id():
 # 检查逾期图书并提醒
 def check_overdue_books(user_id):
     db_session = get_db_session()
-    # 设置提醒日期为当前时间之前的三天
-    due_date = datetime.now() - timedelta(days=3)
+    user=db_session.query(Users).filter_by(id=user_id).first()
+    # 设置提醒日期为当前时间
+    overdue_reminder_days=get_overdue_reminder_days(user)
+    due_date = datetime.now() - timedelta(days=overdue_reminder_days)
     # 查询指定用户所有已批准但未归还且即将到期的借阅记录
     overdue_loans = db_session.query(BookLoans).filter(
         BookLoans.status == 'approved',
@@ -444,5 +446,7 @@ def get_borrow_period(user):
     return user.library_status.borrow_period
 def get_interval_date(user):
     return user.library_status.interval_date
+def get_overdue_reminder_days(user):
+    return user.library_status.overdue_reminder_days
 def get_left_days(loan):
     return (loan.should_return_date-datetime.now()).days

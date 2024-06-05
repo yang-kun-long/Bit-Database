@@ -1,140 +1,100 @@
-/* 基础样式 */
-body, html {
-    height: 100%;
-    font-family: 'Arial', sans-serif;
-}
-
+/* news_model.css 文件 */
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f4f4f4;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5; /* 背景颜色 */
+    text-align: center; /* 文字居中 */
 }
 
 .container {
-    width: 90%;
-    max-width: 1200px;
-    padding: 20px;
-    background-color: #fff;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.news-content {
-    margin-bottom: 20px;
-}
-
-.news-content p {
-    text-align: justify;
-    /* 其他正文样式 */
-}
-
-/* 分隔线样式 */
-hr {
-    border: none;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
-}
-
-.attachments-container {
-    background-color: #f9f9f9;
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-}
-
-.attachments-container h3 {
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.attachments-container ul {
-    padding-left: 20px;
-}
-
-.attachments-container li {
-    margin-bottom: 5px;
-}
-/* 新闻详情样式 */
-.news-detail {
     width: 100%;
-    padding: 40px 20px;
+    max-width: 800px; /* 最大宽度 */
+    padding: 20px; /* 内边距 */
+}
+
+.news-detail {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: left; /* 详情内容文字左对齐 */
 }
 
 .news-title {
-    font-weight: bold;
-    /*与上方的距离*/
-    margin-top: 300px;
-    font-size: 2.5em;
-    margin-bottom: 0.5em;
+    margin-top: 0;
     color: #333;
+    font-size: 2.5rem;
 }
 
 .news-author,
 .news-time {
     color: #666;
-    font-size: 1em;
-    margin-bottom: 1em;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
 }
 
 .news-content {
-    margin-top: 20px;
-    text-align: justify;
-    line-height: 1.6;
+    margin-bottom: 20px;
 }
 
-.news-attachments {
-    margin-top: 30px;
+.news-content p,
+.news-content h2,
+.news-content h3,
+.news-content ul,
+.news-content ol {
+    margin-bottom: 1rem;
+    text-align: justify; /* 段落文字两端对齐 */
 }
 
-.attachment-link {
-    margin-right: 10px;
+/* 图片居中样式 */
+.news-content img {
+    display: block; /* 使图片作为块级元素显示 */
+    margin: 0 auto; /* 上下自动，左右自动，实现水平居中 */
+    max-width: 100%; /* 图片最大宽度为100% */
+    height: auto; /* 高度自适应 */
+}
+
+.attachments-container {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.attachments-container h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 附件列表样式 */
+.attachment-item {
+    background-color: #e9ecef;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.attachment-item a {
     color: #007bff;
     text-decoration: none;
 }
 
-.attachment-link:hover {
-    text-decoration: underline;
-}
-/* 新闻正文内容样式 */
-.news-content {
-    font-family: 'Arial', sans-serif; /* 字体 */
-    line-height: 1.6; /* 行高 */
-    color: #333; /* 文字颜色 */
-     /* 文本居中 */
-    text-align: justify;
-    text-justify: inter-word;
-    /* 字体大小 */
-    margin-top: 20px; /* 与上边距 */
-    margin-bottom: 20px; /* 与下边距 */
+.attachment-item a:hover {
+    text-align: underline;
 }
 
-.news-content p {
-    margin-bottom: 1em; /* 设置段落间距 */
-/*    居中*/
-    text-align: center;
+/* 分隔线样式 */
+hr {
+    border-top: 1px solid #ddd;
 }
 
-.news-content img {
-    max-width: 30%; /* 使图片宽度不超过其容器 */
-    height: auto; /* 保持图片宽高比 */
-    display: block; /* 图片自适应显示 */
-    margin-left: auto; /* 图片居中 */
-    margin-right: auto;
-    border-radius: 5px; /* 圆角边框，根据需要添加 */
-}
-
-/* 其他样式保持不变 */
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
     .news-title {
-        font-size: 2em;
-    }
-
-    .container {
-        padding: 10px;
-    }
-
-    .news-detail {
-        padding: 20px 10px;
+        font-size: 2rem;
     }
 }

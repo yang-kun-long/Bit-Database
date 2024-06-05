@@ -1,0 +1,49 @@
+/* 分页容器样式 */
+#pagination {
+    /* display: flex; */
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    overflow: auto;
+    white-space: nowrap; /* 保持按钮在同一行 */
+}
+
+/* 分页按钮基础样式 */
+#pagination button {
+    padding: 8px 16px;
+    margin: 0 5px; /* 按钮之间的间距 */
+    border: 1px solid #ddd; /* 边框颜色 */
+    background-color: #fff; /* 背景颜色 */
+    cursor: pointer; /* 鼠标悬停时的指针手势 */
+    font-size: 16px; /* 字体大小 */
+    transition: background-color 0.3s, border 0.3s; /* 平滑过渡效果 */
+}
+
+/* 分页按钮悬停效果 */
+#pagination button:hover {
+    background-color: #e9ecef; /* 鼠标悬停时的背景色 */
+    border-color: #ccc; /* 鼠标悬停时的边框颜色 */
+}
+
+/* 当前激活的页码按钮样式 */
+#pagination button.active {
+    background-color: #007bff; /* 蓝色背景 */
+    color: white; /* 文字颜色 */
+    border-color: #007bff; /* 蓝色边框 */
+}
+
+/* 禁用的页码按钮样式 */
+#pagination button:disabled {
+    background-color: #eee; /* 禁用按钮的背景色 */
+    cursor: not-allowed; /* 禁用时鼠标指针样式 */
+    opacity: 0.5; /* 禁用按钮的透明度 */
+}
+
+/* 响应式设计：在小屏幕上隐藏超出屏幕宽度的分页按钮 */
+@media screen and (max-width: 768px) {
+    #pagination {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}

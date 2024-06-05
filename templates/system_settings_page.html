@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>图书馆状态设置</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_library_status.css') }}">
+</head>
+
+<body>
+    {% include 'base/navbar.html' %}
+{% include 'base/internal_managemt_sidebar.html' %}
+<div class="contentmain">
+    <main>
+    <div class="container">
+        <h1>图书馆状态设置</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>用户类型</th>
+                    <th>间隔日期</th>
+                    <th>借阅期限</th>
+                    <th>逾期提醒天数</th>
+                    <th>借阅限制</th>
+                    <th>违规限制</th>
+                    <th>是否图书管理员</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="user-status-table">
+                <!-- 用户状态将通过JavaScript动态插入 -->
+            </tbody>
+        </table>
+        <div id="pagination"></div>
+    </div>
+</main>
+</div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">修改图书馆状态</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 用户基本信息 -->
+                    <div class="user-info">
+                        <h6>用户基本信息</h6>
+                        <p><strong>姓名：</strong> <span id="modal-username"></span></p>
+                        <p><strong>学号：</strong> <span id="modal-work-id"></span></p>
+                        <p><strong>用户类型：</strong> <span id="modal-user-type"></span></p>
+                        <!-- 其他基本信息 -->
+                    </div>
+                    <!-- 模态框内容将通过JavaScript动态插入 -->
+                    <form id="editForm">
+
+
+                        <!-- 修改间隔日期，借阅期限， 逾期提醒天数，借阅限制，违规限制，是否图书管理员 -->
+
+                        <div class="form-group">
+                            <label for="interval_date">间隔日期</label>
+                            <input type="number" class="form-control" id="interval_date" name="interval_date"
+                                placeholder="间隔日期,同一用户需在还书后至少间隔一段时间才可借阅">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="borrow_period">借阅期限</label>
+                            <input type="number" class="form-control" id="borrow_period" name="borrow_period"
+                                placeholder="借阅期限，用户需在借书期限内归还书籍">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="overdue_reminder_days">逾期提醒天数</label>
+                            <input type="number" class="form-control" id="overdue_reminder_days"
+                                name="overdue_reminder_days" placeholder="逾期提醒天数，提前几天通知用户书籍逾期">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="borrow_limit">借阅限制</label>
+                            <input type="number" class="form-control" id="borrow_limit" name="borrow_limit"
+                                placeholder="借阅限制，用户同一时间可借阅书籍的数量限制">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="violation_limit">违规限制</label>
+                            <input type="number" class="form-control" id="violation_limit" name="violation_limit"
+                                placeholder="违规限制，超过违规次数不可再借阅书籍">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="is_book_admin">是否图书管理员</label>
+                            <select class="form-control" id="is_book_admin" name="is_book_admin">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                        <!-- 其他表单项 -->
+                        <!-- 这里添加其他需要修改的字段 -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="saveChanges">保存更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'base/footer.html' %}
+    <!-- 引入 jQuery -->
+    <script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.js') }}"></script>
+    <!-- 引入 Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- 引入自定义 JavaScript -->
+    <script src="{{ url_for('static', filename='js/admin_library_status.js') }}"></script>
+</body>
+
+</html>

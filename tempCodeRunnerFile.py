@@ -1,0 +1,1 @@
+/api/libraryS_setting

@@ -6,6 +6,8 @@ from api.users import users_bp  # 从 users 导入蓝图
 from api.request_process import request_api  # 从 request_process 导入蓝图
 from api.news import news_bp  # 从 news 导入蓝图
 from api.materials import materials_bp  # 从 materials 导入蓝图
+from api.libraryS_setting import libraryS_setting_bp  # 从 libraryS_setting 导入蓝图
+from api.introduction_update import introduction_bp  # 从 introduction 导入蓝图
 
 
 # 注册蓝图
@@ -16,6 +18,8 @@ app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(request_api, url_prefix='/api/request_process')
 app.register_blueprint(news_bp, url_prefix='/api/news')
 app.register_blueprint(materials_bp, url_prefix='/api/materials')
+app.register_blueprint(libraryS_setting_bp, url_prefix='/api/libraryS_setting')
+app.register_blueprint(introduction_bp, url_prefix='/api/introduction_update')
 
 
 # 建立所有表，如果表存在，就删除后建立新的

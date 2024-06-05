@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简介管理页面</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
+    <!-- 引入自定义样式 -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
+</head>
+
+<body>
+{% include 'base/navbar.html' %}
+{% include 'base/internal_managemt_sidebar.html' %}
+<div class="contentmain">
+    <!-- 主内容区域 -->
+
+    <main>
+    <div class="container-fluid mt-3">
+        <h1>简介管理</h1>
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addIntroductionModal">
+            添加简介
+        </button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>简称</th>
+                    <th>简介</th>
+                    <th>地址</th>
+                    <th>电话</th>
+                    <th>传真</th>
+                    <th>邮箱</th>
+                    <th>网站</th>
+                    <th>LOGO</th>
+                    <th>创建时间</th>
+                    <th>是否启用</th>
+                    <th>更新者姓名</th>
+                </tr>
+            </thead>
+            <tbody id="introductionsTable">
+                <!-- 简介列表将通过JavaScript动态插入 -->
+            </tbody>
+        </table>
+    </div>
+</main>
+</div>
+
+    <!-- 添加简介模态框 -->
+    <div class="modal fade" id="addIntroductionModal" tabindex="-1" role="dialog"
+        aria-labelledby="addIntroductionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addIntroductionModalLabel">添加简介</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addIntroductionForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">名称</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="shortName">简称</label>
+                            <input type="text" class="form-control" id="shortName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="introduction">简介</label>
+                            <textarea class="form-control" id="introduction" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">地址</label>
+                            <input type="text" class="form-control" id="address">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">电话</label>
+                            <input type="text" class="form-control" id="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="fax">传真</label>
+                            <input type="text" class="form-control" id="fax">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="website">网站</label>
+                            <input type="text" class="form-control" id="website">
+                        </div>
+                        <div class="form-group">
+                            <label for="logo">LOGO</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="logo" name="image"
+                                    accept="image/png, image/jpeg, image/gif">
+                                <label class="custom-file-label" for="logo">选择文件</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="isActive">是否激活</label>
+                            <select class="form-control" id="isActive">
+                                <option value="true">是</option>
+                                <option value="false">否</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveIntroduction">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片预览样式 -->
+    <style>
+        .logo-preview {
+            max-width: 50px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .preview-img {
+            max-width: 20%;
+            height: auto;
+        }
+    </style>
+
+    <script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/introduction_update.js') }}"></script>
+</body>
+
+</html>
