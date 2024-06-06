@@ -694,6 +694,7 @@ class News(db.Model):
     publish_time = db.Column(db.DateTime, nullable=True)
     attachments = db.Column(db.ARRAY(db.String()), nullable=True)  # 使用数组存储附件地址
     cover = db.Column(db.String(255), nullable=False)  # 封面属性
+    
     def to_dict(self):
         return {
             'id': self.id,

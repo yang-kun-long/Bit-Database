@@ -104,3 +104,31 @@ def news_detail(news_id):
     news_json = news.to_dict()
     return jsonify(news_json), 200
 
+
+@news_bp.route('/category-news', methods=['GET'])
+def category_news():
+    # 查询category为新闻动态的最新的一条新闻
+    news = News.query.filter_by(category='news').order_by(News.create_time.desc()).first()
+    # 查询category为通知通告的最新的1条新闻
+    notice = News.query.filter_by(category='notice').order_by(News.create_time.desc()).first()
+    # 查询category为学术活动的最新的1条新闻
+    activity = News.query.filter_by(category='academic').order_by(News.create_time.desc()).first()
+    if news :
+        news_json = news.to_dict()
+    else:
+        news_json = None
+    if notice:
+        notice_json = notice.to_dict()
+    else:
+        notice_json = None
+    if activity:
+        activity_json = activity.to_dict()
+    else:
+        activity_json = None
+    # 返回josn格式数据
+    return jsonify({'news':news_json,'notice':notice_json,'activity':activity_json,'success':True}), 200
+   
+
+
+
+

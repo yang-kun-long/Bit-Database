@@ -8,7 +8,7 @@
     height: 100vh; /* 侧边栏高度设置为视口全高 */
     background-color: #f5f5f5; /* 侧边栏背景颜色 */
     overflow-x: hidden; /* 隐藏水平滚动条 */
-    padding-top: 60px; /* 一些顶部内边距 */
+    padding-top: 90px; /* 一些顶部内边距 */
     padding-right: 0px;
     z-index: 10; /* 确保侧边栏在页面最上层 */
 }
@@ -36,7 +36,7 @@
 
 .sidebar a:hover,
 .sidebar a:focus {
-    color: #007bff; /* 鼠标悬停或聚焦时颜色 */
+    color: #010912d0; /* 鼠标悬停或聚焦时颜色 */
     background-color: #ddd; /* 鼠标悬停或聚焦时背景颜色 */
     outline: none; /* 移除聚焦轮廓 */
 }
@@ -52,7 +52,7 @@
     padding: 1px 16px;
 }
 main {
-    min-height: calc(100vh - 190px); /* 100vh 减去页脚和导航栏的高度 */
+    min-height: calc(100vh - 250px); /* 100vh 减去页脚和导航栏的高度 */
 }
 
 /* 当屏幕宽度小于700px时，改变侧导航栏和内容的布局 */

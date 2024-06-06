@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <title>网络攻防对抗技术研究所</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- 引入CSS样式表 -->
-
-    <script src="scripts.js"></script> <!-- 引入JavaScript文件 -->
 </head>
+
 <body>
     <!-- 导入base.html模板的导航栏  -->
     {% include 'base/navbar.html' %}
     <!-- 首页内容 -->
     <div id="home" class="content">
         <h1>欢迎来到网络攻防对抗技术研究所</h1>
-        <p>这里是研究所的简介和最新动态...</p>
-        <!-- 动态消息 -->
+        <p class="card-text" id="institutionIntroduction"></p>
+
+    </div>
+    <!-- 动态消息 -->
+    <div id="dynamicMessage" class="content">
         <section>
             <h2>最新动态</h2>
             <ul>
-                <li><strong>通知：</strong> [通知内容]</li>
-                <li><strong>新闻：</strong> [新闻内容]</li>
-                <li><strong>活动：</strong> [活动内容]</li>
+                <li><strong>通知：</strong><a id="noticeLink"><span data-category="notice">[通知内容]</span></a></li>
+                <li><strong>新闻：</strong> <a id="newsLink"><span data-category="news">[新闻内容]</span></a></li>
+                <li><strong>活动：</strong> <a id="activityLink"><span data-category="activity">[活动内容]</span></a></li>
             </ul>
         </section>
     </div>
@@ -29,40 +32,280 @@
     <div id="about" class="content">
         <h2>关于我们</h2>
         <p>研究所简介、师资队伍、学生信息、联系方式等...</p>
+        <ul class="student-photos">
+            {% for student in faculty %}
+            <li class="student-photo">
+                <a href="about">
+                    <button type="button" class="btn btn-link" data-toggle="modal"
+                        data-target="#studentModal{{ student.id }}">
+                        <img src="{{ url_for('static', filename=student.photo_path) }}" alt="学生照片"
+                            class="student-photo-img">
+                        <span class="student-name">{{ student.name }}</span>
+                    </button>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 
     <!-- 动态消息 -->
     <div id="news" class="content">
         <h2>动态消息</h2>
         <p>新闻动态、通知通告、学术活动等信息...</p>
+        <ul class="news-gallery">
+            {% for news in news_list %}
+            <li class="news-item">
+                <a href="news">
+                    <button type="button" class="news-preview" data-toggle="modal"
+                        data-target="#newsModal{{ news.id }}">
+                        <img src="{{ news.cover }}" alt="新闻图片" class="news-image">
+                        <span class="news-title">{{ news.title }}</span>
+                    </button>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 
     <!-- 教学科研 -->
+
     <div id="research" class="content">
         <h2>教学科研</h2>
         <p>展示研究所全职教师的教学及科研工作相关信息...</p>
-    </div>
+        <h3>教学工作</h3>
+        <div class="row">
+            {% for work in teaching_works %}
 
-    <!-- 研究成果 -->
+            <div class="col-md-6">
+                <div class="work-item">
+                    <a href="research#teaching">
+                        <h4>{{ work.course_name }}</h4>
+                        <p><strong>课程性质:</strong> {{ work.course_nature }}</p>
+                        <p><strong>面向学生层次:</strong> {{ work.student_level }}</p>
+                        <p><strong>授课时间:</strong> {{ work.teaching_time }}</p>
+                        <p><strong>主讲教师:</strong> {{ work.owner_names }}</p>
+                    </a>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+
+        <!-- 研究工作 -->
+        <h3>研究工作</h3>
+        <div class="row">
+            {% for work in research_works %}
+
+            <div class="col-md-6">
+                <div class="work-item">
+                    <a href="research#research_work">
+                        <h4>{{ work.project_name }}</h4>
+                        <p><strong>项目性质:</strong> {{ work.project_nature }}</p>
+                        <p><strong>参与者:</strong> {{ work.owner_names }}</p>
+                        <p><strong>开始日期:</strong> {{ work.start_date }}</p>
+                        <p><strong>结束日期:</strong> {{ work.end_date }}</p>
+                    </a>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
     <div id="achievements" class="content">
         <h2>研究成果</h2>
         <p>展示教学成果、科研论文、专利、著作权等信息...</p>
+
+        <!-- 教学成果类别 -->
+        <div class="achievement-category" id="teaching-achievements">
+            <h3>教学成果</h3>
+            <!-- 教学成果内容 -->
+            <div class="item">
+                <h4>教学成果</h4>
+                <div class="achievements-list">
+                    {% for achievement in research_achievements.teaching.achievements %}
+                    <div class="achievement-item">
+                        <a href="research_achievements#teaching-achievements">
+
+                            <h4>{{ achievement.name }}</h4>
+                            <p><strong>年份:</strong> {{ achievement.achievement_year }}</p>
+                            <p><strong>级别:</strong> {{ achievement.level }}</p>
+                            <p><strong>描述:</strong> {{ achievement.description }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="item">
+                <h4>教学论文</h4>
+                <div class="papers-list">
+                    {% for paper in research_achievements.teaching.papers %}
+                    <div class="paper-item">
+                        <a href="research_achievements#teaching-papers">
+                            <h4>{{ paper.title }}</h4>
+                            <p><strong>发表年份:</strong> {{ paper.publication_year }}</p>
+                            <p><strong>期刊/会议:</strong> {{ paper.publication }}</p>
+                            <p><strong>刊号/会议时间:</strong> {{ paper.publication_number }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="item">
+                <h4>教材信息</h4>
+                <div class="textbooks-list">
+                    {% for textbook in research_achievements.teaching.textbooks %}
+                    <div class="textbook-item">
+                        <a href="research_achievements#textbooks">
+                            <h4>{{ textbook.name }}</h4>
+                            <p><strong>出版年份:</strong> {{ textbook.publication_year }}</p>
+                            {% if textbook.awad_info %}
+                            <p><strong>获奖信息:</strong> {{ textbook.awad_info }}</p>
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="item">
+                <h4>教改项目信息</h4>
+                <div class="reform-list">
+                    {% for reform in research_achievements.teaching.reform %}
+                    <div class="reform-item">
+                        <a href="research_achievements#teaching-reform">
+                            <h4>{{ reform.name }}</h4>
+                            <p><strong>批准年份:</strong> {{ reform.approval_year }}</p>
+                            <p><strong>级别:</strong> {{ reform.level }}</p>
+                            <p><strong>描述:</strong> {{ reform.description }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 科研成果类别 -->
+        <div class="achievement-category" id="research-achievements">
+            <h3>科研成果</h3>
+            <!-- 科研成果内容 -->
+            <div class="item">
+                <h4>科研成果</h4>
+                <div class="research-achievements-list">
+                    {% for achievement in research_achievements.research.achievements %}
+                    <div class="research-achievement-item">
+                        <a href="research_achievements#research-achievements">
+                            <h4>{{ achievement.name }}</h4>
+                            <p><strong>年份:</strong> {{ achievement.achievement_year }}</p>
+                            <p><strong>级别:</strong> {{ achievement.level }}</p>
+                            <p><strong>描述:</strong> {{ achievement.description }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="item">
+                <h4>科研论文</h4>
+                <div class="publications-list">
+                    {% for paper in research_achievements.research.papers %}
+                    <div class="publication-item">
+                        <a href="research_achievements#research-papers">
+                            <h4>{{ paper.title }}</h4>
+                            <p><strong>发表年份:</strong> {{ paper.publication_year }}</p>
+                            <p><strong>类型:</strong> {{ paper.type }}</p>
+                            <p><strong>期刊/会议:</strong> {{ paper.publication }}</p>
+                            <p><strong>刊号/会议时间:</strong> {{ paper.publication_number }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="item">
+                <h4>专利</h4>
+                <div class="patents-list">
+                    {% for patent in research_achievements.research.patents %}
+                    <div class="patent-item">
+                        <a href="research_achievements#patents">
+                            <h4>{{ patent.title }}</h4>
+                            <p><strong>申请年份:</strong> {{ patent.application_year }}</p>
+                            <p><strong>申请号:</strong> {{ patent.application_number }}</p>
+                            <p><strong>状态:</strong> {{ patent.status }}</p>
+                            <p><strong>发明人:</strong> {{ patent.inventors_names }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            <div class="item">
+                <h4>著作权</h4>
+                <div class="copyrights-list">
+                    {% for copyright in research_achievements.research.copyrights %}
+                    <div class="copyright-item">
+                        <a href="research_achievements#copyrights">
+                            <h4>{{ copyright.software_name }}</h4>
+                            <p><strong>注册年份:</strong> {{ copyright.registration_id }}</p>
+                            <p><strong>登记号:</strong> {{ copyright.registration_number }}</p>
+                            <p><strong>著作权人:</strong> {{ copyright.authors_names }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 招生信息 -->
     <div id="admissions" class="content">
         <h2>招生信息</h2>
-        <p>提供本科生、硕士生、博士生、留学生的招生信息...</p>
+        <!-- 如果存在招生信息，展示它们 -->
+        {% if admission_info %}
+        <div class="admission-list">
+            {% for item in admission_info %}
+
+            <div class="admission-item">
+                <a href="admissions">
+                    <h3>{{ item.category }}</h3>
+                    <p><strong>技术要求:</strong> {{ item.technical_requirements }}</p>
+                    <p><strong>学习形式:</strong> {{ item.study_mode }}</p>
+                    <p><strong>工作时间:</strong> {{ item.work_schedule }}</p>
+                    <p><strong>其他要求:</strong> {{ item.other_requirements }}</p>
+                    <p><strong>联系人:</strong> {{ item.contact_person }}</p>
+                    <p><strong>联系信息:</strong> {{ item.contact_information }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- 如果没有招生信息，显示提示信息 -->
+        {% else %}
+        <p>暂无招生信息。</p>
+        {% endif %}
     </div>
 
-    <!-- 国际合作 -->
     <div id="international" class="content">
         <h2>国际合作</h2>
         <p>展示研究所的国际合作项目和合作方信息...</p>
+
+        <!-- 国际合作项目列表 -->
+        <div class="cooperation-list">
+            {% for partnership in cooperation_info %}
+            <div class="cooperation-item">
+                <a href="cooperation">
+                    <h3>{{ partnership.name }} ({{ partnership.country }})</h3>
+                    <p><strong>合作项目:</strong> {{ partnership.project }}</p>
+                    <p><strong>开始时间:</strong> {{ partnership.start_date | default('未提供', true) }}</p>
+                    <p><strong>结束时间:</strong> {{ partnership.end_date | default('进行中', true) }}</p>
+                    <p><strong>合作状态:</strong> {{ partnership.status | default('未提供', true) }}</p>
+                    <p><strong>项目描述:</strong> {{ partnership.description | default('无', true) }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
-<!-- 导入base.html模板的页脚  -->
-{% include 'base/footer.html' %}
+    <!-- 导入base.html模板的页脚  -->
+    {% include 'base/footer.html' %}
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script> <!-- 引入JS脚本 -->
+
 
 </body>
+
 </html>

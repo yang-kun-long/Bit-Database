@@ -140,6 +140,7 @@ def get_faculty_info(category):
                 'duty': full_time_teacher.duty,
                 'social_part_time': full_time_teacher.social_part_time,
                 'administrative_duty': full_time_teacher.administrative_duty,
+                'photo_path': full_time_teacher.teacher.user.user_info.photo_path,
             })
     elif category == '兼职':
         # 查询兼职教师信息
@@ -450,3 +451,26 @@ def get_overdue_reminder_days(user):
     return user.library_status.overdue_reminder_days
 def get_left_days(loan):
     return (loan.should_return_date-datetime.now()).days
+def slice_achievements(achievements, limit=6):
+    """
+    Slice the achievements data to a specified limit.
+
+    :param achievements: dict, the original achievements data
+    :param limit: int, the number of items to keep in each category
+    :return: dict, the sliced achievements data
+    """
+    limited_achievements = {
+        'teaching': {
+            'achievements': achievements['teaching']['achievements'][:limit],
+            'papers': achievements['teaching']['papers'][:limit],
+            'textbooks': achievements['teaching']['textbooks'][:limit],
+            'reform': achievements['teaching']['reform'][:limit],
+        },
+        'research': {
+            'achievements': achievements['research']['achievements'][:limit],
+            'papers': achievements['research']['papers'][:limit],
+            'patents': achievements['research']['patents'][:limit],
+            'copyrights': achievements['research']['copyrights'][:limit],
+        }
+    }
+    return limited_achievements

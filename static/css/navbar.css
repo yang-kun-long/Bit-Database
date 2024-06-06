@@ -114,3 +114,38 @@
     background: no-repeat center center;
     background-size: 100% 100%;
 }
+
+/* 确保logo容器内的图片水平居中 */
+#logoContainer { 
+    /* 容器小一点 */
+
+    max-width: 100px;
+    display: flex;
+    justify-content: center; /* 使图片水平居中 */
+    align-items: center; /* 使图片垂直居中 */
+    text-align: center; /*使图片水平居中
+    margin: 0px 0; /*上下边距，根据需要调整
+     padding: 0; /* 移除内边距，如果继承了内边距 */
+}
+
+/* 设置机构Logo图片的样式 */
+#institutionLogo {
+    max-width: 100%; /* 设置图片最大宽度为100%，这样它会适应容器宽度 */
+    height: auto; /* 保持图片的宽高比 */
+    display: block; /* 使图片作为块级元素，以便应用宽度和边距 */
+    margin: 0 auto; /* 设置外边距为自动，实现水平居中 */
+    border-radius: 4px; /* 可选：给图片添加圆角效果 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 可选：添加阴影效果 */
+    transition: transform 0.3s ease; /* 平滑缩放效果 */
+}
+
+/* 可选：为图片添加鼠标悬停效果 */
+#institutionLogo:hover {
+    transform: scale(1.05); /* 鼠标悬停时放大图片 */
+}
+
+/* 如果需要对图片添加边框，可以使用以下样式 */
+#institutionLogo {
+    border: 1px solid #ddd; /* 边框颜色 */
+    /* 其他样式 */
+}

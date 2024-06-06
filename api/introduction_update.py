@@ -78,7 +78,10 @@ def get_active_introduction():
     institution = Institution.query.filter_by(is_active=True).first()
     if institution is None:
         return jsonify({'message': '没有激活的简介！', 'success': False}), 404
+
+    # 添加 success 字段为 True
     return jsonify({
+        'success': True,
         'id': institution.id,
         'name': institution.name,
         'short_name': institution.short_name,

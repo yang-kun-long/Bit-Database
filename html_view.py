@@ -36,7 +36,25 @@ def load_user(user_id):
 # 主页
 @views_blueprint.route('/')
 def index():
-    return render_template('index.html')
+    faculty_info = get_faculty_info('全职')
+    # 取前六个教师信息
+    faculty_info = faculty_info[:5]
+    news_list = News.query.order_by(News.create_time.desc()).limit(3).all()
+    # 将新闻列表转换为 JSON 格式
+    news_list_json = [news.to_dict() for news in news_list]
+    teaching_works = get_teaching_works_info()
+    teaching_works = teaching_works[:6]
+    research_works = get_research_works_info()
+    research_works = research_works[:6]
+    all_achievements = get_achievements_info()
+    research_achievements=slice_achievements(all_achievements, 1)
+    admission_info = AdmissionInfo.query.limit(3).all()
+    cooperation_info = InternationalPartnership.query.limit(3).all()
+
+    return render_template('index.html', faculty=faculty_info, news_list=news_list_json, 
+                           teaching_works=teaching_works, research_works=research_works,
+                           research_achievements = research_achievements,admission_info=admission_info
+                           ,cooperation_info=cooperation_info)
 
 @views_blueprint.route('/research_achievements')
 def research_achievements():
@@ -337,6 +355,10 @@ def system_settings_page():
 @views_blueprint.route('/introduction_update_page', methods=['GET', 'POST'])
 def introduction_update_page():
     return render_template('introduction_update_page.html')
+
+@views_blueprint.route('/test', methods=['GET', 'POST'])
+def test():
+    return render_template('test.html')
 
 def blueprint(app):
     app.register_blueprint(views_blueprint)

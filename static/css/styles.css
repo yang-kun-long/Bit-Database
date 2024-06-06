@@ -1,165 +1,250 @@
-/* 重置浏览器默认样式 */
-* {
+/* styles.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+    color: #333;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* 页面整体样式 */
-body {
-    font-family: Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
 }
 
-/* 导航栏样式 */
-nav {
-    background: #333;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-}
-
-
-nav ul {
-    list-style: none;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: #fff;
+a {
+    color: inherit;
     text-decoration: none;
-    padding: 5px 10px;
 }
 
-nav ul li a:hover, nav ul li a.active {
-    background: #555;
+a:hover,
+a:active,
+a:visited {
+    color: inherit;
+    text-decoration: none;
 }
 
-/* 页面内容区域样式 */
+
 .content {
+    max-width: 1200px;
+    margin: auto;
     padding: 20px;
-    margin: 20px 0;
     background: #fff;
-    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
-.content h2 {
+#home {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#home h1 {
+    margin-bottom: 0.5em;
     color: #333;
 }
 
-/* 页脚样式 */
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 20px;
-
-    bottom: 0;
-    width: 100%;
-}
-
-/* 动态消息列表样式 */
-.content ul {
-    list-style-type: none;
-}
-
-.content ul li {
-    margin-bottom: 10px;
-    padding: 5px;
-    background: #eee;
-    border-radius: 3px;
-}
-
-.content ul li strong {
-    color: #d00;
-}
-/* styles.css */
-/* styles.css */
-.user-avatar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px; /* 头像宽度 */
-    height: 50px; /* 头像高度 */
-    border-radius: 50%; /* 头像圆角 */
-    background-color: #f8f8f8; /* 背景颜色 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer; /* 鼠标悬停时显示手指图标 */
-}
-
-.user-avatar img {
-    width: 100%; /* 确保图片在头像容器内完全显示 */
-    height: auto; /* 保持图片高度与宽度比例 */
-    border-radius: 50%; /* 确保图片是圆形的 */
-}
-
-/* styles.css */
-.footer-links {
-    list-style-type: none;
+#dynamicMessage ul {
+    list-style: none;
     padding: 0;
+}
+
+#dynamicMessage ul li {
+    margin-bottom: 1em;
+}
+
+#dynamicMessage ul li strong {
+    color: #333;
+}
+
+/* About us section with student photos */
+.student-photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.student-photo {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.student-photo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.student-name {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: #f9f9f9;
+}
+
+/* News gallery */
+.news-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.news-item {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.news-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.news-title {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: #f9f9f9;
+}
+
+#research .row, #achievements .row {
     display: flex;
-    justify-content: space-around; /* 使列表项均匀分布 */
+    flex-wrap: wrap;
+    margin: -10px; /* Adjust negative margin to pull items closer */
 }
 
-.footer-links li {
-    margin-bottom: 0; /* 防止列表项之间有额外的空隙 */
+#research .row > *, #achievements .row > * {
+    flex: 1 1 320px; /* Allow items to grow and shrink, but start at 400px */
+    margin: 10px; /* Adjust margin to control spacing between items */
+    box-sizing: border-box; /* Ensure padding doesn't affect the width */
 }
 
-.footer-links a {
-    text-decoration: none;
-    color: #fff; /* 链接颜色 */
+.work-item, .achievement-item, .paper-item, .textbook-item, .reform-item,
+.research-achievement-item, .publication-item, .patent-item, .copyright-item {
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
-.footer-links a:hover {
-    text-decoration: underline; /* 鼠标悬停时的下划线效果 */
+
+/* Headings */
+.work-item h4, .achievement-item h4, .paper-item h4, .textbook-item h4, .reform-item h4,
+.research-achievement-item h4, .publication-item h4, .patent-item h4, .copyright-item h4 {
+    margin-top: 0;
 }
 
+/* Admissions section */
+#admissions .admission-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
 
-/* 响应式设计：当屏幕宽度小于600px时，导航栏水平排列变为垂直排列 */
-@media (max-width: 600px) {
-    nav ul li {
-        display: block;
-        margin-bottom: 10px;
+.admission-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admission-item h3 {
+    margin-top: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    #research .row, #achievements .row {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 }
-/* 下拉菜单样式 */
-.dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
+
+@media (max-width: 992px) {
+    #research .row, #achievements .row {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .student-photos, .news-gallery, #admissions .admission-list {
+        grid-template-columns: 1fr; /* Stack items on top of each other on small screens */
+    }
+
+    #research .row, #achievements .row {
+        grid-template-columns: 1fr; /* Stack items on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Additional small screen adjustments if needed */
+}
+/* 成果类别容器 */
+.achievement-category {
+    margin-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 使项水平排列 */
+}
+
+/* 成果类别标题 */
+.achievement-category h3 {
+    width: 100%; /* 确保标题独占一行 */
+    margin-bottom: 10px;
+}
+
+/* 每个成果项 */
+.achievement-category .item {
+    flex-basis: calc(25% - 20px); /* 四项一行，减去间隔 */
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: none;
+    text-align: left;
+}
+#international {
     background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    display: none; /* 默认隐藏下拉菜单 */
-    width: 200px; /* 增加下拉菜单的宽度 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
-/* 鼠标悬停时显示下拉菜单 */
-.user-avatar:hover .dropdown {
-    display: block;
+.cooperation-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* 调整间隔大小以适应布局 */
+    margin-top: 20px;
 }
 
-/* 下拉菜单项样式 */
-.dropdown a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
+.cooperation-item {
+    flex: 1 1 300px; /* 允许项目根据屏幕大小调整 */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+.cooperation-item h3 {
+    margin-top: 0;
     color: #333;
 }
 
-/* 下拉菜单项悬停样式 */
-.dropdown a:hover {
-    background: #eee;
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+    .achievement-category .item {
+        flex-basis: calc(33.333% - 20px); /* 三项一行 */
+    }
+}
+
+@media (max-width: 768px) {
+    .achievement-category .item {
+        flex-basis: 100%; /* 单列显示 */
+    }
+}
+
+@media (max-width: 480px) {
+    /* 针对小屏幕的额外调整 */
 }
