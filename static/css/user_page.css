@@ -48,7 +48,15 @@ h1, h2 {
 .loan-item p {
     margin: 5px 0;
 }
-
+#avatar-img1 {
+    width: 60px;
+    height: 60px;
+    object-fit: cover; /* 裁剪图片以填充区域 */
+    margin-right: 10px;
+}
+.edit-btn {
+    margin-left: auto; /* 将按钮推向容器的结束位置 */
+}
 /* 响应式设计：在小屏幕上堆叠布局 */
 @media (max-width: 768px) {
     .info-item button.edit-btn {

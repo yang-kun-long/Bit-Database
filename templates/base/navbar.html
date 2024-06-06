@@ -39,7 +39,7 @@
                 <div class="navbar-nav">
                     <div class="nav-item">
                         <div class="user-avatar" onclick="toggleDropdown()">
-                            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像">
+                            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像" id="avatar-img">
                             <div id="dropdown" class="dropdown-menu">
                             <a class="dropdown-item" href="{{ url_for('html_view.user_page') }}">个人主页</a>
                             <a class="dropdown-item" href="{{ url_for('html_view.logout') }}">退出登录</a>
@@ -52,8 +52,8 @@
                 <!-- 用户未登录时显示的内容 -->
                 <div class="navbar-nav">
                     <div class="nav-item">
-                        <div class="user-avatar" onclick="location.href='{{ url_for('html_view.login') }}'">
-                            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像">
+                        <div class="user-avatar" onclick="location.href='{{ url_for('html_view.login') }}';">
+                            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像" id="avatar-img">
                         </div>
                     </div>
                 </div>
@@ -64,6 +64,7 @@
 </nav>
 
 <!-- 引入Bootstrap JS -->
+<script src="{{ url_for('static', filename='jquery-3.5.1/jquery-3.5.1.min.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
 <!-- 引入自定义JS -->
 <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>

@@ -36,6 +36,17 @@
                     <label>用户名:</label> <strong>{{ user.username }}</strong>
                 </div>
                 <div class="info-item">
+                    <label>密码:</label>
+                    <strong>******</strong>
+                    <button class="edit-btn btn btn-sm btn-primary" data-field="password">修改密码</button>
+                </div>
+                <div class="info-item">
+                    <label>头像:</label>
+                    <img src="{{ url_for('static', filename=user.user_info.photo_path) }}" alt="用户头像" class="avatar" id="avatar-img1">
+                    <button class="edit-btn btn btn-sm btn-primary" data-field="photo_path">修改头像</button>
+                    <input id="avatar-file-input" type="file" style="display:none" />
+                </div>
+                <div class="info-item">
                     <label>英文名:</label> <strong>{{ user.get_english_name() }}</strong>
                     <!-- 用户类型可能不需要修改按钮，根据实际情况决定 -->
                 </div>
