@@ -1,8 +1,9 @@
-[toc]
-
 # Bit-Database
 
+[toc]
+
 ## 表结构
+
 ### Institution 模型
 
 #### 描述
@@ -11,22 +12,22 @@
 
 #### 字段说明
 
-| 字段名        | 数据类型      | 描述                   | 是否可为空 | 默认值           | 关联模型 |
-|---------------|---------------|------------------------|------------|------------------|----------|
-| id            | Integer       | 研究所ID，主键         | 否         | 自增             |          |
-| name          | String(255)   | 研究所名称             | 否         |                  |          |
-| short_name    | String(255)   | 研究所简称             | 否         |                  |          |
-| introduction  | Text          | 研究所简介             | 否         |                  |          |
-| address       | String(255)   | 研究所地址             | 否         |                  |          |
-| phone         | String(20)    | 研究所电话             | 否         |                  |          |
-| fax           | String(20)    | 研究所传真             | 否         |                  |          |
-| email         | String(255)   | 研究所邮箱             | 否         |                  |          |
-| website       | String(255)   | 研究所网站             | 否         |                  |          |
-| logo_path     | String(255)   | 研究所logo路径         | 否         |                  |          |
-| created_at    | DateTime      | 创建时间               | 是         | 当前时间戳       |          |
-| is_active     | Boolean       | 是否启用               | 是         | False            |          |
-| operator_id   | String(20)    | 更新人ID，外键         | 否         |                  | Users    |
-| operator      | Object        | 更新人对象，反向引用   | 是         |                  | Users    |
+| 字段名       | 数据类型    | 描述                 | 是否可为空 | 默认值     | 关联模型 |
+| ------------ | ----------- | -------------------- | ---------- | ---------- | -------- |
+| id           | Integer     | 研究所 ID，主键      | 否         | 自增       |          |
+| name         | String(255) | 研究所名称           | 否         |            |          |
+| short_name   | String(255) | 研究所简称           | 否         |            |          |
+| introduction | Text        | 研究所简介           | 否         |            |          |
+| address      | String(255) | 研究所地址           | 否         |            |          |
+| phone        | String(20)  | 研究所电话           | 否         |            |          |
+| fax          | String(20)  | 研究所传真           | 否         |            |          |
+| email        | String(255) | 研究所邮箱           | 否         |            |          |
+| website      | String(255) | 研究所网站           | 否         |            |          |
+| logo_path    | String(255) | 研究所 logo 路径     | 否         |            |          |
+| created_at   | DateTime    | 创建时间             | 是         | 当前时间戳 |          |
+| is_active    | Boolean     | 是否启用             | 是         | False      |          |
+| operator_id  | String(20)  | 更新人 ID，外键      | 否         |            | Users    |
+| operator     | Object      | 更新人对象，反向引用 | 是         |            | Users    |
 
 #### 反向引用
 
@@ -49,29 +50,29 @@
 
 #### 字段说明
 
-| 字段名             | 数据类型        | 描述                         | 是否可为空 | 默认值           | 关联模型        |
-|--------------------|-----------------|------------------------------|------------|------------------|------------------|
-| id                 | Integer         | 用户ID，主键                 | 否         | 自增             |                |
-| work_id            | String(20)     | 工号                         | 否         |                  |                |
-| password_hash      | String(528)    | 密码哈希                     | 否         |                  |                |
-| created_at         | DateTime        | 创建时间                     | 是         | 当前时间戳       |                |
-| last_login         | DateTime        | 最后登录时间                 | 是         | None             |                |
-| login_fail_count   | Integer         | 登录失败次数                 | 是         | 0                |                |
-| last_fail_login    | DateTime        | 上次登录失败时间             | 是         | None             |                |
-| is_active          | Boolean         | 是否激活                     | 是         | False            |                |
-| user_info_id       | Integer         | 用户信息ID，外键             | 否         |                  | UserInfo       |
-| user_info          | Object          | 用户信息对象，反向引用       | 是         |                  | UserInfo       |
-| library_status_id  | Integer         | 图书馆常量设置ID，外键     | 否         |                  | LibraryStatus  |
-| library_status     | Object          | 图书馆常量设置对象，反向引用 | 是         |                  | LibraryStatus  |
+| 字段名            | 数据类型    | 描述                         | 是否可为空 | 默认值     | 关联模型      |
+| ----------------- | ----------- | ---------------------------- | ---------- | ---------- | ------------- |
+| id                | Integer     | 用户 ID，主键                | 否         | 自增       |               |
+| work_id           | String(20)  | 工号                         | 否         |            |               |
+| password_hash     | String(528) | 密码哈希                     | 否         |            |               |
+| created_at        | DateTime    | 创建时间                     | 是         | 当前时间戳 |               |
+| last_login        | DateTime    | 最后登录时间                 | 是         | None       |               |
+| login_fail_count  | Integer     | 登录失败次数                 | 是         | 0          |               |
+| last_fail_login   | DateTime    | 上次登录失败时间             | 是         | None       |               |
+| is_active         | Boolean     | 是否激活                     | 是         | False      |               |
+| user_info_id      | Integer     | 用户信息 ID，外键            | 否         |            | UserInfo      |
+| user_info         | Object      | 用户信息对象，反向引用       | 是         |            | UserInfo      |
+| library_status_id | Integer     | 图书馆常量设置 ID，外键      | 否         |            | LibraryStatus |
+| library_status    | Object      | 图书馆常量设置对象，反向引用 | 是         |            | LibraryStatus |
 
 #### 方法说明
 
 - `get_english_name(self)`: 返回用户信息中的英文名字段。
-- `get_teacher(self, zheng, type)`: 根据提供的 `zheng` 和 `type` 参数，返回学生的导师或共同导师的名称或ID。
+- `get_teacher(self, zheng, type)`: 根据提供的 `zheng` 和 `type` 参数，返回学生的导师或共同导师的名称或 ID。
 - `@property username`: 返回用户信息中的用户名字段。
 - `set_password(self, password)`: 设置用户的密码，通过哈希处理。
 - `check_password(self, password)`: 检查提供的密码是否与用户的哈希密码匹配。
-- `get_id(self)`: 返回用户ID的字符串表示。
+- `get_id(self)`: 返回用户 ID 的字符串表示。
 - `activate(self)`: 激活用户账户。
 - `reset_password(self, new_password)`: 重置用户密码为提供的新密码。
 - `update_info(self, **kwargs)`: 根据提供的关键字参数更新用户信息。
@@ -97,19 +98,19 @@
 
 #### 字段说明
 
-| 字段名          | 数据类型        | 描述                     | 是否可为空 | 默认值                                 | 备注       |
-|-----------------|-----------------|--------------------------|------------|----------------------------------------|------------|
-| id              | Integer         | 用户信息ID，主键         | 否         | 自增                                   |            |
-| email           | String(100)     | 邮箱                     | 是         |                                        |            |
-| phone           | String(20)      | 手机号                   | 是         |                                        |            |
-| username        | String(50)      | 用户名                   | 否         |                                        |            |
-| english_name    | String(50)      | 英文姓名                 | 是         | 拼音转换自`username`（若未提供）       |            |
-| gender          | String(10)      | 性别                     | 是         |                                        |            |
-| user_type       | String(20)      | 用户类型                 | 否         |                                        |            |
-| photo_path      | String(255)     | 照片路径                 | 是         | "images/avatar.png"                     | 默认头像路径 |
-| birth_date      | Date            | 出生日期                 | 是         |                                        |            |
-| nationality     | String(50)      | 国籍                     | 是         |                                        |            |
-| remarks         | Text            | 备注信息                 | 是         |                                        |            |
+| 字段名       | 数据类型    | 描述              | 是否可为空 | 默认值                           | 备注         |
+| ------------ | ----------- | ----------------- | ---------- | -------------------------------- | ------------ |
+| id           | Integer     | 用户信息 ID，主键 | 否         | 自增                             |              |
+| email        | String(100) | 邮箱              | 是         |                                  |              |
+| phone        | String(20)  | 手机号            | 是         |                                  |              |
+| username     | String(50)  | 用户名            | 否         |                                  |              |
+| english_name | String(50)  | 英文姓名          | 是         | 拼音转换自`username`（若未提供） |              |
+| gender       | String(10)  | 性别              | 是         |                                  |              |
+| user_type    | String(20)  | 用户类型          | 否         |                                  |              |
+| photo_path   | String(255) | 照片路径          | 是         | "images/avatar.png"              | 默认头像路径 |
+| birth_date   | Date        | 出生日期          | 是         |                                  |              |
+| nationality  | String(50)  | 国籍              | 是         |                                  |              |
+| remarks      | Text        | 备注信息          | 是         |                                  |              |
 
 #### 方法说明
 
@@ -124,14 +125,16 @@
 #### 备注
 
 - 英文姓名如果没有提供，则自动使用中文姓名的拼音作为英文姓名。
+
 #### 图书馆常量设置表：（LibraryStatus）
-- id: 图书馆常量设置ID，主键
-- user_id: 用户ID，外键关联Users表
-- interval_date: 间隔日期 天数 默认5
-- borrow_period: 借阅期限 天数 默认30
-- overdue_reminder_days: 超出期限提前提醒天数 默认3
-- borrow_limit: 单个用户借阅数量限制 默认2
-- violation_limit: 单个用户违规记录数量限制 默认3
+
+- id: 图书馆常量设置 ID，主键
+- user_id: 用户 ID，外键关联 Users 表
+- interval_date: 间隔日期 天数 默认 5
+- borrow_period: 借阅期限 天数 默认 30
+- overdue_reminder_days: 超出期限提前提醒天数 默认 3
+- borrow_limit: 单个用户借阅数量限制 默认 2
+- violation_limit: 单个用户违规记录数量限制 默认 3
 - is_book_admin: 是否图书管理员
 
 ### Students 模型
@@ -142,19 +145,19 @@
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述                             | 是否可为空 | 默认值           |
-|-----------------|-------------|----------------------------------|------------|------------------|
-| id              | Integer     | 学生ID，主键                   | 否         | 自增             |
-| user_id         | String(20)  | 关联的用户ID，外键              | 否         |                  |
-| category        | String(20)  | 学生类别（本科、硕士、博士）   | 否         |                  |
-| admission_time  | Date        | 入学时间                       | 否         |                  |
-| user            | Object      | 关联的用户对象，反向引用       | 是         |                  |
-| tutor_id        | String(50)  | 导师ID                         | 是         |                  |
-| co_tutor_id     | String(50)  | 副导师ID                       | 是         |                  |
-| tutor_name      | String(50)  | 导师姓名                       | 是         |                  |
-| co_tutor_name   | String(50)  | 副导师姓名                     | 是         |                  |
-| graduation_time | Date        | 毕业时间                       | 是         |                  |
-| first_employment_unit | String(50)  | 初次就业单位                   | 是         |                  |
+| 字段名                | 数据类型   | 描述                         | 是否可为空 | 默认值 |
+| --------------------- | ---------- | ---------------------------- | ---------- | ------ |
+| id                    | Integer    | 学生 ID，主键                | 否         | 自增   |
+| user_id               | String(20) | 关联的用户 ID，外键          | 否         |        |
+| category              | String(20) | 学生类别（本科、硕士、博士） | 否         |        |
+| admission_time        | Date       | 入学时间                     | 否         |        |
+| user                  | Object     | 关联的用户对象，反向引用     | 是         |        |
+| tutor_id              | String(50) | 导师 ID                      | 是         |        |
+| co_tutor_id           | String(50) | 副导师 ID                    | 是         |        |
+| tutor_name            | String(50) | 导师姓名                     | 是         |        |
+| co_tutor_name         | String(50) | 副导师姓名                   | 是         |        |
+| graduation_time       | Date       | 毕业时间                     | 是         |        |
+| first_employment_unit | String(50) | 初次就业单位                 | 是         |        |
 
 #### 构造函数说明
 
@@ -172,21 +175,21 @@
 
 - `user_id`字段作为外键与`Users`表的`work_id`字段关联。
 
-
 ### Teachers 模型
+
 #### 描述
 
 `Teachers` 模型代表教师信息，包括职称、学历等，与`Users`模型通过`user_id`唯一关联。
 
 #### 字段说明
 
-| 字段名    | 数据类型    | 描述               | 是否可为空 | 默认值 |
-|-----------|-------------|--------------------|------------|--------|
-| id        | Integer     | 教师ID，主键       | 否         | 自增   |
-| title     | String(50)  | 职称               | 是         |        |
-| education | String(50)  | 教师学历           | 是         |        |
-| user_id   | String(20)  | 关联的用户ID，外键 | 否         |        |
-| user      | Object      | 关联的用户对象     | 是         |        |
+| 字段名    | 数据类型   | 描述                | 是否可为空 | 默认值 |
+| --------- | ---------- | ------------------- | ---------- | ------ |
+| id        | Integer    | 教师 ID，主键       | 否         | 自增   |
+| title     | String(50) | 职称                | 是         |        |
+| education | String(50) | 教师学历            | 是         |        |
+| user_id   | String(20) | 关联的用户 ID，外键 | 否         |        |
+| user      | Object     | 关联的用户对象      | 是         |        |
 
 #### 构造函数说明
 
@@ -206,24 +209,22 @@
 
 #### 唯一性约束
 
-- `user_id`: 必须唯一，确保每个教师的用户ID在数据库中只存在一次。
-
-
-
+- `user_id`: 必须唯一，确保每个教师的用户 ID 在数据库中只存在一次。
 
 ### PartTimeTeachers 模型
+
 #### 描述
 
 `PartTimeTeachers` 模型代表兼职教师的详细信息，与`Teachers`模型通过`teacher_id`一对一关联。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述                     | 是否可为空 | 默认值 |
-|-------------|-------------|--------------------------|------------|--------|
-| id          | Integer     | 兼职教师ID，主键         | 否         | 自增   |
-| work_unit   | String(50)  | 工作单位                 | 是         |        |
-| teacher_id  | Integer     | 教师工号，外键           | 否         |        |
-| teacher     | Object      | 关联的教师实体           | 是         |        |
+| 字段名     | 数据类型   | 描述              | 是否可为空 | 默认值 |
+| ---------- | ---------- | ----------------- | ---------- | ------ |
+| id         | Integer    | 兼职教师 ID，主键 | 否         | 自增   |
+| work_unit  | String(50) | 工作单位          | 是         |        |
+| teacher_id | Integer    | 教师工号，外键    | 否         |        |
+| teacher    | Object     | 关联的教师实体    | 是         |        |
 
 #### 构造函数说明
 
@@ -244,23 +245,25 @@
 #### 示例构造函数调用
 
 创建一个兼职教师记录时，您需要提供工作单位、教师工号、职称、用户名、手机号、性别、学历等信息，其他字段如邮箱、国籍、出生日期、英文姓名和备注信息是可选的。兼职教师的用户类型默认设置为'兼职教师'。
+
 ### FullTimeTeachers 模型
+
 #### 描述
 
 `FullTimeTeachers` 模型代表全职教师的详细信息，与`Teachers`模型通过`teacher_id`一对一关联。
 
 #### 字段说明
 
-| 字段名            | 数据类型    | 描述                         | 是否可为空 | 默认值 |
-|-------------------|-------------|------------------------------|------------|--------|
-| id                | Integer     | 全职教师ID，主键             | 否         | 自增   |
-| qualification     | String(50)  | 导师资格                     | 是         |        |
-| duty              | Text        | 研究所职务                   | 是         |        |
-| social_part_time  | Text        | 社会兼职                     | 是         |        |
-| administrative_duty| Text       | 学院行政职务                 | 是         |        |
-| office_phone      | String(20)  | 办公电话                     | 是         |        |
-| teacher_id        | Integer     | 教师工号，外键               | 否         |        |
-| teacher           | Object      | 关联的教师实体               | 是         |        |
+| 字段名              | 数据类型   | 描述              | 是否可为空 | 默认值 |
+| ------------------- | ---------- | ----------------- | ---------- | ------ |
+| id                  | Integer    | 全职教师 ID，主键 | 否         | 自增   |
+| qualification       | String(50) | 导师资格          | 是         |        |
+| duty                | Text       | 研究所职务        | 是         |        |
+| social_part_time    | Text       | 社会兼职          | 是         |        |
+| administrative_duty | Text       | 学院行政职务      | 是         |        |
+| office_phone        | String(20) | 办公电话          | 是         |        |
+| teacher_id          | Integer    | 教师工号，外键    | 否         |        |
+| teacher             | Object     | 关联的教师实体    | 是         |        |
 
 #### 构造函数说明
 
@@ -281,24 +284,26 @@
 #### 用户类型
 
 - 教师的用户类型默认设置为'全职教师'。
+
 ### LoginEvent 模型
+
 #### 描述
 
 `LoginEvent` 模型用于记录用户登录系统的相关事件信息。
 
 #### 字段说明
 
-| 字段名          | 数据类型        | 描述                             | 是否可为空 | 默认值                |
-|-----------------|-----------------|----------------------------------|------------|----------------------|
-| id              | Integer         | 登录事件ID，主键                 | 否         | 自增                 |
-| user_id         | String(20)      | 用户工号，外键关联到Users表     | 是         |                      |
-| user_name       | String(50)      | 用户名称                         | 是         |                      |
-| ip_address      | String(45)      | 登录IP地址                       | 是         |                      |
-| login_time      | DateTime        | 登录时间                         | 是         | 当前时间戳 (`datetime.now`) |
-| logout_time     | DateTime        | 登出时间，用户会话结束时间       | 是         |                      |
-| session_id      | String(255)     | 会话ID，用于跟踪用户会话         | 是         |                      |
-| tutor_id        | String(50)      | 导师ID，如果用户是导师           | 是         |                      |
-| co_tutor_id     | String(50)      | 副导师ID，如果用户是副导师       | 是         |                      |
+| 字段名      | 数据类型    | 描述                          | 是否可为空 | 默认值                      |
+| ----------- | ----------- | ----------------------------- | ---------- | --------------------------- |
+| id          | Integer     | 登录事件 ID，主键             | 否         | 自增                        |
+| user_id     | String(20)  | 用户工号，外键关联到 Users 表 | 是         |                             |
+| user_name   | String(50)  | 用户名称                      | 是         |                             |
+| ip_address  | String(45)  | 登录 IP 地址                  | 是         |                             |
+| login_time  | DateTime    | 登录时间                      | 是         | 当前时间戳 (`datetime.now`) |
+| logout_time | DateTime    | 登出时间，用户会话结束时间    | 是         |                             |
+| session_id  | String(255) | 会话 ID，用于跟踪用户会话     | 是         |                             |
+| tutor_id    | String(50)  | 导师 ID，如果用户是导师       | 是         |                             |
+| co_tutor_id | String(50)  | 副导师 ID，如果用户是副导师   | 是         |                             |
 
 #### 反向引用
 
@@ -316,18 +321,20 @@
 
 - `logout_time`: 对于仍在进行中的会话，该字段可能为`NULL`。
 - `tutor_id`和`co_tutor_id`: 如果用户不是导师或副导师，这些字段可能为`NULL`。
+
 ### TeachingWorksTeacherAssociation 模型
+
 #### 描述
 
 `TeachingWorksTeacherAssociation` 模型用于关联教学作品与教师，确保每个项目与参与的教师之间有明确的联系。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述                         | 是否可为空 |
-|-------------|-------------|------------------------------|------------|
-| id          | Integer     | 关联记录ID，主键             | 否         |
-| project_id  | Integer     | 教学作品ID，外键             | 否         |
-| user_id     | String(20)  | 用户工号，外键关联到Users表   | 否         |
+| 字段名     | 数据类型   | 描述                          | 是否可为空 |
+| ---------- | ---------- | ----------------------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键             | 否         |
+| project_id | Integer    | 教学作品 ID，外键             | 否         |
+| user_id    | String(20) | 用户工号，外键关联到 Users 表 | 否         |
 
 #### 外键关系
 
@@ -341,21 +348,23 @@
 #### 约束条件
 
 - `project_id`和`user_id`字段由于是外键，因此不能包含空值，确保每条记录都有明确的教学作品和教师关联。
+
 ### TeachingWork 模型
+
 #### 描述
 
 `TeachingWork` 模型代表教学作品的详细信息，包括课程编号、名称、性质、学生层次和授课时间。
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述                         | 是否可为空 |
-|-----------------|-------------|------------------------------|------------|
-| id              | Integer     | 课程ID，主键                 | 否         |
-| course_id       | String(20)  | 课程编号                     | 否         |
-| course_name     | String(100) | 课程名称                     | 否         |
-| course_nature   | String(50)  | 课程性质                     | 否         |
-| student_level   | String(50)  | 学生层次                     | 否         |
-| teaching_time   | String(50)  | 授课时间                     | 否         |
+| 字段名        | 数据类型    | 描述          | 是否可为空 |
+| ------------- | ----------- | ------------- | ---------- |
+| id            | Integer     | 课程 ID，主键 | 否         |
+| course_id     | String(20)  | 课程编号      | 否         |
+| course_name   | String(100) | 课程名称      | 否         |
+| course_nature | String(50)  | 课程性质      | 否         |
+| student_level | String(50)  | 学生层次      | 否         |
+| teaching_time | String(50)  | 授课时间      | 否         |
 
 #### 关联模型
 
@@ -376,18 +385,20 @@
 #### 索引建议
 
 - `course_id`: 作为课程编号，建议设置为唯一且可索引，以优化查询效率。
+
 ### ResearchWorkTeacherAssociation 模型
+
 #### 描述
 
 `ResearchWorkTeacherAssociation` 模型用于建立科研项目与教师之间的关联关系，支持多对多的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述                         | 是否可为空 |
-|-------------|-------------|------------------------------|------------|
-| id          | Integer     | 关联记录ID，主键             | 否         |
-| project_id  | Integer     | 科研项目ID，外键             | 否         |
-| user_id     | String(20)  | 用户工号，外键关联到Users表   | 否         |
+| 字段名     | 数据类型   | 描述                          | 是否可为空 |
+| ---------- | ---------- | ----------------------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键             | 否         |
+| project_id | Integer    | 科研项目 ID，外键             | 否         |
+| user_id    | String(20) | 用户工号，外键关联到 Users 表 | 否         |
 
 #### 外键关系
 
@@ -401,21 +412,23 @@
 #### 约束条件
 
 - `project_id`和`user_id`字段由于是外键，因此不能包含空值，确保每条记录都有明确的科研项目和教师关联。
+
 ### ResearchWork 模型
+
 #### 描述
 
 `ResearchWork` 模型存储科研工作的详细信息，包括项目编号、名称、性质、开始和结束日期。
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述                         | 是否可为空 |
-|-----------------|-------------|------------------------------|------------|
-| id              | Integer     | 科研工作ID，主键             | 否         |
-| project_id      | String(20)  | 项目编号                     | 否         |
-| project_name    | String(100) | 项目名称                     | 否         |
-| project_nature  | String(50)  | 项目性质                     | 否         |
-| start_date      | Date        | 项目开始日期                 | 是         |
-| end_date        | Date        | 项目结束日期                 | 是         |
+| 字段名         | 数据类型    | 描述              | 是否可为空 |
+| -------------- | ----------- | ----------------- | ---------- |
+| id             | Integer     | 科研工作 ID，主键 | 否         |
+| project_id     | String(20)  | 项目编号          | 否         |
+| project_name   | String(100) | 项目名称          | 否         |
+| project_nature | String(50)  | 项目性质          | 否         |
+| start_date     | Date        | 项目开始日期      | 是         |
+| end_date       | Date        | 项目结束日期      | 是         |
 
 #### 关联模型
 
@@ -436,20 +449,21 @@
 #### 索引建议
 
 - `project_id`: 作为项目编号，建议设置为唯一且可索引，以优化查询效率。
+
 #### 描述
 
 研究工作表用于存储科研工作的详细信息，包括项目编号、项目名称、项目性质、项目开始和结束日期。此外，通过多对多关系表`ResearchWorkTeacherAssociation`与用户表关联，以表示哪些教师参与了哪些科研工作。
 
 #### 字段说明
 
-| 字段名          | 数据类型        | 描述               | 是否可为空 | 默认值           | 关联模型         |
-|-----------------|-----------------|--------------------|------------|------------------|------------------|
-| **id**          | Integer         | 科研工作ID，主键   | 否         | 自增             |                  |
-| **project_id**  | String(20)     | 项目编号           | 否         | None             |                  |
-| **project_name** | String(100)    | 项目名称           | 否         | None             |                  |
-| **project_nature** | String(50)     | 项目性质           | 否         | None             |                  |
-| **start_date**  | Date            | 项目开始日期       | 是         | None             |                  |
-| **end_date**    | Date            | 项目结束日期       | 是         | None             |                  |
+| 字段名             | 数据类型    | 描述              | 是否可为空 | 默认值 | 关联模型 |
+| ------------------ | ----------- | ----------------- | ---------- | ------ | -------- |
+| **id**             | Integer     | 科研工作 ID，主键 | 否         | 自增   |          |
+| **project_id**     | String(20)  | 项目编号          | 否         | None   |          |
+| **project_name**   | String(100) | 项目名称          | 否         | None   |          |
+| **project_nature** | String(50)  | 项目性质          | 否         | None   |          |
+| **start_date**     | Date        | 项目开始日期      | 是         | None   |          |
+| **end_date**       | Date        | 项目结束日期      | 是         | None   |          |
 
 #### 多对多关系
 
@@ -471,19 +485,19 @@
 
 - `research_works`: 在`Users`模型中，通过
 
-
 ### TeachingAchievementTeacherAssociation 模型
+
 #### 描述
 
 `TeachingAchievementTeacherAssociation` 模型用于关联教学成果与教师，实现多对多的关系。
 
 #### 字段说明
 
-| 字段名    | 数据类型    | 描述               | 是否可为空 |
-|-----------|-------------|--------------------|------------|
-| id        | Integer     | 关联记录ID，主键   | 否         |
-| user_id   | String(20)  | 用户工号，外键     | 否         |
-| project_id| Integer     | 教学成果ID，外键   | 否         |
+| 字段名     | 数据类型   | 描述              | 是否可为空 |
+| ---------- | ---------- | ----------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键 | 否         |
+| user_id    | String(20) | 用户工号，外键    | 否         |
+| project_id | Integer    | 教学成果 ID，外键 | 否         |
 
 #### 外键关系
 
@@ -497,20 +511,22 @@
 #### 约束条件
 
 - `user_id`和`project_id`字段由于是外键，因此不能为空，确保每条记录都有明确的教师和教学成果的关联。
+
 ### TeachingAchievements 模型
+
 #### 描述
 
 `TeachingAchievements` 模型用于存储教学成果的详细信息，包括成果名称、级别、年份和描述。
 
 #### 字段说明
 
-| 字段名            | 数据类型    | 描述                         | 是否可为空 |
-|-------------------|-------------|------------------------------|------------|
-| id                | Integer     | 教学成果ID，主键             | 否         |
-| achievement_year  | String(50)  | 成果年份                     | 否         |
-| name              | String(255) | 成果名称                     | 否         |
-| level             | String(50)  | 级别                         | 否         |
-| description       | Text        | 成果描述                     | 是         |
+| 字段名           | 数据类型    | 描述              | 是否可为空 |
+| ---------------- | ----------- | ----------------- | ---------- |
+| id               | Integer     | 教学成果 ID，主键 | 否         |
+| achievement_year | String(50)  | 成果年份          | 否         |
+| name             | String(255) | 成果名称          | 否         |
+| level            | String(50)  | 级别              | 否         |
+| description      | Text        | 成果描述          | 是         |
 
 #### 关联模型
 
@@ -531,18 +547,20 @@
 #### 索引建议
 
 - `achievement_year`和`name`: 可以根据查询需求考虑设置为索引，以优化基于成果年份或名称的查询效率。
+
 ### PaperAuthorAssociation 模型
+
 #### 描述
 
 `PaperAuthorAssociation` 模型用于建立论文与其作者之间的关联关系，支持一对多的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述               | 是否可为空 |
-|-------------|-------------|--------------------|------------|
-| id          | Integer     | 关联记录ID，主键   | 否         |
-| project_id  | Integer     | 论文ID，外键       | 否         |
-| user_id     | String(20)  | 用户工号，外键     | 否         |
+| 字段名     | 数据类型   | 描述              | 是否可为空 |
+| ---------- | ---------- | ----------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键 | 否         |
+| project_id | Integer    | 论文 ID，外键     | 否         |
+| user_id    | String(20) | 用户工号，外键    | 否         |
 
 #### 外键关系
 
@@ -556,21 +574,23 @@
 #### 约束条件
 
 - `project_id`和`user_id`字段由于是外键，因此不能为空，确保每条记录都有明确的论文和作者的关联。
+
 ### Papers 模型
+
 #### 描述
 
 `Papers` 模型用于存储论文的详细信息，包括发表年份、类型、题目、期刊/会议名称和刊号/会议时间。
 
 #### 字段说明
 
-| 字段名              | 数据类型    | 描述                             | 是否可为空 |
-|---------------------|-------------|----------------------------------|------------|
-| id                  | Integer     | 论文ID，主键                     | 否         |
-| publication_year    | String(50)  | 发表年份                         | 否         |
-| type                | String(50)  | 类型：教学，科研                 | 否         |
-| title               | String(255) | 论文题目                         | 否         |
-| publication         | String(100) | 期刊/会议名称                     | 否         |
-| publication_number  | String(100) | 刊号/会议时间                     | 否         |
+| 字段名             | 数据类型    | 描述             | 是否可为空 |
+| ------------------ | ----------- | ---------------- | ---------- |
+| id                 | Integer     | 论文 ID，主键    | 否         |
+| publication_year   | String(50)  | 发表年份         | 否         |
+| type               | String(50)  | 类型：教学，科研 | 否         |
+| title              | String(255) | 论文题目         | 否         |
+| publication        | String(100) | 期刊/会议名称    | 否         |
+| publication_number | String(100) | 刊号/会议时间    | 否         |
 
 #### 关联模型
 
@@ -591,18 +611,20 @@
 #### 索引建议
 
 - `publication_year`和`title`: 可以根据查询需求考虑设置为索引，以优化基于发表年份或论文题目的查询效率。
+
 ### BookAuthorAssociation 模型
+
 #### 描述
 
 `BookAuthorAssociation` 模型用于建立教科书或书籍与其作者之间的关联关系，支持一对多的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述               | 是否可为空 |
-|-------------|-------------|--------------------|------------|
-| id          | Integer     | 关联记录ID，主键   | 否         |
-| project_id  | Integer     | 书籍ID，外键       | 否         |
-| user_id     | String(20)  | 用户工号，外键     | 否         |
+| 字段名     | 数据类型   | 描述              | 是否可为空 |
+| ---------- | ---------- | ----------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键 | 否         |
+| project_id | Integer    | 书籍 ID，外键     | 否         |
+| user_id    | String(20) | 用户工号，外键    | 否         |
 
 #### 外键关系
 
@@ -616,19 +638,21 @@
 #### 约束条件
 
 - `project_id`和`user_id`字段由于是外键，因此不能为空，确保每条记录都有明确的书籍和作者的关联。
+
 ### TextBooks 模型
+
 #### 描述
 
 `TextBooks` 模型用于存储教材的详细信息，包括出版年份、名称和获奖信息。
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述               | 是否可为空 |
-|-----------------|-------------|--------------------|------------|
-| id              | Integer     | 教材ID，主键       | 否         |
-| publication_year| String(50)  | 出版年份           | 否         |
-| name            | String(255) | 教材名称           | 否         |
-| awad_info       | String(255) | 获奖信息           | 是         |
+| 字段名           | 数据类型    | 描述          | 是否可为空 |
+| ---------------- | ----------- | ------------- | ---------- |
+| id               | Integer     | 教材 ID，主键 | 否         |
+| publication_year | String(50)  | 出版年份      | 否         |
+| name             | String(255) | 教材名称      | 否         |
+| awad_info        | String(255) | 获奖信息      | 是         |
 
 #### 关联模型
 
@@ -649,18 +673,20 @@
 #### 索引建议
 
 - `publication_year`和`name`: 可以根据查询需求考虑设置为索引，以优化基于出版年份或教材名称的查询效率。
+
 ### TeachingReformTeacherAssociation 模型
+
 #### 描述
 
 `TeachingReformTeacherAssociation` 模型用于建立教学改革项目与教师之间的关联关系，实现多对多的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述               | 是否可为空 |
-|-------------|-------------|--------------------|------------|
-| id          | Integer     | 关联记录ID，主键   | 否         |
-| user_id     | String(20)  | 用户工号，外键     | 否         |
-| project_id  | Integer     | 教学改革项目ID，外键 | 否         |
+| 字段名     | 数据类型   | 描述                  | 是否可为空 |
+| ---------- | ---------- | --------------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键     | 否         |
+| user_id    | String(20) | 用户工号，外键        | 否         |
+| project_id | Integer    | 教学改革项目 ID，外键 | 否         |
 
 #### 外键关系
 
@@ -674,20 +700,22 @@
 #### 约束条件
 
 - `user_id`和`project_id`字段由于是外键，因此不能为空，确保每条记录都有明确的教师和教学改革项目的关联。
+
 ### TeachingReformProjects 模型
+
 #### 描述
 
 `TeachingReformProjects` 模型用于存储教学改革项目的详细信息，包括批准年份、项目名称、级别和项目描述。
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述               | 是否可为空 |
-|-----------------|-------------|--------------------|------------|
-| id              | Integer     | 项目ID，主键       | 否         |
-| approval_year   | String(50)  | 批准年份           | 否         |
-| name            | String(255) | 项目名称           | 否         |
-| level           | String(50)  | 项目级别           | 否         |
-| description     | Text        | 项目描述           | 是         |
+| 字段名        | 数据类型    | 描述          | 是否可为空 |
+| ------------- | ----------- | ------------- | ---------- |
+| id            | Integer     | 项目 ID，主键 | 否         |
+| approval_year | String(50)  | 批准年份      | 否         |
+| name          | String(255) | 项目名称      | 否         |
+| level         | String(50)  | 项目级别      | 否         |
+| description   | Text        | 项目描述      | 是         |
 
 #### 关联模型
 
@@ -708,18 +736,20 @@
 #### 索引建议
 
 - `approval_year`和`name`: 可以根据查询需求考虑设置为索引，以优化基于批准年份或项目名称的查询效率。
+
 ### ResearchAchievementAuthorAssociation 模型
+
 #### 描述
 
 `ResearchAchievementAuthorAssociation` 模型用于建立科研成果与作者（教师）之间的关联关系，实现一对多的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述               | 是否可为空 |
-|-------------|-------------|--------------------|------------|
-| id          | Integer     | 关联记录ID，主键   | 否         |
-| user_id     | String(20)  | 用户工号，外键     | 否         |
-| project_id  | Integer     | 科研成果ID，外键   | 否         |
+| 字段名     | 数据类型   | 描述              | 是否可为空 |
+| ---------- | ---------- | ----------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键 | 否         |
+| user_id    | String(20) | 用户工号，外键    | 否         |
+| project_id | Integer    | 科研成果 ID，外键 | 否         |
 
 #### 外键关系
 
@@ -733,20 +763,22 @@
 #### 约束条件
 
 - `user_id` 和 `project_id` 字段由于是外键，因此不能为空，确保每条记录都有明确的作者和科研成果的关联。
+
 ### ResearchAchievements 模型
+
 #### 描述
 
 `ResearchAchievements` 模型用于存储科研成果的详细信息，包括成果年份、名称、级别和描述。
 
 #### 字段说明
 
-| 字段名            | 数据类型    | 描述               | 是否可为空 |
-|------------------|-------------|--------------------|------------|
-| id                | Integer     | 科研成果ID，主键   | 否         |
-| achievement_year  | String(50)  | 成果年份           | 否         |
-| name              | String(255) | 成果名称           | 否         |
-| level             | String(50)  | 级别               | 否         |
-| description       | Text        | 成果描述           | 是         |
+| 字段名           | 数据类型    | 描述              | 是否可为空 |
+| ---------------- | ----------- | ----------------- | ---------- |
+| id               | Integer     | 科研成果 ID，主键 | 否         |
+| achievement_year | String(50)  | 成果年份          | 否         |
+| name             | String(255) | 成果名称          | 否         |
+| level            | String(50)  | 级别              | 否         |
+| description      | Text        | 成果描述          | 是         |
 
 #### 关联模型
 
@@ -767,18 +799,20 @@
 #### 索引建议
 
 - `achievement_year`和`name`: 可以根据查询需求考虑设置为索引，以优化基于成果年份或名称的查询效率。
+
 ### PatentInventorAssociation 模型
+
 #### 描述
 
 `PatentInventorAssociation` 模型用于建立专利与其发明者（教师或学生）之间的关联关系，实现多对多的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述               | 是否可为空 |
-|-------------|-------------|--------------------|------------|
-| id          | Integer     | 关联记录ID，主键   | 否         |
-| project_id  | Integer     | 专利ID，外键       | 否         |
-| user_id     | String(20)  | 用户工号，外键     | 否         |
+| 字段名     | 数据类型   | 描述              | 是否可为空 |
+| ---------- | ---------- | ----------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键 | 否         |
+| project_id | Integer    | 专利 ID，外键     | 否         |
+| user_id    | String(20) | 用户工号，外键    | 否         |
 
 #### 外键关系
 
@@ -792,22 +826,24 @@
 #### 约束条件
 
 - `project_id`和`user_id`字段由于是外键，因此不能为空，确保每条记录都有明确的专利和发明者的关联。
+
 ### Patents 模型
+
 #### 描述
 
 `Patents` 模型用于存储专利的详细信息，包括申请年份、专利名称、申请号、发明人姓名集合、专利权人姓名集合以及专利状态。
 
 #### 字段说明
 
-| 字段名               | 数据类型          | 描述                             | 是否可为空 | 唯一性 | 索引 |
-|----------------------|-------------------|----------------------------------|------------|--------|------|
-| id                   | Integer           | 专利ID，主键                     | 否         |        |      |
-| application_year     | Date              | 申请年份                         | 否         |        |      |
-| title                | String(255)       | 专利名称                         | 否         |        |      |
-| application_number   | String(100)       | 专利申请号                       | 否         | 是     | 是   |
-| status               | String(50)        | 专利状态（如：申请、授权等）   | 否         |        |      |
-| inventors_names      | String(255)       | 专利发明人姓名集合               | 是         |        |      |
-| shareholders         | String(255)       | 专利权人姓名集合                 | 是         |        |      |
+| 字段名             | 数据类型    | 描述                         | 是否可为空 | 唯一性 | 索引 |
+| ------------------ | ----------- | ---------------------------- | ---------- | ------ | ---- |
+| id                 | Integer     | 专利 ID，主键                | 否         |        |      |
+| application_year   | Date        | 申请年份                     | 否         |        |      |
+| title              | String(255) | 专利名称                     | 否         |        |      |
+| application_number | String(100) | 专利申请号                   | 否         | 是     | 是   |
+| status             | String(50)  | 专利状态（如：申请、授权等） | 否         |        |      |
+| inventors_names    | String(255) | 专利发明人姓名集合           | 是         |        |      |
+| shareholders       | String(255) | 专利权人姓名集合             | 是         |        |      |
 
 #### 关联模型
 
@@ -828,18 +864,20 @@
 #### 索引建议
 
 - `application_number`: 由于是专利申请号，建议设置为唯一索引，以确保每项专利的申请号在数据库中唯一。
+
 ### CopyrightAuthorAssociation 模型
+
 #### 描述
 
 `CopyrightAuthorAssociation` 模型用于建立版权作品与其作者之间的关联关系，实现一对一或多对一的关联方式。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述               | 是否可为空 |
-|-------------|-------------|--------------------|------------|
-| id          | Integer     | 关联记录ID，主键   | 否         |
-| project_id  | Integer     | 版权作品ID，外键   | 否         |
-| user_id     | String(20)  | 用户工号，外键     | 否         |
+| 字段名     | 数据类型   | 描述              | 是否可为空 |
+| ---------- | ---------- | ----------------- | ---------- |
+| id         | Integer    | 关联记录 ID，主键 | 否         |
+| project_id | Integer    | 版权作品 ID，外键 | 否         |
+| user_id    | String(20) | 用户工号，外键    | 否         |
 
 #### 外键关系
 
@@ -853,20 +891,22 @@
 #### 约束条件
 
 - `project_id`和`user_id`字段由于是外键，因此不能为空，确保每条记录都有明确的版权作品和作者的关联。
+
 ### Copyrights 模型
+
 #### 描述
 
 `Copyrights` 模型用于存储软件著作权的详细信息，包括注册号、登记号、软件名称以及著作权人信息。
 
 #### 字段说明
 
-| 字段名             | 数据类型    | 描述                         | 是否可为空 |
-|--------------------|-------------|------------------------------|------------|
-| id                 | Integer     | 著作权ID，主键               | 否         |
-| registration_id    | String(100) | 注册号                       | 否         |
-| registration_number| String(100) | 登记号                       | 否         |
-| software_name      | String(255) | 软件名称                     | 否         |
-| authors_names      | String(255) | 著作权人姓名集合             | 是         |
+| 字段名              | 数据类型    | 描述             | 是否可为空 |
+| ------------------- | ----------- | ---------------- | ---------- |
+| id                  | Integer     | 著作权 ID，主键  | 否         |
+| registration_id     | String(100) | 注册号           | 否         |
+| registration_number | String(100) | 登记号           | 否         |
+| software_name       | String(255) | 软件名称         | 否         |
+| authors_names       | String(255) | 著作权人姓名集合 | 是         |
 
 #### 关联模型
 
@@ -887,23 +927,25 @@
 #### 索引建议
 
 - `registration_id` 和 `registration_number`: 可以根据查询需求考虑设置为索引，以优化基于注册号或登记号的查询效率。
+
 ### AdmissionInfo 模型
+
 #### 描述
 
 `AdmissionInfo` 模型用于存储招生信息的详细描述，包括招生类别、技术要求、学习形式、工作时间、其他要求、联系人和联系信息。
 
 #### 字段说明
 
-| 字段名               | 数据类型    | 描述                         | 是否可为空 |
-|----------------------|-------------|------------------------------|------------|
-| id                   | Integer     | 招生信息ID，主键             | 否         |
-| category             | String(50)  | 招生类别                     | 否         |
-| technical_requirements| Text        | 技术要求                     | 是         |
-| study_mode           | String(50)  | 学习形式                     | 是         |
-| work_schedule        | String(100) | 工作时间                     | 是         |
-| other_requirements   | Text        | 其他要求                     | 是         |
-| contact_person       | String(50)  | 联系人                       | 是         |
-| contact_information  | String(100) | 联系信息                     | 是         |
+| 字段名                 | 数据类型    | 描述              | 是否可为空 |
+| ---------------------- | ----------- | ----------------- | ---------- |
+| id                     | Integer     | 招生信息 ID，主键 | 否         |
+| category               | String(50)  | 招生类别          | 否         |
+| technical_requirements | Text        | 技术要求          | 是         |
+| study_mode             | String(50)  | 学习形式          | 是         |
+| work_schedule          | String(100) | 工作时间          | 是         |
+| other_requirements     | Text        | 其他要求          | 是         |
+| contact_person         | String(50)  | 联系人            | 是         |
+| contact_information    | String(100) | 联系信息          | 是         |
 
 #### 模型功能
 
@@ -916,23 +958,25 @@
 #### 索引建议
 
 - `category`: 如果该字段经常用于查询，可以考虑设置索引以提高查询效率。
+
 ### InternationalPartnership 模型
+
 #### 描述
 
 `InternationalPartnership` 模型用于存储国际合作伙伴关系的信息，包括合作伙伴的名称、所属国家、合作项目、合作时间、状态和项目描述。
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述                             | 是否可为空 |
-|-----------------|-------------|----------------------------------|------------|
-| id              | Integer     | 合作伙伴关系ID，主键             | 否         |
-| name            | String(255) | 大学/企业名称                     | 否         |
-| country         | String(100) | 所属国家                         | 否         |
-| project         | String(255) | 合作项目                         | 否         |
-| start_date      | Date        | 合作开始时间                     | 是         |
-| end_date        | Date        | 合作结束时间                     | 是         |
-| status          | String(50)  | 合作状态（如：进行中、已完成等） | 是         |
-| description     | Text        | 合作项目描述或详情               | 是         |
+| 字段名      | 数据类型    | 描述                             | 是否可为空 |
+| ----------- | ----------- | -------------------------------- | ---------- |
+| id          | Integer     | 合作伙伴关系 ID，主键            | 否         |
+| name        | String(255) | 大学/企业名称                    | 否         |
+| country     | String(100) | 所属国家                         | 否         |
+| project     | String(255) | 合作项目                         | 否         |
+| start_date  | Date        | 合作开始时间                     | 是         |
+| end_date    | Date        | 合作结束时间                     | 是         |
+| status      | String(50)  | 合作状态（如：进行中、已完成等） | 是         |
+| description | Text        | 合作项目描述或详情               | 是         |
 
 #### 模型功能
 
@@ -945,22 +989,24 @@
 #### 索引建议
 
 - `name`和`country`: 可以根据查询需求考虑设置为索引，以优化基于合作伙伴名称或国家的查询效率。
+
 ### Books 模型
+
 #### 描述
 
-`Books` 模型用于存储图书馆或图书管理系统中的图书信息，包括图书ID、名称、作者、出版年份、位置和可借状态。
+`Books` 模型用于存储图书馆或图书管理系统中的图书信息，包括图书 ID、名称、作者、出版年份、位置和可借状态。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述                         | 是否可为空 | 唯一性 | 索引 |
-|-------------|-------------|------------------------------|------------|--------|------|
-| id          | Integer     | 唯一标识符，主键             | 否         |        |      |
-| book_id     | String(100) | 图书ID，唯一值               | 否         | 是     | 是   |
-| name        | String(100) | 图书名称                     | 否         |        |      |
-| authors     | String(100) | 作者                         | 是         |        |      |
-| publish_year| String(50)  | 出版年份                     | 是         |        |      |
-| location    | String(50)  | 图书当前位置                 | 是         |        |      |
-| available   | Boolean     | 图书是否可借                 | 否         |        |      |
+| 字段名       | 数据类型    | 描述             | 是否可为空 | 唯一性 | 索引 |
+| ------------ | ----------- | ---------------- | ---------- | ------ | ---- |
+| id           | Integer     | 唯一标识符，主键 | 否         |        |      |
+| book_id      | String(100) | 图书 ID，唯一值  | 否         | 是     | 是   |
+| name         | String(100) | 图书名称         | 否         |        |      |
+| authors      | String(100) | 作者             | 是         |        |      |
+| publish_year | String(50)  | 出版年份         | 是         |        |      |
+| location     | String(50)  | 图书当前位置     | 是         |        |      |
+| available    | Boolean     | 图书是否可借     | 否         |        |      |
 
 #### 模型功能
 
@@ -976,7 +1022,7 @@
 
 #### 序列化方法
 
-- `to_json(self)`: 方法将图书对象序列化为JSON格式，包括图书的所有核心属性。
+- `to_json(self)`: 方法将图书对象序列化为 JSON 格式，包括图书的所有核心属性。
 
 序列化示例：
 
@@ -991,25 +1037,25 @@
 }
 ```
 
-
 ### BookLoans 模型
+
 #### 描述
 
 `BookLoans` 模型用于记录图书借阅的详细信息，包括借阅的图书、用户、借阅和应还日期以及借阅状态。
 
 #### 字段说明
 
-| 字段名               | 数据类型              | 描述                             | 是否可为空 |
-|----------------------|-----------------------|----------------------------------|------------|
-| id                   | Integer               | 借阅记录ID，主键                 | 否         |
-| book_id              | String(100)           | 借阅图书ID，外键关联`Books`表   | 否         |
-| user_id              | String(20)            | 借阅用户ID，外键关联`Users`表   | 否         |
-| brows_request_id     | Integer               | 预借请求ID，外键关联`BookLoanRequest`表 | 是         |
-| return_request_id    | Integer               | 还书请求ID，外键关联`BookLoanRequest`表 | 是         |
-| should_return_date  | DateTime              | 应还日期                         | 否         |
-| loan_date            | DateTime              | 借阅日期                         | 否         |
-| return_date          | DateTime              | 实际还书日期                     | 是         |
-| status               | String(20)            | 借阅状态                         | 否         |
+| 字段名             | 数据类型    | 描述                                     | 是否可为空 |
+| ------------------ | ----------- | ---------------------------------------- | ---------- |
+| id                 | Integer     | 借阅记录 ID，主键                        | 否         |
+| book_id            | String(100) | 借阅图书 ID，外键关联`Books`表           | 否         |
+| user_id            | String(20)  | 借阅用户 ID，外键关联`Users`表           | 否         |
+| brows_request_id   | Integer     | 预借请求 ID，外键关联`BookLoanRequest`表 | 是         |
+| return_request_id  | Integer     | 还书请求 ID，外键关联`BookLoanRequest`表 | 是         |
+| should_return_date | DateTime    | 应还日期                                 | 否         |
+| loan_date          | DateTime    | 借阅日期                                 | 否         |
+| return_date        | DateTime    | 实际还书日期                             | 是         |
+| status             | String(20)  | 借阅状态                                 | 否         |
 
 #### 关联模型
 
@@ -1021,34 +1067,36 @@
 #### 模型方法
 
 - `get_left_days(self)`: 计算并返回剩余还书天数。
-- `to_json(self)`: 将借阅记录对象序列化为JSON格式。
+- `to_json(self)`: 将借阅记录对象序列化为 JSON 格式。
 
 序列化示例：
 
 ```json
 {
-  'id': '借阅记录ID',
-  'book_id': '借阅图书ID',
-  'user_id': '用户ID',
-  'loan_date': '借阅日期',
-  'return_date': '实际还书日期',
-  'status': '借阅状态'
+  "id": "借阅记录ID",
+  "book_id": "借阅图书ID",
+  "user_id": "用户ID",
+  "loan_date": "借阅日期",
+  "return_date": "实际还书日期",
+  "status": "借阅状态"
 }
 ```
+
 ### ViolationRecords 模型
+
 #### 描述
 
 `ViolationRecords` 模型用于记录用户在图书借阅过程中的违规行为，包括违规日期、描述以及与用户和借阅记录的关联。
 
 #### 字段说明
 
-| 字段名          | 数据类型    | 描述                             | 是否可为空 |
-|-----------------|-------------|----------------------------------|------------|
-| id              | Integer     | 违规记录ID，主键                 | 否         |
-| user_id         | String(20)  | 违规用户ID，外键关联`Users`表   | 否         |
-| loan_id         | Integer     | 借阅记录ID，外键关联`BookLoans`表 | 否         |
-| violation_date  | DateTime    | 违规日期                         | 否         |
-| description     | Text        | 违规行为描述                     | 否         |
+| 字段名         | 数据类型   | 描述                               | 是否可为空 |
+| -------------- | ---------- | ---------------------------------- | ---------- |
+| id             | Integer    | 违规记录 ID，主键                  | 否         |
+| user_id        | String(20) | 违规用户 ID，外键关联`Users`表     | 否         |
+| loan_id        | Integer    | 借阅记录 ID，外键关联`BookLoans`表 | 否         |
+| violation_date | DateTime   | 违规日期                           | 否         |
+| description    | Text       | 违规行为描述                       | 否         |
 
 #### 关联模型
 
@@ -1074,7 +1122,7 @@
 
 #### 示例
 
-违规记录的创建通常涉及提供用户ID、借阅记录ID、违规日期以及违规行为的详细描述。例如：
+违规记录的创建通常涉及提供用户 ID、借阅记录 ID、违规日期以及违规行为的详细描述。例如：
 
 ```plaintext
 用户ID: U1234
@@ -1086,22 +1134,22 @@
 
 #### 描述
 
-图书借阅请求表用于存储用户对图书的借阅或归还请求信息，包括请求人ID、处理人ID、图书ID、请求日期、处理日期、状态、申请理由和处理备注。
+图书借阅请求表用于存储用户对图书的借阅或归还请求信息，包括请求人 ID、处理人 ID、图书 ID、请求日期、处理日期、状态、申请理由和处理备注。
 
 #### 字段说明
 
-| 字段名               | 数据类型        | 描述                         | 是否可为空 | 默认值                     | 关联模型         |
-|----------------------|-----------------|------------------------------|------------|----------------------------|------------------|
-| **id**               | Integer         | 请求记录ID，主键             | 否         | 自增                       |                  |
-| **requester_id**     | Integer         | 请求人ID，外键              | 否         | None                       | 用户表           |
-| **processor_id**     | Integer         | 处理人ID，外键              | 是         | None                       | 用户表           |
-| **book_id**          | Integer         | 图书ID，外键                | 否         | None                       | 图书信息表       |
-| **request_date**     | DateTime        | 请求日期                     | 否         | 当前时间戳                 |                  |
-| **process_date**     | DateTime        | 处理日期                     | 是         | None                       |                  |
-| **status**           | String(50)     | 请求状态                     | 否         | '待处理'                   |                  |
-| **request_reason**   | Text            | 申请理由                     | 是         | None                       |                  |
-| **processing_note**  | Text            | 处理备注                     | 是         | None                       |                  |
-| **request_type**     | String(10)     | 申请类型，如 借阅、还书    | 否         | None                       |                  |
+| 字段名              | 数据类型   | 描述                    | 是否可为空 | 默认值     | 关联模型   |
+| ------------------- | ---------- | ----------------------- | ---------- | ---------- | ---------- |
+| **id**              | Integer    | 请求记录 ID，主键       | 否         | 自增       |            |
+| **requester_id**    | Integer    | 请求人 ID，外键         | 否         | None       | 用户表     |
+| **processor_id**    | Integer    | 处理人 ID，外键         | 是         | None       | 用户表     |
+| **book_id**         | Integer    | 图书 ID，外键           | 否         | None       | 图书信息表 |
+| **request_date**    | DateTime   | 请求日期                | 否         | 当前时间戳 |            |
+| **process_date**    | DateTime   | 处理日期                | 是         | None       |            |
+| **status**          | String(50) | 请求状态                | 否         | '待处理'   |            |
+| **request_reason**  | Text       | 申请理由                | 是         | None       |            |
+| **processing_note** | Text       | 处理备注                | 是         | None       |            |
+| **request_type**    | String(10) | 申请类型，如 借阅、还书 | 否         | None       |            |
 
 #### 反向引用
 
@@ -1130,24 +1178,25 @@
 - `request_type` 字段用于标识请求的类型，如借阅或还书。
 
 ### BookLoanRequest 模型
+
 #### 描述
 
 `BookLoanRequest` 模型用于管理图书借阅请求的详细信息，包括请求者、处理人、图书、请求日期、处理日期、状态、申请理由、处理备注和请求类型。
 
 #### 字段说明
 
-| 字段名               | 数据类型    | 描述                         | 是否可为空 | 默认值                 |
-|----------------------|-------------|------------------------------|------------|------------------------|
-| id                   | Integer     | 请求记录ID，主键             | 否         |                        |
-| requester_id         | String(20)  | 请求者ID，外键关联`Users`表 | 否         |                        |
-| processor_id         | String(20)  | 处理人ID，外键关联`Users`表 | 是         |                        |
-| book_id              | String(100) | 图书ID，外键关联`Books`表   | 否         |                        |
-| request_date         | DateTime    | 请求日期                     | 否         | 当前时间 (`datetime.now`) |
-| process_date         | DateTime    | 处理日期                     | 是         |                        |
-| status               | String(50)  | 请求状态                     | 否         | `'待处理'`             |
-| request_reason       | Text        | 申请理由                     |            |                        |
-| processing_note      | Text        | 处理备注                     |            |                        |
-| request_type         | String(10)  | 申请类型，如 借阅、还书   | 否         |                        |
+| 字段名          | 数据类型    | 描述                         | 是否可为空 | 默认值                    |
+| --------------- | ----------- | ---------------------------- | ---------- | ------------------------- |
+| id              | Integer     | 请求记录 ID，主键            | 否         |                           |
+| requester_id    | String(20)  | 请求者 ID，外键关联`Users`表 | 否         |                           |
+| processor_id    | String(20)  | 处理人 ID，外键关联`Users`表 | 是         |                           |
+| book_id         | String(100) | 图书 ID，外键关联`Books`表   | 否         |                           |
+| request_date    | DateTime    | 请求日期                     | 否         | 当前时间 (`datetime.now`) |
+| process_date    | DateTime    | 处理日期                     | 是         |                           |
+| status          | String(50)  | 请求状态                     | 否         | `'待处理'`                |
+| request_reason  | Text        | 申请理由                     |            |                           |
+| processing_note | Text        | 处理备注                     |            |                           |
+| request_type    | String(10)  | 申请类型，如 借阅、还书      | 否         |                           |
 
 #### 关联模型
 
@@ -1157,7 +1206,7 @@
 
 #### 构造函数说明
 
-- `__init__(self, requester_id, book_id, request_type, request_reason, request_date, status='待处理', processing_note=None, processor_id=None, process_date=None)`: 构造函数用于初始化一个新的`BookLoanRequest`实例，需要提供请求者ID、图书ID、请求类型、申请理由、请求日期，其他字段可选。
+- `__init__(self, requester_id, book_id, request_type, request_reason, request_date, status='待处理', processing_note=None, processor_id=None, process_date=None)`: 构造函数用于初始化一个新的`BookLoanRequest`实例，需要提供请求者 ID、图书 ID、请求类型、申请理由、请求日期，其他字段可选。
 
 #### 序列化方法
 
@@ -1184,21 +1233,22 @@
 ```
 
 ### LibraryStatus 模型
+
 #### 描述
 
 `LibraryStatus` 模型用于定义图书馆管理的常量设置，包括间隔日期、借阅期限、超出期限提醒天数、单个用户借阅数量限制和单个用户违规记录数量限制等。
 
 #### 字段说明
 
-| 字段名                  | 数据类型    | 描述                             | 默认值 | 是否可为空 |
-|-------------------------|-------------|----------------------------------|--------|------------|
-| id                      | Integer     | 常量设置ID，主键                 |        | 否         |
-| interval_date           | Integer     | 间隔日期（天数）                 | 5      | 否         |
-| borrow_period           | Integer     | 借阅期限（天数）                 | 30     | 否         |
-| overdue_reminder_days   | Integer     | 超出期限提醒天数                 | 3      | 否         |
-| borrow_limit            | Integer     | 单个用户借阅数量限制             | 2      | 否         |
-| violation_limit         | Integer     | 单个用户违规记录数量限制         | 3      | 否         |
-| is_book_admin           | Boolean     | 是否图书管理员                   | False  | 否         |
+| 字段名                | 数据类型 | 描述                     | 默认值 | 是否可为空 |
+| --------------------- | -------- | ------------------------ | ------ | ---------- |
+| id                    | Integer  | 常量设置 ID，主键        |        | 否         |
+| interval_date         | Integer  | 间隔日期（天数）         | 5      | 否         |
+| borrow_period         | Integer  | 借阅期限（天数）         | 30     | 否         |
+| overdue_reminder_days | Integer  | 超出期限提醒天数         | 3      | 否         |
+| borrow_limit          | Integer  | 单个用户借阅数量限制     | 2      | 否         |
+| violation_limit       | Integer  | 单个用户违规记录数量限制 | 3      | 否         |
+| is_book_admin         | Boolean  | 是否图书管理员           | False  | 否         |
 
 #### 序列化方法
 
@@ -1218,23 +1268,23 @@
 }
 ```
 
-
 ### ResourceDownload 模型
+
 #### 描述
 
 `ResourceDownload` 模型用于存储可供下载的资源信息，包括资源名称、下载链接、类型、作者以及简介。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述                         | 是否可为空 |
-|-------------|-------------|------------------------------|------------|
-| id          | Integer     | 资源ID，主键                 | 否         |
-| name        | Text        | 资源名称                     | 否         |
-| url         | String(200) | 资源下载链接                 | 是         |
-| type        | String(20)  | 资料类型                     | 否         |
-| work_id     | String(20)  | 上传者工号，外键关联`Users`表 | 否         |
-| author      | String(100) | 作者                         | 是         |
-| introduction| Text        | 简介                         | 是         |
+| 字段名       | 数据类型    | 描述                          | 是否可为空 |
+| ------------ | ----------- | ----------------------------- | ---------- |
+| id           | Integer     | 资源 ID，主键                 | 否         |
+| name         | Text        | 资源名称                      | 否         |
+| url          | String(200) | 资源下载链接                  | 是         |
+| type         | String(20)  | 资料类型                      | 否         |
+| work_id      | String(20)  | 上传者工号，外键关联`Users`表 | 否         |
+| author       | String(100) | 作者                          | 是         |
+| introduction | Text        | 简介                          | 是         |
 
 #### 序列化方法
 
@@ -1252,25 +1302,27 @@
   "author": "作者信息"
 }
 ```
+
 ### News 模型
+
 #### 描述
 
 `News` 模型用于存储新闻或通知的详细信息，包括标题、内容、链接、类别、作者、创建时间、发布时间、附件和封面。
 
 #### 字段说明
 
-| 字段名      | 数据类型    | 描述                         | 是否可为空 | 默认值                 |
-|-------------|-------------|------------------------------|------------|------------------------|
-| id          | Integer     | 新闻ID，主键                 | 否         |                        |
-| title       | String(255) | 标题                         | 否         |                        |
-| content     | Text        | 内容                         | 是         |                        |
-| link        | String(255) | 外部链接                     | 是         |                        |
-| category    | String(100) | 类别                         | 否         |                        |
-| author      | String(100) | 作者                         | 否         |                        |
-| create_time | DateTime    | 创建时间                     | 否         | 当前时间 (`datetime.now`) |
-| publish_time| DateTime    | 发布时间                     | 是         |                        |
-| attachments | ARRAY(String) | 附件地址数组                 | 是         |                        |
-| cover       | String(255) | 封面属性                     | 否         |
+| 字段名       | 数据类型      | 描述          | 是否可为空 | 默认值                    |
+| ------------ | ------------- | ------------- | ---------- | ------------------------- |
+| id           | Integer       | 新闻 ID，主键 | 否         |                           |
+| title        | String(255)   | 标题          | 否         |                           |
+| content      | Text          | 内容          | 是         |                           |
+| link         | String(255)   | 外部链接      | 是         |                           |
+| category     | String(100)   | 类别          | 否         |                           |
+| author       | String(100)   | 作者          | 否         |                           |
+| create_time  | DateTime      | 创建时间      | 否         | 当前时间 (`datetime.now`) |
+| publish_time | DateTime      | 发布时间      | 是         |                           |
+| attachments  | ARRAY(String) | 附件地址数组  | 是         |                           |
+| cover        | String(255)   | 封面属性      | 否         |
 
 #### 序列化方法
 
@@ -1292,7 +1344,9 @@
   "cover": "封面属性"
 }
 ```
-## api文档
+
+## api 文档
+
 ### Blueprint: loans_bp
 
 #### 路径: /api/books_loans/request_borrow/<string:book_id>
@@ -1302,15 +1356,18 @@
 ##### 功能: 申请借阅图书
 
 ###### 参数
-- book_id (string): 图书ID
+
+- book_id (string): 图书 ID
 
 ###### 响应
+
 - 201: 借阅申请已提交，等待审批
 - 400: 您已经达到最大借阅数量 或 您已提交过借阅申请，请等待审批
 - 404: 图书不存在或不可申请
 - 500: 借阅申请失败
 
 ###### 请求体
+
 - reason (string, 可选): 借阅原因
 
 ---
@@ -1322,9 +1379,11 @@
 ##### 功能: 申请归还图书
 
 ###### 参数
-- loan_id (int): 借阅记录ID
+
+- loan_id (int): 借阅记录 ID
 
 ###### 响应
+
 - 201: 还书申请已提交，等待审批
 - 400: 您已提交过还书申请，请等待审批
 - 403: 您没有这本书的借阅记录
@@ -1332,6 +1391,7 @@
 - 500: 还书申请失败
 
 ###### 请求体
+
 - reason (string, 可选): 归还原因
 
 ---
@@ -1343,6 +1403,7 @@
 ##### 功能: 获取当前用户所借阅的所有书籍
 
 ##### 响应
+
 - 200: 返回用户所借阅的书籍列表
 
 ---
@@ -1354,7 +1415,9 @@
 ##### 功能: 获取当前用户的诚信记录
 
 ##### 响应
+
 - 200: 返回用户的诚信记录列表
+
 ### Blueprint: books_bp
 
 #### 路径: /api/books
@@ -1364,6 +1427,7 @@
 ##### 功能: 获取所有图书的信息
 
 ##### 响应
+
 - 200: 返回所有图书的列表
 
 ---
@@ -1375,9 +1439,11 @@
 ##### 功能: 获取特定图书的信息
 
 ##### 参数
-- book_id (int): 图书的ID
+
+- book_id (int): 图书的 ID
 
 ##### 响应
+
 - 200: 返回特定图书的信息
 - 404: 如果图书不存在，返回错误信息
 
@@ -1390,9 +1456,11 @@
 ##### 功能: 更新图书的信息
 
 ##### 参数
-- book_id (int): 图书的ID
+
+- book_id (int): 图书的 ID
 
 ##### 请求体
+
 - barcode (string, 可选): 图书的条形码
 - name (string, 可选): 图书的名称
 - authors (string, 可选): 图书的作者
@@ -1401,6 +1469,7 @@
 - available (boolean, 可选): 图书是否可用
 
 ##### 响应
+
 - 200: 更新图书信息成功
 - 400: 如果请求体中缺少必要的参数，返回错误信息
 - 404: 如果图书不存在，返回错误信息
@@ -1414,6 +1483,7 @@
 ##### 功能: 创建新的图书
 
 ##### 请求体
+
 - barcode (string): 图书的条形码
 - name (string): 图书的名称
 - authors (string): 图书的作者
@@ -1422,6 +1492,7 @@
 - available (boolean, 可选): 图书是否可用
 
 ##### 响应
+
 - 201: 创建图书成功
 - 400: 如果请求体中缺少必要的参数，返回错误信息
 
@@ -1434,9 +1505,11 @@
 ##### 功能: 完全更新图书的信息
 
 ##### 参数
-- book_id (int): 图书的ID
+
+- book_id (int): 图书的 ID
 
 ##### 请求体
+
 - barcode (string, 可选): 图书的条形码
 - name (string, 可选): 图书的名称
 - authors (string, 可选): 图书的作者
@@ -1445,6 +1518,7 @@
 - available (boolean, 可选): 图书是否可用
 
 ##### 响应
+
 - 200: 更新图书信息成功
 - 400: 如果请求体中缺少必要的参数，返回错误信息
 - 404: 如果图书不存在，返回错误信息
@@ -1458,13 +1532,16 @@
 ##### 功能: 删除图书
 
 ##### 参数
-- book_id (int): 图书的ID
+
+- book_id (int): 图书的 ID
 
 ##### 响应
+
 - 204: 删除图书成功
 - 404: 如果图书不存在，返回错误信息
 
 ---
+
 ### Blueprint: introduction
 
 #### 路径: /api/introduction_update
@@ -1474,6 +1551,7 @@
 ##### 功能: 获取所有简介
 
 ##### 响应
+
 - 200: 返回所有简介的列表
 
 ---
@@ -1485,6 +1563,7 @@
 ##### 功能: 建立新的简介
 
 ##### 请求体
+
 - name (string): 简介的名称
 - short_name (string): 简介的简称
 - introduction (string): 简介的介绍内容
@@ -1493,11 +1572,12 @@
 - fax (string): 传真
 - email (string): 电子邮件
 - website (string): 网站
-- logo_path (string): logo路径
+- logo_path (string): logo 路径
 - is_active (boolean): 是否激活
-- operator_id (int): 操作员ID
+- operator_id (int): 操作员 ID
 
 ##### 响应
+
 - 200: 新建简介成功
 
 ---
@@ -1509,12 +1589,15 @@
 ##### 功能: 切换简介的激活状态
 
 ##### 参数
-- id (int): 简介的ID
+
+- id (int): 简介的 ID
 
 ##### 请求体
+
 - is_active (boolean): 简介的激活状态
 
 ##### 响应
+
 - 200: 简介状态更新成功
 - 404: 如果简介不存在，返回错误信息
 
@@ -1527,8 +1610,10 @@
 ##### 功能: 获取激活的简介
 
 ##### 响应
+
 - 200: 返回激活的简介信息
 - 404: 如果没有激活的简介，返回错误信息
+
 ### Blueprint: libraryS_setting
 
 #### 路径: /api/libraryS_setting/get_libraryS_status
@@ -1538,10 +1623,12 @@
 ##### 功能: 获取图书馆状态信息
 
 ##### 参数
+
 - page (int): 页码
 - per_page (int): 每页显示数量
 
 ##### 响应
+
 - 200: 返回图书馆状态信息的分页列表
 
 ---
@@ -1553,7 +1640,8 @@
 ##### 功能: 修改图书馆状态
 
 ##### 请求体
-- work_id (string): 用户工作ID
+
+- work_id (string): 用户工作 ID
 - interval_date (int, 可选): 借阅间隔日期
 - borrow_period (int, 可选): 借阅期限
 - overdue_reminder_days (int, 可选): 逾期提醒天数
@@ -1562,9 +1650,11 @@
 - is_book_admin (boolean, 可选): 是否为图书管理员
 
 ##### 响应
+
 - 200: 修改成功
 - 401: 用户不存在
 - 500: 修改失败
+
 ### Blueprint: materials_bp
 
 #### 路径: /api/materials
@@ -1574,14 +1664,16 @@
 ##### 功能: 上传文件
 
 ##### 请求体
+
 - name (string): 文件名称
 - type (string): 文件类型
-- work_id (string): 工作ID
+- work_id (string): 工作 ID
 - author (string): 作者
 - introduction (string): 简介
 - file (file): 要上传的文件
 
 ##### 响应
+
 - 201: 文件上传成功
 - 400: 没有文件部分 或 没有选择文件 或 不支持的文件类型
 - 415: 不支持的文件类型
@@ -1596,13 +1688,16 @@
 ##### 功能: 根据类型获取文件列表
 
 ##### 参数
+
 - type (string): 文件类型
 - page (int): 页码
 - limit (int): 每页显示数量
 
 ##### 响应
+
 - 200: 返回文件列表和分页信息
 - 400: 缺少文件类型参数
+
 ### Blueprint: news_bp
 
 #### 路径: /api/news
@@ -1612,9 +1707,11 @@
 ##### 功能: 上传图片
 
 ##### 请求体
+
 - image (file): 要上传的图片文件
 
 ##### 响应
+
 - 200: 图片上传成功，返回图片的 URL 路径
 - 400: 没有文件部分 或 没有选择文件 或 不支持的文件类型
 
@@ -1627,6 +1724,7 @@
 ##### 功能: 提交新闻
 
 ##### 请求体
+
 - title (string): 新闻标题
 - author (string): 新闻作者
 - cover (file): 新闻封面图片
@@ -1636,6 +1734,7 @@
 - files (file): 附件文件（多个）
 
 ##### 响应
+
 - 200: 新闻内容提交成功
 
 ---
@@ -1647,7 +1746,8 @@
 ##### 功能: 获取新闻列表
 
 ##### 响应
-- 200: 返回最新的10条新闻列表
+
+- 200: 返回最新的 10 条新闻列表
 
 ---
 
@@ -1658,9 +1758,11 @@
 ##### 功能: 获取单条新闻内容
 
 ##### 参数
-- news_id (int): 新闻ID
+
+- news_id (int): 新闻 ID
 
 ##### 响应
+
 - 200: 返回单条新闻内容
 - 404: 如果新闻不存在，返回错误信息
 
@@ -1673,7 +1775,9 @@
 ##### 功能: 获取分类新闻
 
 ##### 响应
+
 - 200: 返回指定分类的最新一条新闻
+
 ### Blueprint: request_api
 
 #### 路径: /api/request_process
@@ -1683,13 +1787,16 @@
 ##### 功能: 处理借阅请求
 
 ##### 参数
-- request_id (int): 借阅请求ID
+
+- request_id (int): 借阅请求 ID
 
 ##### 请求体
+
 - action (string): 操作类型（'同意' 或 '拒绝'）
 - note (string, 可选): 处理备注
 
 ##### 响应
+
 - 200: 图书借阅请求已处理
 - 403: 您没有权限处理此请求
 - 404: 请求不存在或已处理
@@ -1705,13 +1812,16 @@
 ##### 功能: 处理归还请求
 
 ##### 参数
-- request_id (int): 归还请求ID
+
+- request_id (int): 归还请求 ID
 
 ##### 请求体
+
 - action (string): 操作类型（'同意' 或 '拒绝'）
 - note (string, 可选): 处理备注
 
 ##### 响应
+
 - 200: 图书归还请求已处理
 - 403: 您没有权限处理此请求
 - 404: 请求不存在或已处理
@@ -1727,6 +1837,7 @@
 ##### 功能: 获取所有待处理的请求
 
 ##### 响应
+
 - 200: 返回所有待处理的请求列表
 
 ---
@@ -1738,7 +1849,9 @@
 ##### 功能: 获取所有由自己发起的请求
 
 ##### 响应
+
 - 200: 返回所有由自己发起的请求列表
+
 ### Blueprint: users_bp
 
 #### 路径: /api/users
@@ -1748,10 +1861,12 @@
 ##### 功能: 更新用户信息
 
 ##### 请求体
+
 - field (string): 要更新的字段
 - value (string): 更新的值
 
 ##### 响应
+
 - 200: 用户信息更新成功
 - 400: 缺少必要的字段
 - 404: 用户不存在
@@ -1766,9 +1881,11 @@
 ##### 功能: 更新用户头像
 
 ##### 请求体
+
 - image (file): 要上传的头像文件
 
 ##### 响应
+
 - 200: 头像更新成功，返回头像的 URL 路径
 - 400: 没有文件部分 或 没有选择文件 或 不支持的文件类型
 - 404: 用户不存在
@@ -1783,37 +1900,42 @@
 ##### 功能: 获取用户头像地址
 
 ##### 响应
+
 - 200: 返回用户头像的 URL 路径
 - 404: 如果用户不存在，返回错误信息
 
 ### 错误处理器
 
 #### 404 Not Found
-返回一个JSON对象，包含错误信息。
+
+返回一个 JSON 对象，包含错误信息。
 
 #### 400 Bad Request
-返回一个JSON对象，包含错误信息和描述。
 
-## 待添加：
+返回一个 JSON 对象，包含错误信息和描述。
+
+## 待添加
+
 - 动态消息表：（News）
-- 文件下载blacklist表：（FileDownloadBlacklist）
+- 文件下载 blacklist 表：（FileDownloadBlacklist）
 
 ## 视图
+
 ### 普通视图
-- 视图的本质是虚拟表，通过SQL语句来查询数据，而不是直接查询数据库中的表， 所以还是翻译成SQL语句来与数据库进行交互
-- 本项目使用的是SQLAlchemy来进行ORM映射， 也是翻译成SQL语句来与数据库进行交互
+
+- 视图的本质是虚拟表，通过 SQL 语句来查询数据，而不是直接查询数据库中的表， 所以还是翻译成 SQL 语句来与数据库进行交互
+- 本项目使用的是 SQLAlchemy 来进行 ORM 映射， 也是翻译成 SQL 语句来与数据库进行交互
 - 所以本项目没有创建视图的需要
+
 ### 物化视图
+
 - 物化视图是一种特殊的视图，它将数据保存在物理表中，而不是在每次查询时都重新计算，从而提高查询效率。
 - 物化视图的创建需要手动执行，在创建视图的同时，系统会自动将视图数据保存到物理表中。
 - 本项目数据量较小，不需要创建物化视图
+
 ### 综上所述，本项目没有创建视图的需要
+
 ## 索引
-- 本项目使用的是SQLAlchemy来进行ORM映射，表所对应的实体类中，有外键关联的实体类，会自动生成索引。
+
+- 本项目使用的是 SQLAlchemy 来进行 ORM 映射，表所对应的实体类中，有外键关联的实体类，会自动生成索引。
 - 所以本项目没有创建索引的需要
-
-
-
-
-
-
