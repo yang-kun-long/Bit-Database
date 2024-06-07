@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort, current_app
+from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from models import *
 from datetime import datetime, timedelta
@@ -72,30 +72,6 @@ def request_return_book(loan_id):
         return jsonify({'error': '您没有这本书的借阅记录'}), 403
 
     book_id = loan.book_id  # 获取图书ID
-    #如果还书未超时，则直接更新借阅记录的归还日期
-    # if loan.return_date is None or (datetime.now() - loan.return_date) < timedelta(days=current_app.config['RETURN_PERIOD']):
-    #     try:
-    #         #创建还书申请记录，理由为正常归还，状态为‘approved’，处理人id为0000000000
-    #         return_request = BookLoanRequest(
-    #             requester_id=user_id,
-    #             book_id=book_id,
-    #             request_date=datetime.now(),
-    #             status='approved',  # 申请状态为 'approved'，已批准
-    #             request_type='还书' , # 表示这是一个还书申请
-    #             process_date=datetime.now(),  # 处理日期为当前时间
-    #             request_reason='正常归还',  # 归还原因
-    #             processor_id=1000000000,  # 处理人id为1000000000
-    #             processing_note='系统自动归还'  # 处理备注
-    #
-    #         )
-    #         db.session.add(return_request)
-    #         loan.return_date = datetime.now()
-    #         db.session.commit()
-    #         return jsonify({'message': '还书成功'}), 200
-    #     except Exception as e:
-    #         db.session.rollback()  # 如果出错，回滚事务
-    #         return jsonify({'error': '还书失败' + str(e)}), 500
-    # else:
     reason=request.json.get('reason', '')  # 归还原因
     if loan.return_date is None and (datetime.now() - loan.loan_date) > timedelta(
             days=get_borrow_period(loan.requester)):
