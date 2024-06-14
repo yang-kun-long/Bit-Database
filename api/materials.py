@@ -11,7 +11,7 @@ materials_bp = Blueprint('materials_bp', __name__, url_prefix='/api/materials')
 # 检查文件扩展名是否合法
 def allowed_file(filename):
     return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+        filename.rsplit('.', 1)[1].lower() in {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'}
 
 
 # 创建上传目录的函数

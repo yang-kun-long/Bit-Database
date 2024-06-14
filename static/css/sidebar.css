@@ -52,7 +52,7 @@
     padding: 1px 16px;
 }
 main {
-    min-height: calc(100vh - 250px); /* 100vh 减去页脚和导航栏的高度 */
+    min-height: calc(100vh - 210px); /* 100vh 减去页脚和导航栏的高度 */
 }
 
 /* 当屏幕宽度小于700px时，改变侧导航栏和内容的布局 */

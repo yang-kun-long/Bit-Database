@@ -4,3 +4,4 @@ static/uploads/
 __pycache__/
 flask_session/
 migrations/
+static/images/

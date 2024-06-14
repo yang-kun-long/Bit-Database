@@ -42,6 +42,7 @@ def submit_news():
     title = request.form.get('title', '新闻标题')
     author = request.form.get('author', '新闻作者')
     cover = request.files.get('cover')
+    link = request.form.get('link')
     content = request.form.get('content', '新闻内容')
     files = request.files.getlist('files')
     category = request.form.get('category', '新闻分类')
@@ -79,7 +80,7 @@ def submit_news():
     file_paths.extend(attachments_links)
     #创建新闻对象并保存到数据库
     news = News(title=title, author=author, cover=cover_path, content=content, attachments=file_paths,
-                category=category)
+                category=category,link=link)
     db.session.add(news)
     db.session.commit()
     # 假设保存成功
