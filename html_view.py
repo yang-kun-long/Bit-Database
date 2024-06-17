@@ -230,6 +230,9 @@ def user_page():
 
     # 渲染模板并将用户信息、借阅列表和request_ids传递给模板
     return render_template('user_page.html', user=user, user_loans=user_loans,left_days=left_days)
+@views_blueprint.route('/README', methods=['GET'])
+def README():
+    return render_template('README.html')
 
 
 @views_blueprint.route('/logout')

@@ -1,6 +1,14 @@
-# Bit-Database
+---
+html:
+  embed_local_images: false
+  embed_svg: true
+  offline: false
+  toc: false
 
+print_background: false
+---
 [toc]
+# Bit-Database
 
 ## 项目介绍
 ### 环境配置
@@ -18,7 +26,7 @@
 * 前端使用jinja2渲染模板,这样减少接口的请求次数，提高效率
 
 ### 数据库结构
-![Untitled (1).png](jietu/Untitled.png)
+![Untitled (1).png](static/jietu/Untitled.png)
 
 ### 数据库安全设计
 * 使用jwt做用户认证
@@ -1979,7 +1987,7 @@ pip install -r requirements.txt
 - 研究成果显示教学成果，教学论文，教材信息，教改项目信息，科研成果，科研论文，专利，著作权信息，点击可以跳转
 - 招生信息显示硕士生信息，博士生信息，留学生信息，点击可以跳转
 - 国际合作显示最新的三个国际合作项目，点击可以跳转
-![shouye.png](jietu/shouye.png)
+![shouye.png](static/jietu/shouye.png)
 
 ### 导航栏
 #### 未登录
@@ -2016,8 +2024,8 @@ pip install -r requirements.txt
 - 师资队伍：表格形式显示教师信息
 - 学生信息：照片墙形式显示所有学生，点击弹出模态框显示学生信息
 - 联系我们：显示联系方式
-![img.png](jietu/img.png)
-![img_1.png](jietu/img_1.png)
+![img.png](static/jietu/img.png)
+![img_1.png](static/jietu/img_1.png)
 
 ### 动态消息
 
@@ -2026,7 +2034,7 @@ pip install -r requirements.txt
 - 通知：显示通知的封面照片墙，点击跳转到通知详情页面，可以编辑通知
 - 活动：显示活动的封面照片墙，点击跳转到活动详情页面，可以编辑活动
 - 发表文章：跳转到文章编辑页面，可以发表文章
-![dongtai.png](jietu/dongtai.png)
+![dongtai.png](static/jietu/dongtai.png)
 #### 未登录和无编辑权限用户登录
 - 新闻：显示新闻的封面照片墙，点击跳转到新闻详情页面
 - 通知：显示通知的封面照片墙，点击跳转到通知详情页面
@@ -2038,7 +2046,7 @@ pip install -r requirements.txt
 - 作者：显示新闻作者
 - 发布时间：显示新闻发布时间
 - 附件列表：显示新闻附件列表，点击下载附件
-![fabu.png](jietu/fabu.png)
+![fabu.png](static/jietu/fabu.png)
 
 #### 文章发布页面
 - 标题：选择文章类型，默认为新闻
@@ -2051,12 +2059,12 @@ pip install -r requirements.txt
 - 附件：点击按钮，弹出模态框，选择文件，点击确定，即可在文章中插入附件
 - 输入附件链接：如果要发布的文章在网站外，可以输入外部链接，中间用逗号隔开
 - 提交：点击发布按钮，即可发布文章
-![fabu1.png](jietu/fabu1.png)
+![fabu1.png](static/jietu/fabu1.png)
 
 ### 教学研究页面
 - 教学工作：显示所有教学工作的基本信息
 - 科研工作：显示所有科研工作的基本信息
-![gongzuo.png](jietu/gongzuo.png)
+![gongzuo.png](static/jietu/gongzuo.png)
 
 ### 研究成果页面
 - 教学成果：下有四个模块，分别显示教学成果，教学论文，教材信息，教改项目信息
@@ -2069,19 +2077,19 @@ pip install -r requirements.txt
      - 科研论文：表格形式显示所有科研论文的基本信息
      - 专利：表格形式显示所有专利的基本信息
      - 著作权信息：表格形式显示所有著作权信息的基本信息
-- ![chengguo.png](jietu/chengguo.png)
+- ![chengguo.png](static/jietu/chengguo.png)
 
 ### 招生信息页面
 - 本科生信息：表格形式显示所有本科生招生信息
 - 硕士生信息：表格形式显示所有硕士生招生信息
 - 博士生信息：表格形式显示所有博士生招生信息
 - 留学生信息：表格形式显示所有留学生招生信息
-![zhaosheng.png](jietu/zhaosheng.png)
+![zhaosheng.png](static/jietu/zhaosheng.png)
 
 ### 国际合作页面
 - 表格形式显示所有国际合作项目的基本信息
 - 包括合作的大学/企业名称，所属国家，合作项目，开始时间，结束时间，状态，描述
-![hezuo.png](jietu/hezuo.png)
+![hezuo.png](static/jietu/hezuo.png)
 
 ### 内部管理页面
 
@@ -2102,25 +2110,25 @@ pip install -r requirements.txt
 - 超级管理员有以上所有权限
 - 系统设置；跳转到系统设置页面，可以设置系统参数，包括图书借阅常量和用户权限更改
 - 批量导入数据：跳转到批量导入数据页面，可以批量导入数据
-![img_2.png](jietu/img_2.png)
+![img_2.png](static/jietu/img_2.png)
 
 #### 图书借阅页面
 - 图书列表：显示所有图书的基本信息，点击图书名称可以查看图书详情
 - 搜索框：输入图书名称，作者或者id，可以搜索图书
 - 申请借阅：点击按钮，弹出模态框，填入申请理由，点击确定，即可申请借阅，等待审批
-![img_3.png](jietu/img_3.png)
-![img_4.png](jietu/img_4.png)
+![img_3.png](static/jietu/img_3.png)
+![img_4.png](static/jietu/img_4.png)
 
 #### 申请处理页面
 - 待处理申请：显示所有待处理的申请
 - 同意申请：点击按钮，弹出模态框，输入处理备注，点击确定，即可同意申请
 - 拒绝申请：点击按钮，弹出模态框，输入处理备注，点击确定，即可拒绝申请
-![img_5.png](jietu/img_5.png)
+![img_5.png](static/jietu/img_5.png)
 
 #### 统计分析页面
 - 该页面只有全职教师和所长可以访问
 - 登录情况：显示所有用户的登录情况，包括登录时间，登录IP，登出时间，导师工号，副导师工号，用户工号
-![img_6.png](jietu/img_6.png)
+![img_6.png](static/jietu/img_6.png)
 
 #### 简介更新页面
 - 该页面只有有简介更新权限的用户可以访问
@@ -2128,16 +2136,16 @@ pip install -r requirements.txt
 - 停用：点击按钮，可以停用简介，停用后，该简介将不再显示
 - 启用：点击按钮，可以启用简介，启用后，该简介将再次显示，同一时间只能有一个简介被启用，否者会提示用户
 - 新增：点击按钮，弹出模态框，填写简介信息，点击确定，即可新增简介，新增后，该简介将保存到数据库中
-![jianjie.png](jietu/jianjie.png)
-![jianjie1.png](jietu/jianjie1.png)
+![jianjie.png](static/jietu/jianjie.png)
+![jianjie1.png](static/jietu/jianjie1.png)
 
 #### 系统设置页面
 - 该页面只有超级管理员可以访问
 - 图书借阅常量：显示所有用户的图书借阅常量，包括间隔日期，借阅期限，逾期提醒天数，节约上限，违规次数上限
 - 用户权限更改：显示所有用户的用户权限
 - 修改：点击按钮，弹出模态框，修改图书借阅常量和用户权限，点击确定，即可修改
-![xitong.png](jietu/xitong.png)
-![xitong1.png](jietu/xitong1.png)
+![xitong.png](static/jietu/xitong.png)
+![xitong1.png](static/jietu/xitong1.png)
 
 #### 批量导入数据页面
 - 该页面只有超级管理员可以访问
@@ -2145,35 +2153,35 @@ pip install -r requirements.txt
 - 选择文件：弹出文件选择框，选择要导入的文件
 - 选择文件类型：选择文件类型，包括在校生信息，毕业生信息，教师信息，科研工作信息，教学工作信息，教学成果，教学论文，教材，教改，科研成果，科研论文，专利，著作权信息，招生信息，国籍合作信息，图书信息
 - 批量导入：点击按钮，导入文件，导入成功后，会显示导入成功信息
-![img_7.png](jietu/img_7.png)
+![img_7.png](static/jietu/img_7.png)
 
 ### 下载专区页面
 - 该页面需要登陆后才能访问
 - 下载主页：导航至下载主页
 - 文件下载：点击导航至对应类别的下载页面，可以下载相应的文档
 - 资料上传：点击按钮，导=导航至资料上传页面，可以上传文件，点击确定，即可上传文件，上传成功后，会显示上传成功信息
-![img_8.png](jietu/img_8.png)
+![img_8.png](static/jietu/img_8.png)
 
 #### 资料上传页面
 - 输入资料标题，作者，简介，资料类型，选择文件
 - 点击确定，即可上传文件，上传成功后，会显示上传成功信息
-![ziliao.png](jietu/ziliao.png)
+![ziliao.png](static/jietu/ziliao.png)
 
 #### 文件下载页面
 - 点击相应的类别，跳转至对应类别的下载页面
 - 下载文件：点击按钮，下载文件，下载成功后，会显示下载成功信息
-![xaizai.png](jietu/xaizai.png)
+![xaizai.png](static/jietu/xaizai.png)
 
 ### 用户帮助页面
 - 用户手册：显示用户手册
 - 索引查询：显示索引查询
-![img_9.png](jietu/img_9.png)
+![img_9.png](static/jietu/img_9.png)
 
 ### 用户登录页面
 - 输入用户名和密码，点击登录按钮，即可登录
 - 未激活：未激活的用户，需要激活后才能登录，跳转至激活页面
 - 密码错误：密码错误，会显示密码错误信息
-![img_10.png](jietu/img_10.png)
+![img_10.png](static/jietu/img_10.png)
 
 ### 用户激活页面
 - 本系统是内部系统，不设置注册页面，由超级用户导入用户，用户需要激活后才能登录
@@ -2181,7 +2189,7 @@ pip install -r requirements.txt
 - 输入激活码，点击激活按钮，即可激活
 - 激活成功：激活成功，自动登录，跳转至主页
 - 激活失败：激活失败，会显示激活失败信息
-![img_11.png](jietu/img_11.png)
+![img_11.png](static/jietu/img_11.png)
 
 ### 个人主页
 - 显示用户基本信息
@@ -2191,7 +2199,7 @@ pip install -r requirements.txt
 - 修改密码：点击按钮，输入新密码，点击确定，即可修改密码
 - 修改头像：点击按钮，选择图片，点击确定，即可修改头像
 - 还书申请：点击按钮，弹出模态框，输入申请理由，点击确定，即可申请还书，等待审批
-![img_12.png](jietu/img_12.png)
+![img_12.png](static/jietu/img_12.png)
 
 ## 其他未展示功能
 - 由于某些限制，以下功能无法展示，但是本项目已经按照框架实现

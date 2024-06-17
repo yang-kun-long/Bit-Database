@@ -5,7 +5,6 @@ $(document).ready(function () {
     function initialize() {
         loadIntroductions();
     }
-
     // 加载简介列表
     function loadIntroductions() {
         $.ajax({
@@ -17,6 +16,7 @@ $(document).ready(function () {
                     return b.is_active - a.is_active; // 已激活的简介排在前面
                 });
                 renderIntroductionsTable(response);
+                activeIntroductionId = response.find(introduction => introduction.is_active).id || null; // 获取当前激活的简介ID
             },
             error: function (xhr) {
                 console.error('获取简介列表失败:', xhr.status, xhr.statusText);

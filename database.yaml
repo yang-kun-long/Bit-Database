@@ -1,4 +1,4 @@
-databas:
+database:
   dbname: yklDatabase
   user: ykl
   password: 123456
@@ -10,7 +10,7 @@ books:
   overdue_reminder_days: 3
   borrow_limit: 2
   violation_limit: 3
-database:
+databas:
   dbname: bitdatabase
   user: ykl
   password: Ykl12138
